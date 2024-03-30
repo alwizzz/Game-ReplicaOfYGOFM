@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class GameplayManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private Sprite dummySpriteBig;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    [Header("GameplayCardUI's Parameters")]
+    [SerializeField] private Color monsterCardColor;
+    [SerializeField] private Color spellCardColor;
+    [SerializeField] private Color trapCardColor;
+    [SerializeField] private Color ritualCardColor;
+
+
 }
