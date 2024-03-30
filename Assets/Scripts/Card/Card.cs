@@ -10,4 +10,5 @@ public abstract class Card : ScriptableObject
     public Sprite spriteBig;
     public Sprite spriteSmall;
 
+    public abstract bool IsMonsterCard();
 }

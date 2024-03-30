@@ -23,4 +23,6 @@ public abstract class MonsterCard : Card
 
     public List<string> listOfSuitableEquip;
 
+    public override sealed bool IsMonsterCard() => true;
+
 }
