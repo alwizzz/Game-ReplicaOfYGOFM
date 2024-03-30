@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7915e3e67ff1d2043be0e57f76ba5b35, type: 3}
+  m_Name: 035-NormalMonster-DarkMagician
+  m_EditorClassIdentifier: 
+  id: 035
+  cardName: Dark Magician
+  spriteBig: {fileID: 0}
+  spriteSmall: {fileID: 0}
+  type: 15
+  guardianStarOption1: 1
+  guardianStarOption2: 4
+  level: 7
+  attackPoint: 2500
+  defensePoint: 2100
+  listOfSuitableEquip:
+  - 657

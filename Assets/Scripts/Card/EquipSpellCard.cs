@@ -9,5 +9,7 @@ using UnityEngine;
 )]
 public class EquipSpellCard : SpellCard
 {
+    public int attackPointIncrease;
+    public int defensePointIncrease;
 
 }

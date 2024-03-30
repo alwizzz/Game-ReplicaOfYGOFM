@@ -42,6 +42,27 @@ namespace Enums
         Pluto // Thunder
     }
 
+    public enum TrapEffect
+    {
+        None,
+        DestroyMonsterOnAttack,
+        DestroyMonsterOnSummon
+    }
+
+    public enum PhaseTrigger
+    {
+        Null,
+        OnStartOfPlayerPhase,
+        OnStartOfOpponentPhase,
+
+        OnPlayerAttack,
+        OnOpponentAttack,
+
+        OnPlayerSummon,
+        OnOpponentSummon,
+
+    }
+
 
 }
 

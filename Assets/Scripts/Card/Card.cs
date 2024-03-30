@@ -4,10 +4,10 @@ using UnityEngine;
 
 public abstract class Card : ScriptableObject
 {
-    public string Id;
-    public string Name;
+    public string id;
+    public string cardName;
 
-    public Sprite SpriteBig;
-    public Sprite SpriteSmall;
+    public Sprite spriteBig;
+    public Sprite spriteSmall;
 
 }

@@ -10,15 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7915e3e67ff1d2043be0e57f76ba5b35, type: 3}
-  m_Name: 001-NormalMonster-Blue Eyes White Dragon
+  m_Name: 022-NormalMonster-SummonedSkull
   m_EditorClassIdentifier: 
-  Id: 001
-  Name: Blue-Eyes White Dragon
-  SpriteBig: {fileID: 0}
-  SpriteSmall: {fileID: 0}
-  Type: 4
-  Level: 8
-  AttackPoint: 3000
-  DefensePoint: 2500
-  guardianStarOption1: 0
-  guardianStarOption2: 0
+  id: 022
+  cardName: Summoned Skull
+  spriteBig: {fileID: 0}
+  spriteSmall: {fileID: 0}
+  type: 6
+  guardianStarOption1: 3
+  guardianStarOption2: 9
+  level: 6
+  attackPoint: 2500
+  defensePoint: 1200
+  listOfSuitableEquip:
+  - 657
