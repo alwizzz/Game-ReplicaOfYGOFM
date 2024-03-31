@@ -20,4 +20,55 @@ public class GameplayCardUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI attackPointText;
     [SerializeField] private TextMeshProUGUI defensePointText;
 
+    private void Start()
+    {
+        Setup();
+    }
+
+    public void Setup()
+    {
+        if(cardData == null)
+        {
+            print("ERROR: cardData is null, aborting...");
+            return;
+        }
+
+        baseImage.color = GameplayManager.Instance().GetGameplayCardUIBaseColor(cardData);
+        var cardSprite = cardData.spriteBig;
+        if (cardSprite == null)
+        {
+            print("WARNING: cardData's sprite is null, using dummy sprite instead");
+            cardSprite = GameplayManager.Instance().GetDummySprite();
+        }
+        cardImage.sprite = cardSprite;
+
+        if(cardData.IsMonsterCard())
+        {
+            cardAttributes.SetActive(true);
+            var data = (MonsterCard)cardData;
+            attackPointText.text = data.attackPoint.ToString();
+            defensePointText.text = data.defensePoint.ToString();
+        } else // is NonMonsterCard
+        {
+            cardAttributes.SetActive(false);
+        }
+
+    }
+
+    public void SelectCard()
+    {
+        if (isSelected) return;
+
+        isSelected = true;
+        HandSystem.Instance().SetSelectedCard(this);
+    }
+
+    public void UnselectCard()
+    {
+        if (!isSelected) print("WARNING: unselecting a currently unselected card");
+        isSelected = false;
+    }
+
+    public Card GetCardData() => cardData;
+
 }
