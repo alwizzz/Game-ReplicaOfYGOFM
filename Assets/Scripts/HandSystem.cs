@@ -10,6 +10,7 @@ public class HandSystem : UIModal<HandSystem>
 {
     [Header("States")]
     [SerializeField] private GameplayCardUI currentSelectedCard;
+    [SerializeField] private bool isFocusing;
 
     [Header("Caches")]
     [SerializeField] private List<GameplayCardUI> handCards;
@@ -23,6 +24,8 @@ public class HandSystem : UIModal<HandSystem>
     [SerializeField] private Image guardianStar1InformationImage;
     [SerializeField] private Image guardianStar2InformationImage;
 
+    [SerializeField] private HandFocusSystem handFocusSystem;
+    [SerializeField] private GameObject handOverlay;
 
 
     private void Awake()
@@ -77,6 +80,24 @@ public class HandSystem : UIModal<HandSystem>
         {
             cardAttributeInformationsHolder.SetActive(false);
         }
+    }
+
+    public void FocusSelectedCard()
+    {
+        if (isFocusing) return;
+
+        isFocusing = true;
+        handFocusSystem.SetupAndShow(currentSelectedCard);
+        handOverlay.SetActive(true);
+    }
+
+    public void UnfocusSelectedCard()
+    {
+        if (!isFocusing) return;
+
+        isFocusing = false;
+        handFocusSystem.Hide();
+        handOverlay.SetActive(false);
     }
 
 

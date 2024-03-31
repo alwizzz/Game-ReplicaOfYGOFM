@@ -32,7 +32,17 @@ public class GameplayCardUI : MonoBehaviour
             print("ERROR: cardData is null, aborting...");
             return;
         }
+        SetupData();
+    }
 
+    public void Setup(Card cardData)
+    {
+        this.cardData = cardData;
+        SetupData();
+    }
+
+    private void SetupData()
+    {
         baseImage.color = GameplayManager.Instance().GetGameplayCardUIBaseColor(cardData);
         var cardSprite = cardData.spriteBig;
         if (cardSprite == null)
@@ -42,17 +52,17 @@ public class GameplayCardUI : MonoBehaviour
         }
         cardImage.sprite = cardSprite;
 
-        if(cardData.IsMonsterCard())
+        if (cardData.IsMonsterCard())
         {
             cardAttributes.SetActive(true);
             var data = (MonsterCard)cardData;
             attackPointText.text = data.attackPoint.ToString();
             defensePointText.text = data.defensePoint.ToString();
-        } else // is NonMonsterCard
+        }
+        else // is NonMonsterCard
         {
             cardAttributes.SetActive(false);
         }
-
     }
 
     public void SelectCard()
