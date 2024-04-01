@@ -15,9 +15,9 @@ public class CardInformationDisplay : MonoBehaviour
     [SerializeField] private Image guardianStar1Image;
     [SerializeField] private Image guardianStar2Image;
 
-    public void UpdateInformation(GameplayCardUI cardUI)
+    public void UpdateInformation(HandCard handCard)
     {
-        var data = cardUI.GetCardData();
+        var data = handCard.GetCardData();
         nameText.text = data.cardName;
         if (data.IsMonsterCard())
         {

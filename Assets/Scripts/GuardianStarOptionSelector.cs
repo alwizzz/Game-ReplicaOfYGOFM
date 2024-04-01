@@ -32,12 +32,13 @@ public class GuardianStarOptionSelector : MonoBehaviour
         text2.text = guardianStarOption2.ToString();
         imageIcon2.sprite = IconManager.Instance().GetGuardianStarIcon(guardianStarOption2);
 
+
         SelectOption1(); // default value
     }
 
     public void SelectOption1()
     {
-        if (selectedGuardianStar == guardianStarOption1) return;
+        //if (selectedGuardianStar == guardianStarOption1) return;
 
         selectedGuardianStar = guardianStarOption1;
         button1.interactable = false;
@@ -46,7 +47,7 @@ public class GuardianStarOptionSelector : MonoBehaviour
 
     public void SelectOption2()
     {
-        if (selectedGuardianStar == guardianStarOption2) return;
+        //if (selectedGuardianStar == guardianStarOption2) return;
 
         selectedGuardianStar = guardianStarOption2;
         button1.interactable = true;

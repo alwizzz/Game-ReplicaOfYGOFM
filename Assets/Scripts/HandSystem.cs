@@ -8,12 +8,16 @@ using TMPro;
 
 public class HandSystem : UIModal<HandSystem>
 {
+    [SerializeField] private HandCard handCardPrefab;
+
+
     [Header("States")]
-    [SerializeField] private GameplayCardUI currentSelectedCard;
+    [SerializeField] private HandCardContainer selectedHandCardContainer;
     [SerializeField] private bool isFocusing;
 
     [Header("Caches")]
-    [SerializeField] private List<GameplayCardUI> handCards;
+    [SerializeField] private List<HandCardContainer> handCardContainers;
+    //[SerializeField] private List<GameplayCardUI> handCards;
     [SerializeField] private GameObject handSelector;
     [SerializeField] private CardInformationDisplay cardInformationDisplay;
 
@@ -29,24 +33,32 @@ public class HandSystem : UIModal<HandSystem>
 
     private void Start()
     {
-        handCards[2].SelectCard();
+        UpdateHand();
+        //SetSelectedCardContainer(handCardContainers[0]);
+        handCardContainers[0].Select();
     }
 
-    public void SetSelectedCard(GameplayCardUI cardUI)
+    public void SetSelectedCardContainer(HandCardContainer handCardContainer)
     {
-        if(currentSelectedCard != null)
+        if(selectedHandCardContainer != null)
         {
-            currentSelectedCard.UnselectCard();
+            selectedHandCardContainer.Unselect();
         }
 
-        currentSelectedCard = cardUI;
+        selectedHandCardContainer = handCardContainer;
         UpdateHandSelector();
-        cardInformationDisplay.UpdateInformation(cardUI);
+        UpdateInformationDisplay();
     }
 
     private void UpdateHandSelector()
     {
-        handSelector.transform.position = currentSelectedCard.transform.position;
+        selectedHandCardContainer.MovePositionOnContainer(handSelector.transform);
+        //handSelector.transform.position = selectedHandCardContainer.transform.position;
+    }
+
+    private void UpdateInformationDisplay()
+    {
+        cardInformationDisplay.UpdateInformation(selectedHandCardContainer.GetCard()); ;
     }
 
     public void FocusSelectedCard()
@@ -54,7 +66,7 @@ public class HandSystem : UIModal<HandSystem>
         if (isFocusing) return;
 
         isFocusing = true;
-        handFocusSystem.SetupAndShow(currentSelectedCard);
+        handFocusSystem.SetupAndShow(selectedHandCardContainer.GetCard()); ;
         handOverlay.SetActive(true);
     }
 
@@ -66,6 +78,56 @@ public class HandSystem : UIModal<HandSystem>
         handFocusSystem.Hide();
         handOverlay.SetActive(false);
     }
+
+
+    #region Update and Organize Hand
+
+    private void UpdateHand()
+    {
+        int length = handCardContainers.Count;
+        int i = 0;
+        // Reorganizing mode
+        for(; i<length; i++)
+        {
+            var container = handCardContainers[i];
+            if(container.IsEmpty())
+            {
+                bool foundCardToFill = false;
+                int j = i + 1;
+                for (; j<length; j++)
+                {
+                    if(handCardContainers[j].IsEmpty() == false)
+                    {
+                        foundCardToFill = true;
+                        break;
+                    }
+                }
+
+                if(foundCardToFill)
+                {
+                    handCardContainers[j].MoveCardTo(container);
+                } else
+                {
+                    break; // continue to draw mode
+                }
+
+            }
+        }
+
+        // Draw mode
+        for(; i<length;i++)
+        {
+            var cardData = GameplayDeck.Instance().Draw();
+            if (cardData == null) return;
+            var spawnedHandCard = Instantiate(
+                handCardPrefab
+            );
+            spawnedHandCard.Setup(cardData);
+            handCardContainers[i].SetCard(spawnedHandCard);
+        }
+    }
+
+    #endregion
 
 
     private void OnDestroy()

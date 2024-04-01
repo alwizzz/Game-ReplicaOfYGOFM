@@ -1,0 +1,71 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class HandCardContainer : MonoBehaviour
+{
+    //[SerializeField] private int index;
+    [SerializeField] private HandCard containedHandCard;
+    [SerializeField] private bool isSelected;
+
+    public HandCard GetCard() => containedHandCard;
+    public bool IsEmpty() => (containedHandCard == null ? true : false);
+
+    public void SetCard(HandCard handCard)
+    {
+        if(containedHandCard != null)
+        {
+            print("ERROR: attempt to set contained card when currently one exists, aborting...");
+            return;
+        }
+
+        MovePositionOnContainer(handCard.transform, isSettingParent:true);
+        handCard.SetContainer(this);
+        containedHandCard = handCard;
+    }
+
+    public void RemoveCard()
+    {
+        if(containedHandCard == null)
+        {
+            print("WARNING: attempt to remove contained card when it is already null");
+            return;
+        }
+
+        containedHandCard.ResetContainer();
+        containedHandCard = null;
+    }
+
+    public void MoveCardTo(HandCardContainer container)
+    {
+        // make sure the input container currently not holding any
+
+        var tempHandCard = containedHandCard;
+        RemoveCard();
+        container.SetCard(tempHandCard);
+    }
+
+    public void MovePositionOnContainer(Transform obj, bool isSettingParent=false)
+    {
+        obj.position = transform.position;
+        if(isSettingParent)
+        {
+            obj.SetParent(transform);
+        }
+    }
+
+    public void Select()
+    {
+        if (isSelected) return;
+
+        isSelected = true;
+        HandSystem.Instance().SetSelectedCardContainer(this);
+    }
+
+    public void Unselect()
+    {
+        if (!isSelected) return;
+
+        isSelected = false;
+    }
+}

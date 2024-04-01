@@ -73,7 +73,7 @@ public class GameplayCardUI : MonoBehaviour
         if (isSelected) return;
 
         isSelected = true;
-        HandSystem.Instance().SetSelectedCard(this);
+        //HandSystem.Instance().SetSelectedCard(this);
     }
 
     public void UnselectCard()

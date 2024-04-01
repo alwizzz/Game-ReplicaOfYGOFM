@@ -6,7 +6,7 @@ using UnityEngine;
 public class HandFocusSystem : UIModal<HandFocusSystem>
 {
     [SerializeField] private bool isActive;
-    [SerializeField] private GameplayCardUI focusedCard;
+    [SerializeField] private HandCard focusedCard;
     [SerializeField] private bool isFaceDown;
 
     [Header("Cache")]
@@ -21,9 +21,9 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         BaseAwake(this);
     }
 
-    public void SetupAndShow(GameplayCardUI cardUI)
+    public void SetupAndShow(HandCard handCard)
     {
-        var cardData = cardUI.GetCardData();
+        var cardData = handCard.GetCardData();
         focusedCard.Setup(cardData);
 
         if(cardData.IsMonsterCard())
