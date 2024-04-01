@@ -25,6 +25,7 @@ public class GameplayCardUI : MonoBehaviour
         Setup();
     }
 
+    // TODO: called by its spawner in the further logic
     public void Setup()
     {
         if(cardData == null)
@@ -43,6 +44,8 @@ public class GameplayCardUI : MonoBehaviour
 
     private void SetupData()
     {
+        isSelected = false;
+
         baseImage.color = GameplayManager.Instance().GetGameplayCardUIBaseColor(cardData);
         var cardSprite = cardData.spriteBig;
         if (cardSprite == null)

@@ -2,13 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class HandFocusSystem : UIModal<HandFocusSystem>
 {
+    [SerializeField] private bool isActive;
     [SerializeField] private GameplayCardUI focusedCard;
-    [SerializeField] private bool isFacedown;
+    [SerializeField] private bool isFaceDown;
 
     [Header("Cache")]
     [SerializeField] private GuardianStarOptionSelector selector;
+    [SerializeField] private GameObject faceDownCardImage;
+    [SerializeField] private GameObject faceDownButton;
+    [SerializeField] private GameObject faceUpButton;
+
 
     private void Awake()
     {
@@ -31,9 +37,49 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         }
 
         Show();
+        SetToFaceUp();
+    }
+
+    public void SetToFaceUp()
+    {
+        if (isFaceDown == false) return;
+
+        isFaceDown = false;
+        faceDownCardImage.SetActive(false);
+        faceDownButton.SetActive(true);
+        faceUpButton.SetActive(false);
+    }
+
+    public void SetToFaceDown()
+    {
+        if (isFaceDown == true) return;
+
+        isFaceDown = true;
+        faceDownCardImage.SetActive(true);
+        faceDownButton.SetActive(false);
+        faceUpButton.SetActive(true);
+    }
+
+    public void PlayCard()
+    {
+
     }
 
 
+
+
+
+    public override void Show()
+    {
+        base.Show();
+        isActive = true;
+    }
+
+    public override void Hide()
+    {
+        base.Hide();
+        isActive = false;
+    }
 
     private void OnDestroy()
     {
