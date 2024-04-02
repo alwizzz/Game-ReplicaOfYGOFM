@@ -19,7 +19,7 @@ public class FieldCardContainer : CardContainer
     public FieldCard GetCard() => containedFieldCard;
     public bool IsEmpty() => (containedFieldCard == null ? true : false);
 
-    public void SetCard(FieldCard fieldCard, bool flipY = false)
+    public void SetCard(FieldCard fieldCard)
     {
         if (containedFieldCard != null)
         {
@@ -50,7 +50,14 @@ public class FieldCardContainer : CardContainer
         if (isSelected) return;
 
         isSelected = true;
-        GameplayManager.Instance().FieldSystem().SetSelectedCardContainer(this);
+
+        if (IsPlayerOwned())
+        {
+            GameplayManager.Instance().PlayerFieldSystem().SetSelectedCardContainer(this);
+        } else
+        {
+            GameplayManager.Instance().EnemyFieldSystem().SetSelectedCardContainer(this);
+        }
     }
 
     public void Unselect()

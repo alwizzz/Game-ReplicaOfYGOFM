@@ -2,24 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Enums;
+
 public class GameplayManager : StaticReference<GameplayManager>
 {
-    public enum Turn
-    {
-        Player,
-        Opponent
-    }
-
-    public enum Phase
-    {
-        DrawPhase,
-        HandPhase,
-        FocusPhase,
-        FieldPhase,
-        EndPhase
-    }
-
-    [SerializeField] private Turn turn;
+    [SerializeField] private Side turn;
     [SerializeField] private Phase phase;
 
     [Header("Player Parameters")]
@@ -27,10 +14,10 @@ public class GameplayManager : StaticReference<GameplayManager>
     [SerializeField] private HandFocusSystem playerHandFocusSystem;
     [SerializeField] private FieldSystem playerFieldSystem;
 
-    [Header("Opponent Parameters")]
-    [SerializeField] private HandSystem opponentHandSystem;
-    [SerializeField] private HandFocusSystem opponentHandFocusSystem;
-    [SerializeField] private FieldSystem opponentFieldSystem;
+    [Header("Enemy Parameters")]
+    [SerializeField] private HandSystem enemyHandSystem;
+    [SerializeField] private HandFocusSystem enemyHandFocusSystem;
+    [SerializeField] private FieldSystem enemyFieldSystem;
 
     [Header("Caches")]
     [SerializeField] private Transform offscreenParking;
@@ -48,15 +35,20 @@ public class GameplayManager : StaticReference<GameplayManager>
 
     private void Debug()
     {
-        // spawn monster card on opponent field
+        // spawn monster card on enemy field
         var cardData = Resources.Load<Card>("CardLibrary/038-NormalMonster-GaiaTheFierceKnight");
-        var fieldCardContainer = opponentFieldSystem.GetFrontRankContainers()[0];
-        opponentFieldSystem.DebugSpawnFieldCard(cardData, false, fieldCardContainer);
-        print("DEBUG: spawned monster card on opponent field");
+        var fieldCardContainer = enemyFieldSystem.GetFrontRankContainers()[0];
+        enemyFieldSystem.DebugSpawnFieldCard(cardData, false, fieldCardContainer);
+        print("DEBUG: spawned monster card on enemy field");
     }
 
 
-    public bool IsPlayerTurn() => (turn == Turn.Player ? true : false);
+    public bool IsPlayerTurn() => (turn == Side.Player ? true : false);
+
+
+    // considering turn,
+    // on player turn, opponent is the enemy
+    // on enemy turn, opponent is the player
 
     public HandSystem HandSystem()
     {
@@ -64,9 +56,9 @@ public class GameplayManager : StaticReference<GameplayManager>
         {
             return playerHandSystem;
         }
-        return opponentHandSystem;
+        return enemyHandSystem;
     }
-    // getting opponent's hand system is currently unnecessary
+    // getting enemy's hand system is currently unnecessary
 
     public HandFocusSystem HandFocusSystem()
     {
@@ -74,9 +66,9 @@ public class GameplayManager : StaticReference<GameplayManager>
         {
             return playerHandFocusSystem;
         }
-        return opponentHandFocusSystem;
+        return enemyHandFocusSystem;
     }
-    // getting opponent's hand focus system is currently unnecessary
+    // getting enemy's hand focus system is currently unnecessary
 
 
     public FieldSystem FieldSystem()
@@ -85,19 +77,25 @@ public class GameplayManager : StaticReference<GameplayManager>
         {
             return playerFieldSystem;
         }
-        return opponentFieldSystem;
+        return enemyFieldSystem;
     }
     public FieldSystem OpponentFieldSystem()
     {
         if (IsPlayerTurn())
         {
-            return opponentFieldSystem;
+            return enemyFieldSystem;
         }
         return playerFieldSystem;
     }
 
 
-
+    // direct getter without considering which turn
+    public HandSystem PlayerHandSystem() => playerHandSystem;
+    public HandSystem EnemyHandSystem() => enemyHandSystem;
+    public HandFocusSystem PlayerHandFocusSystem() => playerHandFocusSystem;
+    public HandFocusSystem EnemyHandFocusSystem() => enemyHandFocusSystem;
+    public FieldSystem PlayerFieldSystem() => playerFieldSystem;
+    public FieldSystem EnemyFieldSystem() => enemyFieldSystem;
 
 
 

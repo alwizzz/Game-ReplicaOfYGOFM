@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Enums;
+
 public class FieldCard : GameplayCard
 {
     [Header("Field Card")]
+    [SerializeField] private GuardianStar selectedGuardianStar;
     [SerializeField] private bool inAttackPosition;
     [SerializeField] private bool isFaceDown;
     [SerializeField] private FieldCardContainer container;
@@ -49,4 +52,10 @@ public class FieldCard : GameplayCard
         isFaceDown = true;
         faceDownImage.SetActive(true);
     }
+
+    public void SetSelectedGuardianStar(GuardianStar value)
+    {
+        selectedGuardianStar = value;
+    }
+    public GuardianStar GetSelectedGuardianStar() => selectedGuardianStar;
 }

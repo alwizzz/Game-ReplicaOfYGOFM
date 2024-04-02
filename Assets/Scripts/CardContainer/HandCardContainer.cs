@@ -51,7 +51,14 @@ public class HandCardContainer : CardContainer
         if (IsEmpty()) return; // unable to be selected if empty
 
         isSelected = true;
-        GameplayManager.Instance().HandSystem().SetSelectedCardContainer(this);
+        if (IsPlayerOwned())
+        {
+            GameplayManager.Instance().PlayerHandSystem().SetSelectedCardContainer(this);
+        }
+        else
+        {
+            GameplayManager.Instance().EnemyHandSystem().SetSelectedCardContainer(this);
+        }
     }
 
     public void Unselect()

@@ -65,7 +65,8 @@ public class HandFocusSystem : UIModal
     {
         GameplayManager.Instance().FieldSystem().SpawnFieldCard(
             focusedCard.GetCardData(),
-            isFaceDown
+            isFaceDown,
+            selector.GetSelectedGuardianStar()
         );
 
         Hide();

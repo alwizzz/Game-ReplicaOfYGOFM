@@ -4,6 +4,22 @@ using UnityEngine;
 
 namespace Enums
 {
+    public enum Side
+    { 
+        Player,
+        Enemy
+    }
+    public enum Phase
+    {
+        DrawPhase,
+        HandPhase,
+        FocusPhase,
+        FieldPhase,
+        EndPhase
+    }
+
+
+
     public enum MonsterType
     {
         Aqua,

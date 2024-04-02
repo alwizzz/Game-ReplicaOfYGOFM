@@ -4,8 +4,13 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+using Enums;
+
 public class CardInformationDisplay : MonoBehaviour
 {
+    [SerializeField] private bool onField;
+
+    [Header("Caches")]
     [SerializeField] private GameObject nameOverlay;
     [SerializeField] private GameObject attributesOverlay;
     [SerializeField] private TextMeshProUGUI nameText;
@@ -20,6 +25,9 @@ public class CardInformationDisplay : MonoBehaviour
     private void Awake()
     {
         ResetInformation();
+
+        if (!onField) return; // only the selected guardian star is used in field
+        guardianStar1Image.transform.parent.gameObject.SetActive(false);
     }
     public void UpdateInformation(GameplayCard card)
     {
@@ -43,10 +51,22 @@ public class CardInformationDisplay : MonoBehaviour
 
             typeImage.sprite = ResourceManager
                 .Instance().GetTypeIcon(monsterData.type);
-            guardianStar1Image.sprite = ResourceManager
-                .Instance().GetGuardianStarIcon(monsterData.guardianStarOption1);
-            guardianStar2Image.sprite = ResourceManager
-                .Instance().GetGuardianStarIcon(monsterData.guardianStarOption2);
+
+            if(onField)
+            {
+                var fieldCard = (FieldCard)card;
+                var selectedGuardianStar = fieldCard.GetSelectedGuardianStar();
+
+                guardianStar2Image.sprite = ResourceManager
+                    .Instance().GetGuardianStarIcon(selectedGuardianStar);
+            } else
+            {
+                guardianStar1Image.sprite = ResourceManager
+                    .Instance().GetGuardianStarIcon(monsterData.guardianStarOption1);
+                guardianStar2Image.sprite = ResourceManager
+                    .Instance().GetGuardianStarIcon(monsterData.guardianStarOption2);
+            }
+
         }
         else
         {

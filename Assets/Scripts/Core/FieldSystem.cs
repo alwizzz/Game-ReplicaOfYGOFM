@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Enums;
+
 public class FieldSystem : MonoBehaviour
 {
     [SerializeField] private bool isOnSelection;
@@ -39,6 +41,7 @@ public class FieldSystem : MonoBehaviour
         selectedFieldCardContainer = fieldCardContainer;
         UpdateFieldSelector();
 
+        // TODO: manage hiding info on opponent's facedown card
         if(selectedFieldCardContainer.IsEmpty())
         {
             UpdateInformationDisplay(reset:true);
@@ -83,6 +86,8 @@ public class FieldSystem : MonoBehaviour
         UpdateInformationDisplay(reset:true);
     }
 
+    #region Selection Options
+
     public void OpenFullSelection(bool maintainSelection = false)
     {
         isOnSelection = true;
@@ -116,16 +121,19 @@ public class FieldSystem : MonoBehaviour
         SetSelectedCardContainer(backRankFieldCardContainers[0]);
     }
 
-    public void CloseSelection()
+    public void CloseSelection(bool maintainSelection = false)
     {
         isOnSelection = false;
         frontRankOverlay.SetActive(true);
         backRankOverlay.SetActive(true);
 
+        if (maintainSelection) return;
         ResetSelection();
     }
 
-    public void SpawnFieldCard(Card cardData, bool isFacedown)
+    #endregion
+
+    public void SpawnFieldCard(Card cardData, bool isFacedown, GuardianStar selectedGuardianStar)
     {
         if (!isOnSelection) return;
 
@@ -146,7 +154,9 @@ public class FieldSystem : MonoBehaviour
         {
             spawnedFieldCard.SetToFaceUp();
         }
+        spawnedFieldCard.SetSelectedGuardianStar(selectedGuardianStar);
         selectedFieldCardContainer.SetCard(spawnedFieldCard);
+        UpdateInformationDisplay();
     }
 
     #region Field Phase
@@ -181,8 +191,15 @@ public class FieldSystem : MonoBehaviour
         } else
         {
             // battle mode
-            print("BATTLE MODE");
+            OpenBattleMode();
         }
+    }
+
+    private void OpenBattleMode()
+    {
+        print("BATTLE MODE");
+        CloseSelection(maintainSelection:true);
+        GameplayManager.Instance().OpponentFieldSystem().OpenFrontRankSelection();
     }
 
     #endregion
@@ -213,7 +230,8 @@ public class FieldSystem : MonoBehaviour
         {
             spawnedFieldCard.SetToFaceUp();
         }
-        fieldCardContainer.SetCard(spawnedFieldCard, flipY:false);
+        spawnedFieldCard.SetSelectedGuardianStar(((MonsterCard)cardData).guardianStarOption1);
+        fieldCardContainer.SetCard(spawnedFieldCard);
 
     }
 
