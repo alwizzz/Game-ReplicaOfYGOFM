@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class CardInformationDisplay : MonoBehaviour
 {
+    [SerializeField] private GameObject nameOverlay;
     [SerializeField] private GameObject attributesOverlay;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI attackPointText;
@@ -15,13 +16,25 @@ public class CardInformationDisplay : MonoBehaviour
     [SerializeField] private Image guardianStar1Image;
     [SerializeField] private Image guardianStar2Image;
 
-    public void UpdateInformation(HandCard handCard)
+
+    private void Awake()
     {
-        var data = handCard.GetCardData();
+        ResetInformation();
+    }
+    public void UpdateInformation(GameplayCard card)
+    {
+        if(card == null)
+        {
+            print("ERROR: card is null");
+            return;
+        }
+
+        var data = card.GetCardData();
         nameText.text = data.cardName;
         if (data.IsMonsterCard())
         {
             var monsterData = (MonsterCard)data;
+            nameOverlay.SetActive(false);
             attributesOverlay.SetActive(false);
 
             attackPointText.text = monsterData.attackPoint.ToString();
@@ -37,7 +50,15 @@ public class CardInformationDisplay : MonoBehaviour
         }
         else
         {
+            nameOverlay.SetActive(false);
             attributesOverlay.SetActive(true);
         }
+    }
+
+    public void ResetInformation()
+    {
+        // not necessarily resetting the info, just hiding them by overlaying
+        nameOverlay.SetActive(true);
+        attributesOverlay.SetActive(true);
     }
 }

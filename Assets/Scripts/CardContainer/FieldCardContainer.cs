@@ -1,0 +1,64 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class FieldCardContainer : CardContainer
+{
+    public enum Rank
+    { 
+        FrontRank,
+        BackRank
+    }
+
+    [SerializeField] private Rank rank;
+
+    //[SerializeField] private int index;
+    [SerializeField] private FieldCard containedFieldCard;
+    [SerializeField] private bool isSelected;
+
+    public FieldCard GetCard() => containedFieldCard;
+    public bool IsEmpty() => (containedFieldCard == null ? true : false);
+
+    public void SetCard(FieldCard fieldCard)
+    {
+        if (containedFieldCard != null)
+        {
+            print("ERROR: attempt to set contained card when currently one exists, aborting...");
+            return;
+        }
+
+        MovePositionOnContainer(fieldCard.transform, isSettingParent: true);
+        containedFieldCard = fieldCard;
+        containedFieldCard.SetContainer(this);
+    }
+
+    public void RemoveCard()
+    {
+        if (containedFieldCard == null)
+        {
+            print("WARNING: attempt to remove contained card when it is already null");
+            return;
+        }
+
+        containedFieldCard.ResetContainer();
+        containedFieldCard = null;
+    }
+
+
+    public void Select()
+    {
+        if (isSelected) return;
+
+        isSelected = true;
+        FieldSystem.Instance().SetSelectedCardContainer(this);
+    }
+
+    public void Unselect()
+    {
+        if (!isSelected) return;
+
+        isSelected = false;
+    }
+
+
+}

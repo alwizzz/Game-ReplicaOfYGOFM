@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HandCardContainer : MonoBehaviour
+public class HandCardContainer : CardContainer
 {
     //[SerializeField] private int index;
     [SerializeField] private HandCard containedHandCard;
@@ -20,8 +20,8 @@ public class HandCardContainer : MonoBehaviour
         }
 
         MovePositionOnContainer(handCard.transform, isSettingParent:true);
-        handCard.SetContainer(this);
         containedHandCard = handCard;
+        containedHandCard.SetContainer(this);
     }
 
     public void RemoveCard()
@@ -45,18 +45,10 @@ public class HandCardContainer : MonoBehaviour
         container.SetCard(tempHandCard);
     }
 
-    public void MovePositionOnContainer(Transform obj, bool isSettingParent=false)
-    {
-        obj.position = transform.position;
-        if(isSettingParent)
-        {
-            obj.SetParent(transform);
-        }
-    }
-
     public void Select()
     {
         if (isSelected) return;
+        if (IsEmpty()) return; // unable to be selected if empty
 
         isSelected = true;
         HandSystem.Instance().SetSelectedCardContainer(this);

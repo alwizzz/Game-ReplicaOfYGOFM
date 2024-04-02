@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class HandFocusSystem : UIModal<HandFocusSystem>
 {
-    [SerializeField] private bool isActive;
     [SerializeField] private HandCard focusedCard;
     [SerializeField] private bool isFaceDown;
 
@@ -31,9 +30,11 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
             var data = (MonsterCard)cardData;
             selector.gameObject.SetActive(true);
             selector.Setup(data.guardianStarOption1, data.guardianStarOption2);
+            FieldSystem.Instance().OpenFrontRankSelection();
         } else
         {
             selector.gameObject.SetActive(false);
+            FieldSystem.Instance().OpenBackRankSelection();
         }
 
         Show();
@@ -65,21 +66,6 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
     }
 
-
-
-
-
-    public override void Show()
-    {
-        base.Show();
-        isActive = true;
-    }
-
-    public override void Hide()
-    {
-        base.Hide();
-        isActive = false;
-    }
 
     private void OnDestroy()
     {

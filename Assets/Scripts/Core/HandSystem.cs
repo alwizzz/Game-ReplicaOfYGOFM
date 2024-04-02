@@ -21,7 +21,7 @@ public class HandSystem : UIModal<HandSystem>
     [SerializeField] private GameObject handSelector;
     [SerializeField] private CardInformationDisplay cardInformationDisplay;
 
-    [SerializeField] private HandFocusSystem handFocusSystem;
+    //[SerializeField] private HandFocusSystem handFocusSystem;
     [SerializeField] private GameObject handOverlay;
 
 
@@ -53,7 +53,6 @@ public class HandSystem : UIModal<HandSystem>
     private void UpdateHandSelector()
     {
         selectedHandCardContainer.MovePositionOnContainer(handSelector.transform);
-        //handSelector.transform.position = selectedHandCardContainer.transform.position;
     }
 
     private void UpdateInformationDisplay()
@@ -66,18 +65,20 @@ public class HandSystem : UIModal<HandSystem>
         if (isFocusing) return;
 
         isFocusing = true;
-        handFocusSystem.SetupAndShow(selectedHandCardContainer.GetCard()); ;
-        handOverlay.SetActive(true);
+        //handOverlay.SetActive(true); // unused as it will then be hidden
+
+        HandFocusSystem.Instance().SetupAndShow(selectedHandCardContainer.GetCard()); ;
+        Hide();
     }
 
-    public void UnfocusSelectedCard()
-    {
-        if (!isFocusing) return;
+    //public void UnfocusSelectedCard()
+    //{
+    //    if (!isFocusing) return;
 
-        isFocusing = false;
-        handFocusSystem.Hide();
-        handOverlay.SetActive(false);
-    }
+    //    isFocusing = false;
+    //    handFocusSystem.Hide();
+    //    handOverlay.SetActive(false);
+    //}
 
 
     #region Update and Organize Hand
