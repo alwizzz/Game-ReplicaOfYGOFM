@@ -41,6 +41,21 @@ public class GameplayManager : StaticReference<GameplayManager>
         BaseAwake(this);
     }
 
+    private void Start()
+    {
+        Debug();
+    }
+
+    private void Debug()
+    {
+        // spawn monster card on opponent field
+        var cardData = Resources.Load<Card>("CardLibrary/038-NormalMonster-GaiaTheFierceKnight");
+        var fieldCardContainer = opponentFieldSystem.GetFrontRankContainers()[0];
+        opponentFieldSystem.DebugSpawnFieldCard(cardData, false, fieldCardContainer);
+        print("DEBUG: spawned monster card on opponent field");
+    }
+
+
     public bool IsPlayerTurn() => (turn == Turn.Player ? true : false);
 
     public HandSystem HandSystem()

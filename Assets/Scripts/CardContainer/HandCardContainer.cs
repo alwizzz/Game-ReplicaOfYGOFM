@@ -19,7 +19,7 @@ public class HandCardContainer : CardContainer
             return;
         }
 
-        MovePositionOnContainer(handCard.transform, isSettingParent:true);
+        MovePositionOnContainer(handCard.transform, setParent:true);
         containedHandCard = handCard;
         containedHandCard.SetContainer(this);
     }

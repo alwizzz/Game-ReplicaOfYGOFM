@@ -19,7 +19,7 @@ public class FieldCardContainer : CardContainer
     public FieldCard GetCard() => containedFieldCard;
     public bool IsEmpty() => (containedFieldCard == null ? true : false);
 
-    public void SetCard(FieldCard fieldCard)
+    public void SetCard(FieldCard fieldCard, bool flipY = false)
     {
         if (containedFieldCard != null)
         {
@@ -27,7 +27,7 @@ public class FieldCardContainer : CardContainer
             return;
         }
 
-        MovePositionOnContainer(fieldCard.transform, isSettingParent: true);
+        MovePositionOnContainer(fieldCard.transform, setParent: true);
         containedFieldCard = fieldCard;
         containedFieldCard.SetContainer(this);
     }

@@ -24,7 +24,7 @@ public class FieldSystem : MonoBehaviour
 
 
 
-    private void Awake()
+    private void Start()
     {
         CloseSelection();
     }
@@ -183,6 +183,38 @@ public class FieldSystem : MonoBehaviour
             // battle mode
             print("BATTLE MODE");
         }
+    }
+
+    #endregion
+
+    public List<FieldCardContainer> GetFrontRankContainers() => frontRankFieldCardContainers;
+    public List<FieldCardContainer> GetBackRankContainers() => backRankFieldCardContainers;
+
+
+    #region DEBUG
+
+    public void DebugSpawnFieldCard(Card cardData, bool isFacedown, FieldCardContainer fieldCardContainer)
+    {
+        //if (selectedFieldCardContainer.IsEmpty() == false)
+        //{
+        //    // currently unable to spawn on occupied container
+        //    // TODO: implement fusion/equip in this manner
+        //    return;
+        //}
+
+        var spawnedFieldCard = Instantiate(fieldCardPrefab);
+        spawnedFieldCard.Setup(cardData);
+        spawnedFieldCard.SetToAttackPosition(); // default when spawning
+        if (isFacedown)
+        {
+            spawnedFieldCard.SetToFaceDown();
+        }
+        else
+        {
+            spawnedFieldCard.SetToFaceUp();
+        }
+        fieldCardContainer.SetCard(spawnedFieldCard, flipY:false);
+
     }
 
     #endregion
