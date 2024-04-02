@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class SpellCard : NonMonsterCard
 {
-
+    public override sealed bool IsSpellCard() => true;
 }

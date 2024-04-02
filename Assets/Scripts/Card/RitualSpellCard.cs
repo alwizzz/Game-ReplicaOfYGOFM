@@ -9,5 +9,8 @@ using UnityEngine;
 )]
 public class RitualSpellCard : SpellCard
 {
-
+    public override void Activate()
+    {
+        Debug.Log("Activate RITUAL SPELL!");
+    }
 }

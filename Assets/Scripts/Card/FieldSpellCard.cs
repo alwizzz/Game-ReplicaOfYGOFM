@@ -9,5 +9,8 @@ using UnityEngine;
 )]
 public class FieldSpellCard : SpellCard
 {
-
+    public override void Activate()
+    {
+        Debug.Log("Activate FIELD SPELL!");
+    }
 }

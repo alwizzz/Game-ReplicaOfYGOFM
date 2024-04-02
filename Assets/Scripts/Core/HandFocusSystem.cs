@@ -69,6 +69,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         );
 
         Hide();
+        FieldSystem.Instance().StartFieldPhase();
     }
 
 

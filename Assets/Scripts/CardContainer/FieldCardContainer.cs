@@ -60,5 +60,5 @@ public class FieldCardContainer : CardContainer
         isSelected = false;
     }
 
-
+    public bool IsBackRank() => (rank == Rank.BackRank ? true : false);
 }

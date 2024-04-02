@@ -5,7 +5,7 @@ using UnityEngine;
 public class FieldCard : GameplayCard
 {
     [Header("Field Card")]
-    [SerializeField] private bool inAttackMode;
+    [SerializeField] private bool inAttackPosition;
     [SerializeField] private bool isFaceDown;
     [SerializeField] private FieldCardContainer container;
     [SerializeField] private GameObject faceDownImage;
@@ -17,15 +17,26 @@ public class FieldCard : GameplayCard
 
     public void ResetContainer() { container = null; }
 
-    public void SetToAttackMode()
+    public void SetToAttackPosition()
     {
-        inAttackMode = true;
+        inAttackPosition = true;
         transform.rotation = Quaternion.identity;
     }
-    public void SetToDefenseMode()
+    public void SetToDefensePosition()
     {
-        inAttackMode = false;
+        inAttackPosition = false;
         transform.rotation = Quaternion.Euler(0, 0, 90);
+    }
+
+    public void ChangePosition()
+    {
+        if(inAttackPosition)
+        {
+            SetToDefensePosition();
+        } else
+        {
+            SetToAttackPosition();
+        }
     }
 
     public void SetToFaceUp()

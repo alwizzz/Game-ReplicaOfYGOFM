@@ -9,5 +9,8 @@ using UnityEngine;
 )]
 public class NormalSpellCard : SpellCard
 {
-
+    public override void Activate()
+    {
+        Debug.Log("Activate NORMAL SPELL!");
+    }
 }

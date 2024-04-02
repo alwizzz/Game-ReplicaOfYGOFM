@@ -11,18 +11,18 @@ public class FieldSystem : StaticReference<FieldSystem>
     [SerializeField] private FieldCardContainer selectedFieldCardContainer;
 
     [Header("Caches")]
+    [SerializeField] private List<FieldCardContainer> frontRankFieldCardContainers;
+    [SerializeField] private List<FieldCardContainer> backRankFieldCardContainers;
     [SerializeField] private GameObject frontRankOverlay;
     [SerializeField] private GameObject backRankOverlay;
 
-    [SerializeField] private Transform offscreenParking;
-    [SerializeField] private List<FieldCardContainer> frontRankFieldCardContainers;
-    [SerializeField] private List<FieldCardContainer> backRankFieldCardContainers;
+    [SerializeField] private Transform offscreenParking; // TODO: put on GameplayManager
 
-    //[SerializeField] private List<GameplayCardUI> fieldCards;
     [SerializeField] private GameObject fieldSelector;
     //[SerializeField] private GameObject secondaryFieldSelector; //TODO on further logic like equip
 
     [SerializeField] private CardInformationDisplay cardInformationDisplay;
+    [SerializeField] private GameObject fieldPhaseButtons;
 
 
 
@@ -138,7 +138,7 @@ public class FieldSystem : StaticReference<FieldSystem>
 
         var spawnedFieldCard = Instantiate(fieldCardPrefab);
         spawnedFieldCard.Setup(cardData);
-        spawnedFieldCard.SetToAttackMode(); // default when spawning
+        spawnedFieldCard.SetToAttackPosition(); // default when spawning
         if(isFacedown)
         {
             spawnedFieldCard.SetToFaceDown();
@@ -148,6 +148,44 @@ public class FieldSystem : StaticReference<FieldSystem>
         }
         selectedFieldCardContainer.SetCard(spawnedFieldCard);
     }
+
+    #region Field Phase
+
+    public void StartFieldPhase()
+    {
+        OpenFullSelection();
+        fieldPhaseButtons.SetActive(true);
+    }
+
+    public void ChangeCardPosition()
+    {
+        if (selectedFieldCardContainer.IsBackRank()) return; // only front rank able to change position
+        if (selectedFieldCardContainer.IsEmpty()) return;
+
+        selectedFieldCardContainer.GetCard().ChangePosition();
+    }
+
+    public void UseFieldCard()
+    {
+        if (selectedFieldCardContainer.IsEmpty()) return;
+        if (selectedFieldCardContainer.IsBackRank())
+        {
+            var cardData = selectedFieldCardContainer.GetCard().GetCardData();
+            if (cardData.IsMonsterCard()) return; // backrank card should have be a NonMonsterCard
+
+            var nonMonsterCard = (NonMonsterCard)cardData;
+            if (!nonMonsterCard.IsSpellCard()) return; // do nothing if a trap card
+
+            var spellCard = (SpellCard)nonMonsterCard;
+            spellCard.Activate();
+        } else
+        {
+            // battle mode
+            print("BATTLE MODE");
+        }
+    }
+
+    #endregion
 
     private void OnDestroy()
     {
