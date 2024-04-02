@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 022
   cardName: Summoned Skull
-  spriteBig: {fileID: 0}
+  spriteBig: {fileID: 21300000, guid: 0e265e773233a3744a1d344f2efdac6f, type: 3}
   spriteSmall: {fileID: 0}
   type: 6
   guardianStarOption1: 3

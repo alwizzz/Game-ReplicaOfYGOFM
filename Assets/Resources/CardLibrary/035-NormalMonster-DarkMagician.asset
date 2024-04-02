@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 035
   cardName: Dark Magician
-  spriteBig: {fileID: 0}
+  spriteBig: {fileID: 21300000, guid: b7f2c869c71c87f41b09243611a24002, type: 3}
   spriteSmall: {fileID: 0}
   type: 15
   guardianStarOption1: 1

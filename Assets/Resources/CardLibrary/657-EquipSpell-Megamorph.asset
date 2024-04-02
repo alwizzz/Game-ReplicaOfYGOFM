@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 657
   cardName: Megamorph
-  spriteBig: {fileID: 0}
+  spriteBig: {fileID: 21300000, guid: f0c35780a3289d64b9375b5de47eaf42, type: 3}
   spriteSmall: {fileID: 0}
   attackPointIncrease: 1000
   defensePointIncrease: 1000
