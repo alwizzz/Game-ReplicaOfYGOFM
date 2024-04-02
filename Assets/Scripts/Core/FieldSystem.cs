@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FieldSystem : StaticReference<FieldSystem>
+public class FieldSystem : MonoBehaviour
 {
     [SerializeField] private bool isOnSelection;
 
@@ -16,8 +16,6 @@ public class FieldSystem : StaticReference<FieldSystem>
     [SerializeField] private GameObject frontRankOverlay;
     [SerializeField] private GameObject backRankOverlay;
 
-    [SerializeField] private Transform offscreenParking; // TODO: put on GameplayManager
-
     [SerializeField] private GameObject fieldSelector;
     //[SerializeField] private GameObject secondaryFieldSelector; //TODO on further logic like equip
 
@@ -28,7 +26,6 @@ public class FieldSystem : StaticReference<FieldSystem>
 
     private void Awake()
     {
-        BaseAwake(this);
         CloseSelection();
     }
 
@@ -55,7 +52,7 @@ public class FieldSystem : StaticReference<FieldSystem>
     {
         if(toOffscreen)
         {
-            fieldSelector.transform.position = offscreenParking.position;
+            GameplayManager.Instance().MoveToOffscreenParking(fieldSelector.transform);
             return;
         }
 
@@ -190,8 +187,4 @@ public class FieldSystem : StaticReference<FieldSystem>
 
     #endregion
 
-    private void OnDestroy()
-    {
-        BaseOnDestroy();
-    }
 }

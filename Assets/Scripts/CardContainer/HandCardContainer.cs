@@ -51,7 +51,7 @@ public class HandCardContainer : CardContainer
         if (IsEmpty()) return; // unable to be selected if empty
 
         isSelected = true;
-        HandSystem.Instance().SetSelectedCardContainer(this);
+        GameplayManager.Instance().HandSystem().SetSelectedCardContainer(this);
     }
 
     public void Unselect()

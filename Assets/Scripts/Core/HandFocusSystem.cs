@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class HandFocusSystem : UIModal<HandFocusSystem>
+public class HandFocusSystem : UIModal
 {
     [SerializeField] private HandCard focusedCard;
     [SerializeField] private bool isFaceDown;
@@ -17,7 +17,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
     private void Awake()
     {
-        BaseAwake(this);
+        BaseAwake();
     }
 
     public void SetupAndShow(HandCard handCard)
@@ -30,11 +30,11 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
             var data = (MonsterCard)cardData;
             selector.gameObject.SetActive(true);
             selector.Setup(data.guardianStarOption1, data.guardianStarOption2);
-            FieldSystem.Instance().OpenFrontRankSelection();
+            GameplayManager.Instance().FieldSystem().OpenFrontRankSelection();
         } else
         {
             selector.gameObject.SetActive(false);
-            FieldSystem.Instance().OpenBackRankSelection();
+            GameplayManager.Instance().FieldSystem().OpenBackRankSelection();
         }
 
         Show();
@@ -63,18 +63,13 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
     public void PlayCard()
     {
-        FieldSystem.Instance().SpawnFieldCard(
+        GameplayManager.Instance().FieldSystem().SpawnFieldCard(
             focusedCard.GetCardData(),
             isFaceDown
         );
 
         Hide();
-        FieldSystem.Instance().StartFieldPhase();
+        GameplayManager.Instance().FieldSystem().StartFieldPhase();
     }
 
-
-    private void OnDestroy()
-    {
-        BaseOnDestroy();
-    }
 }

@@ -50,7 +50,7 @@ public class FieldCardContainer : CardContainer
         if (isSelected) return;
 
         isSelected = true;
-        FieldSystem.Instance().SetSelectedCardContainer(this);
+        GameplayManager.Instance().FieldSystem().SetSelectedCardContainer(this);
     }
 
     public void Unselect()

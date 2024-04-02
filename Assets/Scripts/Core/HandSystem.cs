@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 
 
-public class HandSystem : UIModal<HandSystem>
+public class HandSystem : UIModal
 {
     [SerializeField] private HandCard handCardPrefab;
 
@@ -27,7 +27,7 @@ public class HandSystem : UIModal<HandSystem>
 
     private void Awake()
     {
-        BaseAwake(this);
+        BaseAwake();
         Show();
     }
 
@@ -67,7 +67,7 @@ public class HandSystem : UIModal<HandSystem>
         isFocusing = true;
         //handOverlay.SetActive(true); // unused as it will then be hidden
 
-        HandFocusSystem.Instance().SetupAndShow(selectedHandCardContainer.GetCard()); ;
+        GameplayManager.Instance().HandFocusSystem().SetupAndShow(selectedHandCardContainer.GetCard()); ;
         Hide();
     }
 
@@ -131,8 +131,4 @@ public class HandSystem : UIModal<HandSystem>
     #endregion
 
 
-    private void OnDestroy()
-    {
-        BaseOnDestroy();
-    }
 }
