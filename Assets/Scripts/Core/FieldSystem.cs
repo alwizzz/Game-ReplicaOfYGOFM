@@ -86,33 +86,36 @@ public class FieldSystem : StaticReference<FieldSystem>
         UpdateInformationDisplay(reset:true);
     }
 
-    public void OpenFullSelection()
+    public void OpenFullSelection(bool maintainSelection = false)
     {
         isOnSelection = true;
 
         frontRankOverlay.SetActive(false);
         backRankOverlay.SetActive(false);
 
+        if (maintainSelection) return;
         SetSelectedCardContainer(frontRankFieldCardContainers[0]);
     }
 
-    public void OpenFrontRankSelection()
+    public void OpenFrontRankSelection(bool maintainSelection = false)
     {
         isOnSelection = true;
 
         frontRankOverlay.SetActive(false);
         backRankOverlay.SetActive(true);
 
+        if (maintainSelection) return;
         SetSelectedCardContainer(frontRankFieldCardContainers[0]);
     }
 
-    public void OpenBackRankSelection()
+    public void OpenBackRankSelection(bool maintainSelection = false)
     {
         isOnSelection = true;
 
         frontRankOverlay.SetActive(true);
         backRankOverlay.SetActive(false);
 
+        if (maintainSelection) return;
         SetSelectedCardContainer(backRankFieldCardContainers[0]);
     }
 
@@ -153,7 +156,7 @@ public class FieldSystem : StaticReference<FieldSystem>
 
     public void StartFieldPhase()
     {
-        OpenFullSelection();
+        OpenFullSelection(true);
         fieldPhaseButtons.SetActive(true);
     }
 

@@ -377,11 +377,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8d4bb07070f8e946a8f9471f8ce1514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dummySpriteBig: {fileID: 21300000, guid: c1d15c1052945aa48bcfea9e5d19ed00, type: 3}
-  monsterCardColor: {r: 0.7686275, g: 0.69803923, b: 0.25882354, a: 1}
-  spellCardColor: {r: 0.4156863, g: 0.7137255, b: 0.32156864, a: 1}
-  trapCardColor: {r: 0.8313726, g: 0.4156863, b: 0.60784316, a: 1}
-  ritualCardColor: {r: 0.04705883, g: 0.27058825, b: 0.8588236, a: 1}
 --- !u!4 &35664128
 Transform:
   m_ObjectHideFlags: 0
@@ -3922,6 +3917,117 @@ MonoBehaviour:
   button2: {fileID: 718389856}
   imageIcon2: {fileID: 1936203740}
   text2: {fileID: 101830313}
+--- !u!1 &997327443
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 997327445}
+  - component: {fileID: 997327444}
+  m_Layer: 0
+  m_Name: ResourceManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &997327444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 997327443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7677044357754842b9f72f544054ecb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dummySprite: {fileID: 21300000, guid: c1d15c1052945aa48bcfea9e5d19ed00, type: 3}
+  typeIcons:
+  - name: Aqua
+    sprite: {fileID: 21300000, guid: 221cdcaa43741cf4998b5304410e470c, type: 3}
+  - name: Beast
+    sprite: {fileID: 21300000, guid: 0561964cc1d529542a9ed71ddd269f3f, type: 3}
+  - name: BeastWarrior
+    sprite: {fileID: 21300000, guid: 6ab8413d390418543a3e5671364fe0bc, type: 3}
+  - name: Dinosaur
+    sprite: {fileID: 21300000, guid: 85cbbc2cfc8f50a49b0561937485bac2, type: 3}
+  - name: Dragon
+    sprite: {fileID: 21300000, guid: ee7cf8542de236e449c7d0e4f9be0879, type: 3}
+  - name: Fairy
+    sprite: {fileID: 21300000, guid: 40ae02048e24621498a601a1b0bdf592, type: 3}
+  - name: Fiend
+    sprite: {fileID: 21300000, guid: f37d6d300a1a52d45ba1124e171ffe5b, type: 3}
+  - name: Fish
+    sprite: {fileID: 21300000, guid: 6fcad0df92c027d4595ace168e8966ed, type: 3}
+  - name: Insect
+    sprite: {fileID: 21300000, guid: b7d4288379db77944939857bb2677472, type: 3}
+  - name: Machine
+    sprite: {fileID: 21300000, guid: eceb5d6678522644c9c19ffb66c05c5d, type: 3}
+  - name: Plant
+    sprite: {fileID: 21300000, guid: 0aaf286ef39b7734eb96e30ae54bc860, type: 3}
+  - name: Pyro
+    sprite: {fileID: 21300000, guid: 1767ce89495fadd4aa524f36185cf707, type: 3}
+  - name: Reptile
+    sprite: {fileID: 21300000, guid: 9f220a89fde474f4e80dd92d1e33d39c, type: 3}
+  - name: Rock
+    sprite: {fileID: 21300000, guid: 58adbe6b835d47c45b1426f1c23649f8, type: 3}
+  - name: SeaSerpent
+    sprite: {fileID: 21300000, guid: 5bc747e62d2920742a122297f583e329, type: 3}
+  - name: Spellcaster
+    sprite: {fileID: 21300000, guid: 41a68484a09a64040b00653c10e7e3c2, type: 3}
+  - name: Thunder
+    sprite: {fileID: 21300000, guid: 2fc5427d59f4a304cb2d6d86ebf3c6a7, type: 3}
+  - name: Warrior
+    sprite: {fileID: 21300000, guid: 2cbb20758606080489a0c0f26aaebdb3, type: 3}
+  - name: WingedBeast
+    sprite: {fileID: 21300000, guid: 30e46ffc968c45e4eb3741b4fc8a4105, type: 3}
+  - name: Zombie
+    sprite: {fileID: 21300000, guid: 49f91dcc03c78684b9199781906255a7, type: 3}
+  guardianStarIcons:
+  - name: Jupiter
+    sprite: {fileID: 21300000, guid: 0910a73e3e87d5746a36e45dd3c2c9c6, type: 3}
+  - name: Mars
+    sprite: {fileID: 21300000, guid: cf2f909f5b335fe41a361d94333d126a, type: 3}
+  - name: Mercury
+    sprite: {fileID: 21300000, guid: a6d0914316c67b54f9a4395d7e14b769, type: 3}
+  - name: Moon
+    sprite: {fileID: 21300000, guid: 3fce34c5f97a017409e38bae396412ae, type: 3}
+  - name: Neptune
+    sprite: {fileID: 21300000, guid: d1d3312344bdf184d9bbc3424d9f232f, type: 3}
+  - name: Pluto
+    sprite: {fileID: 21300000, guid: 317151bb6417f9b409104debca13f55d, type: 3}
+  - name: Saturn
+    sprite: {fileID: 21300000, guid: 7728ade402d0f114ea0f350fdc84ac1f, type: 3}
+  - name: Sun
+    sprite: {fileID: 21300000, guid: 955e11142664d394ca197b5ca9297be4, type: 3}
+  - name: Uranus
+    sprite: {fileID: 21300000, guid: 87ffb849efa5afe43bcd10106ce17291, type: 3}
+  - name: Venus
+    sprite: {fileID: 21300000, guid: 01f8524a3fe6b9349bee2baa26cc9483, type: 3}
+  monsterCardColor: {r: 0.7960785, g: 0.7137255, b: 0.28627452, a: 1}
+  spellCardColor: {r: 0.48235297, g: 0.7411765, b: 0.4156863, a: 1}
+  trapCardColor: {r: 0.8980393, g: 0.49411768, b: 0.68235296, a: 1}
+  ritualCardColor: {r: 0.015686275, g: 0.23137257, b: 0.82745105, a: 1}
+--- !u!4 &997327445
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 997327443}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1031214258
 GameObject:
   m_ObjectHideFlags: 0
@@ -4835,114 +4941,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &1526630839
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1526630840}
-  - component: {fileID: 1526630841}
-  m_Layer: 0
-  m_Name: IconManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1526630840
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1526630839}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1526630841
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1526630839}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62f38a68a5e15574aaaf3cd6af102b45, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dummySprite: {fileID: 21300000, guid: c1d15c1052945aa48bcfea9e5d19ed00, type: 3}
-  levelIcons: []
-  typeIcons:
-  - name: Aqua
-    sprite: {fileID: 21300000, guid: 221cdcaa43741cf4998b5304410e470c, type: 3}
-  - name: Beast
-    sprite: {fileID: 21300000, guid: 0561964cc1d529542a9ed71ddd269f3f, type: 3}
-  - name: BeastWarrior
-    sprite: {fileID: 21300000, guid: 6ab8413d390418543a3e5671364fe0bc, type: 3}
-  - name: Dinosaur
-    sprite: {fileID: 21300000, guid: 85cbbc2cfc8f50a49b0561937485bac2, type: 3}
-  - name: Dragon
-    sprite: {fileID: 21300000, guid: ee7cf8542de236e449c7d0e4f9be0879, type: 3}
-  - name: Fairy
-    sprite: {fileID: 21300000, guid: 40ae02048e24621498a601a1b0bdf592, type: 3}
-  - name: Fiend
-    sprite: {fileID: 21300000, guid: f37d6d300a1a52d45ba1124e171ffe5b, type: 3}
-  - name: Fish
-    sprite: {fileID: 21300000, guid: 6fcad0df92c027d4595ace168e8966ed, type: 3}
-  - name: Insect
-    sprite: {fileID: 21300000, guid: b7d4288379db77944939857bb2677472, type: 3}
-  - name: Machine
-    sprite: {fileID: 21300000, guid: eceb5d6678522644c9c19ffb66c05c5d, type: 3}
-  - name: Plant
-    sprite: {fileID: 21300000, guid: 0aaf286ef39b7734eb96e30ae54bc860, type: 3}
-  - name: Pyro
-    sprite: {fileID: 21300000, guid: 1767ce89495fadd4aa524f36185cf707, type: 3}
-  - name: Reptile
-    sprite: {fileID: 21300000, guid: 9f220a89fde474f4e80dd92d1e33d39c, type: 3}
-  - name: Rock
-    sprite: {fileID: 21300000, guid: 58adbe6b835d47c45b1426f1c23649f8, type: 3}
-  - name: SeaSerpent
-    sprite: {fileID: 21300000, guid: 5bc747e62d2920742a122297f583e329, type: 3}
-  - name: Spellcaster
-    sprite: {fileID: 21300000, guid: 41a68484a09a64040b00653c10e7e3c2, type: 3}
-  - name: Thunder
-    sprite: {fileID: 21300000, guid: 2fc5427d59f4a304cb2d6d86ebf3c6a7, type: 3}
-  - name: Warrior
-    sprite: {fileID: 21300000, guid: 2cbb20758606080489a0c0f26aaebdb3, type: 3}
-  - name: WingedBeast
-    sprite: {fileID: 21300000, guid: 30e46ffc968c45e4eb3741b4fc8a4105, type: 3}
-  - name: Zombie
-    sprite: {fileID: 21300000, guid: 49f91dcc03c78684b9199781906255a7, type: 3}
-  guardianStarIcons:
-  - name: Jupiter
-    sprite: {fileID: 21300000, guid: 0910a73e3e87d5746a36e45dd3c2c9c6, type: 3}
-  - name: Mars
-    sprite: {fileID: 21300000, guid: cf2f909f5b335fe41a361d94333d126a, type: 3}
-  - name: Mercury
-    sprite: {fileID: 21300000, guid: a6d0914316c67b54f9a4395d7e14b769, type: 3}
-  - name: Moon
-    sprite: {fileID: 21300000, guid: 3fce34c5f97a017409e38bae396412ae, type: 3}
-  - name: Neptune
-    sprite: {fileID: 21300000, guid: d1d3312344bdf184d9bbc3424d9f232f, type: 3}
-  - name: Pluto
-    sprite: {fileID: 21300000, guid: 317151bb6417f9b409104debca13f55d, type: 3}
-  - name: Saturn
-    sprite: {fileID: 21300000, guid: 7728ade402d0f114ea0f350fdc84ac1f, type: 3}
-  - name: Sun
-    sprite: {fileID: 21300000, guid: 955e11142664d394ca197b5ca9297be4, type: 3}
-  - name: Uranus
-    sprite: {fileID: 21300000, guid: 87ffb849efa5afe43bcd10106ce17291, type: 3}
-  - name: Venus
-    sprite: {fileID: 21300000, guid: 01f8524a3fe6b9349bee2baa26cc9483, type: 3}
 --- !u!1 &1543891168
 GameObject:
   m_ObjectHideFlags: 0
@@ -7068,7 +7066,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 857886468}
   - {fileID: 35664128}
-  - {fileID: 1526630840}
+  - {fileID: 997327445}
   - {fileID: 1340304228}
   - {fileID: 762765502}
   - {fileID: 727214031}

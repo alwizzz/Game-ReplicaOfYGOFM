@@ -22,12 +22,12 @@ public abstract class GameplayCard : MonoBehaviour
     {
         this.cardData = cardData;
 
-        baseImage.color = GameplayManager.Instance().GetGameplayCardUIBaseColor(cardData);
+        baseImage.color = ResourceManager.Instance().GetGameplayCardBaseColor(cardData);
         var cardSprite = cardData.spriteBig;
         if (cardSprite == null)
         {
             print("WARNING: cardData's sprite is null, using dummy sprite instead");
-            cardSprite = GameplayManager.Instance().GetDummySprite();
+            cardSprite = ResourceManager.Instance().GetDummySprite();
         }
         cardImage.sprite = cardSprite;
 

@@ -26,11 +26,11 @@ public class GuardianStarOptionSelector : MonoBehaviour
     {
         this.guardianStarOption1 = guardianStarOption1;
         text1.text = guardianStarOption1.ToString();
-        imageIcon1.sprite = IconManager.Instance().GetGuardianStarIcon(guardianStarOption1);
+        imageIcon1.sprite = ResourceManager.Instance().GetGuardianStarIcon(guardianStarOption1);
 
         this.guardianStarOption2 = guardianStarOption2;
         text2.text = guardianStarOption2.ToString();
-        imageIcon2.sprite = IconManager.Instance().GetGuardianStarIcon(guardianStarOption2);
+        imageIcon2.sprite = ResourceManager.Instance().GetGuardianStarIcon(guardianStarOption2);
 
 
         SelectOption1(); // default value

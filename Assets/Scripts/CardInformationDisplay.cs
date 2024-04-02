@@ -41,11 +41,11 @@ public class CardInformationDisplay : MonoBehaviour
             defensePointText.text = monsterData.defensePoint.ToString();
             levelText.text = monsterData.level.ToString();
 
-            typeImage.sprite = IconManager
+            typeImage.sprite = ResourceManager
                 .Instance().GetTypeIcon(monsterData.type);
-            guardianStar1Image.sprite = IconManager
+            guardianStar1Image.sprite = ResourceManager
                 .Instance().GetGuardianStarIcon(monsterData.guardianStarOption1);
-            guardianStar2Image.sprite = IconManager
+            guardianStar2Image.sprite = ResourceManager
                 .Instance().GetGuardianStarIcon(monsterData.guardianStarOption2);
         }
         else

@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 using Enums;
 
-public class IconManager : StaticReference<IconManager>
+// TODO: name isnt that suitable because it also stores color informations and dummy sprites
+public class ResourceManager : StaticReference<ResourceManager>
 {
     [System.Serializable]
     public struct NamedSprite
@@ -16,9 +16,15 @@ public class IconManager : StaticReference<IconManager>
 
     [SerializeField] private Sprite dummySprite;
 
-    [SerializeField] private List<NamedSprite> levelIcons;
+    //[SerializeField] private List<NamedSprite> levelIcons;
     [SerializeField] private List<NamedSprite> typeIcons;
     [SerializeField] private List<NamedSprite> guardianStarIcons;
+
+    [Header("Color Parameters")]
+    [SerializeField] private Color monsterCardColor;
+    [SerializeField] private Color spellCardColor;
+    [SerializeField] private Color trapCardColor;
+    [SerializeField] private Color ritualCardColor;
 
     private void Awake()
     {
@@ -50,6 +56,35 @@ public class IconManager : StaticReference<IconManager>
         return spriteResult;
     }
 
+    public Sprite GetDummySprite() => dummySprite;
+
+    public Color GetGameplayCardBaseColor(Card cardData)
+    {
+        if (cardData is MonsterCard)
+        {
+            return monsterCardColor;
+        }
+        else if (cardData is SpellCard)
+        {
+            if (cardData is RitualSpellCard)
+            {
+                return ritualCardColor;
+            }
+            else
+            {
+                return spellCardColor;
+            }
+        }
+        else if (cardData is TrapCard)
+        {
+            return trapCardColor;
+        }
+        else
+        {
+            print("WARNING: invalid card data types, returning white color as null");
+            return Color.white;
+        }
+    }
 
     private void OnDestroy()
     {
