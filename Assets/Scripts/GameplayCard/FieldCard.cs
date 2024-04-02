@@ -41,6 +41,7 @@ public class FieldCard : GameplayCard
             SetToAttackPosition();
         }
     }
+    public bool InAttackPosition() => inAttackPosition;
 
     public void SetToFaceUp()
     {

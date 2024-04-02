@@ -68,4 +68,13 @@ public class FieldCardContainer : CardContainer
     }
 
     public bool IsBackRank() => (rank == Rank.BackRank ? true : false);
+
+    public void SetAsAttackerInBattle()
+    {
+        BattleSystem.Instance().SetAttackerReference(containedFieldCard);
+    }
+    public void SetAsAttackedInBattle()
+    {
+        BattleSystem.Instance().SetAttackedReference(containedFieldCard);
+    }
 }

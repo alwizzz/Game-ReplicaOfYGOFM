@@ -191,6 +191,9 @@ public class FieldSystem : MonoBehaviour
         } else
         {
             // battle mode
+            var fieldCard = selectedFieldCardContainer.GetCard();
+            if (fieldCard.InAttackPosition() == false) return;
+
             OpenBattleMode();
         }
     }
@@ -198,7 +201,9 @@ public class FieldSystem : MonoBehaviour
     private void OpenBattleMode()
     {
         print("BATTLE MODE");
+        selectedFieldCardContainer.SetAsAttackerInBattle();
         CloseSelection(maintainSelection:true);
+
         GameplayManager.Instance().OpponentFieldSystem().OpenFrontRankSelection();
     }
 
@@ -206,7 +211,7 @@ public class FieldSystem : MonoBehaviour
 
     public List<FieldCardContainer> GetFrontRankContainers() => frontRankFieldCardContainers;
     public List<FieldCardContainer> GetBackRankContainers() => backRankFieldCardContainers;
-
+    public FieldCardContainer GetSelectedFieldContainer() => selectedFieldCardContainer;
 
     #region DEBUG
 

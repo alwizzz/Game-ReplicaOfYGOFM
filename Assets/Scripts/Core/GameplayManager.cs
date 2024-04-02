@@ -98,7 +98,17 @@ public class GameplayManager : StaticReference<GameplayManager>
     public FieldSystem EnemyFieldSystem() => enemyFieldSystem;
 
 
+    public void SetAttackedOnOpponentInBattle()
+    {
+        var opponentSelectedFieldContainer = OpponentFieldSystem().GetSelectedFieldContainer();
+        if (opponentSelectedFieldContainer == null)
+        {
+            print("ERROR: currently no selected field container on opponent");
+            return;
+        }
 
+        opponentSelectedFieldContainer.SetAsAttackedInBattle();
+    }
 
 
     public void MoveToOffscreenParking(Transform obj)
