@@ -63,7 +63,12 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
     public void PlayCard()
     {
+        FieldSystem.Instance().SpawnFieldCard(
+            focusedCard.GetCardData(),
+            isFaceDown
+        );
 
+        Hide();
     }
 
 

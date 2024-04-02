@@ -5,9 +5,9 @@ using UnityEngine;
 public class FieldSystem : StaticReference<FieldSystem>
 {
     [SerializeField] private bool isOnSelection;
-    [SerializeField] private FieldCard fieldCardPrefab;
 
     [Header("States")]
+    [SerializeField] private FieldCard fieldCardPrefab;
     [SerializeField] private FieldCardContainer selectedFieldCardContainer;
 
     [Header("Caches")]
@@ -41,7 +41,14 @@ public class FieldSystem : StaticReference<FieldSystem>
 
         selectedFieldCardContainer = fieldCardContainer;
         UpdateFieldSelector();
-        UpdateInformationDisplay();
+
+        if(selectedFieldCardContainer.IsEmpty())
+        {
+            UpdateInformationDisplay(reset:true);
+        } else
+        {
+            UpdateInformationDisplay();
+        }
     }
 
     private void UpdateFieldSelector(bool toOffscreen = false)
@@ -118,10 +125,29 @@ public class FieldSystem : StaticReference<FieldSystem>
         ResetSelection();
     }
 
+    public void SpawnFieldCard(Card cardData, bool isFacedown)
+    {
+        if (!isOnSelection) return;
 
+        if(selectedFieldCardContainer.IsEmpty() == false)
+        {
+            // currently unable to spawn on occupied container
+            // TODO: implement fusion/equip in this manner
+            return;
+        }
 
-
-
+        var spawnedFieldCard = Instantiate(fieldCardPrefab);
+        spawnedFieldCard.Setup(cardData);
+        spawnedFieldCard.SetToAttackMode(); // default when spawning
+        if(isFacedown)
+        {
+            spawnedFieldCard.SetToFaceDown();
+        } else
+        {
+            spawnedFieldCard.SetToFaceUp();
+        }
+        selectedFieldCardContainer.SetCard(spawnedFieldCard);
+    }
 
     private void OnDestroy()
     {

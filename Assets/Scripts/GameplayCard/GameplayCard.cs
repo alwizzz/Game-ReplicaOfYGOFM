@@ -21,11 +21,7 @@ public abstract class GameplayCard : MonoBehaviour
     public void Setup(Card cardData)
     {
         this.cardData = cardData;
-        SetupData();
-    }
 
-    private void SetupData()
-    {
         baseImage.color = GameplayManager.Instance().GetGameplayCardUIBaseColor(cardData);
         var cardSprite = cardData.spriteBig;
         if (cardSprite == null)
