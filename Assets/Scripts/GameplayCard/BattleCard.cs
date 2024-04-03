@@ -33,4 +33,6 @@ public class BattleCard : GameplayCard
         }
     }
 
+    public bool InAttackPosition() => inAttackPosition;
+
 }

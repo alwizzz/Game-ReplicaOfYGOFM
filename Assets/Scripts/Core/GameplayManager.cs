@@ -36,7 +36,7 @@ public class GameplayManager : StaticReference<GameplayManager>
     private void Debug()
     {
         // spawn monster card on enemy field
-        var cardData = Resources.Load<Card>("CardLibrary/038-NormalMonster-GaiaTheFierceKnight");
+        var cardData = Resources.Load<Card>("CardLibrary/022-NormalMonster-SummonedSkull");
         var fieldCardContainer = enemyFieldSystem.GetFrontRankContainers()[0];
         enemyFieldSystem.DebugSpawnFieldCard(cardData, false, fieldCardContainer);
         print("DEBUG: spawned monster card on enemy field");
