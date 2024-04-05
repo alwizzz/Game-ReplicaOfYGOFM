@@ -6,12 +6,16 @@ using Enums;
 
 public class FieldCard : GameplayCard
 {
-    [Header("Field Card")]
-    [SerializeField] private GuardianStar selectedGuardianStar;
+    [Header("Field Card States")]
     [SerializeField] private bool inAttackPosition;
     [SerializeField] private bool isFaceDown;
+    [SerializeField] private bool hasAttacked;
+    [SerializeField] private GuardianStar selectedGuardianStar;
     [SerializeField] private FieldCardContainer container;
+
+    [Header("Field Card Caches")]
     [SerializeField] private GameObject faceDownImage;
+    [SerializeField] private GameObject hasAttackedOverlay;
 
     public void SetContainer(FieldCardContainer container)
     {
@@ -20,6 +24,7 @@ public class FieldCard : GameplayCard
 
     public void ResetContainer() { container = null; }
 
+    #region Update Card States
     public void SetToAttackPosition()
     {
         inAttackPosition = true;
@@ -33,7 +38,7 @@ public class FieldCard : GameplayCard
 
     public void ChangePosition()
     {
-        if(inAttackPosition)
+        if (inAttackPosition)
         {
             SetToDefensePosition();
         } else
@@ -53,6 +58,15 @@ public class FieldCard : GameplayCard
         isFaceDown = true;
         faceDownImage.SetActive(true);
     }
+
+    public void SetHasAttacked(bool value)
+    { 
+        hasAttacked = value;
+        hasAttackedOverlay.SetActive(hasAttacked);
+    }
+    public bool HasAttacked() => hasAttacked;
+
+    #endregion
 
     public void SetSelectedGuardianStar(GuardianStar value)
     {

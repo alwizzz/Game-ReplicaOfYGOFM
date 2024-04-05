@@ -9,12 +9,18 @@ public class FieldCardContainer : CardContainer
         FrontRank,
         BackRank
     }
-
+    [SerializeField] private FieldSystem fieldSystem;
     [SerializeField] private Rank rank;
 
     //[SerializeField] private int index;
     [SerializeField] private FieldCard containedFieldCard;
     [SerializeField] private bool isSelected;
+
+    public void Setup(FieldSystem fieldSystem)
+    {
+        this.fieldSystem = fieldSystem;
+    }
+
 
     public FieldCard GetCard() => containedFieldCard;
     public bool IsEmpty() => (containedFieldCard == null ? true : false);
@@ -42,6 +48,8 @@ public class FieldCardContainer : CardContainer
 
         containedFieldCard.ResetContainer();
         containedFieldCard = null;
+
+        fieldSystem.UpdateInformationDisplay(reset: true);
     }
 
 
@@ -71,6 +79,7 @@ public class FieldCardContainer : CardContainer
 
     public void SetAsAttackerInBattle()
     {
+        if (GetCard().HasAttacked()) return; 
         BattleSystem.Instance().SetAttackerReference(containedFieldCard);
     }
     public void SetAsAttackedInBattle()

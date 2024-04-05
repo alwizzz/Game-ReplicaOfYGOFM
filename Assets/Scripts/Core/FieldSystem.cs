@@ -24,7 +24,16 @@ public class FieldSystem : MonoBehaviour
     [SerializeField] private CardInformationDisplay cardInformationDisplay;
     [SerializeField] private GameObject fieldPhaseButtons;
 
+    private void Awake()
+    {
+        Setup();
+    }
 
+    private void Setup()
+    {
+        frontRankFieldCardContainers.ForEach(e => e.Setup(this));
+        backRankFieldCardContainers.ForEach(e => e.Setup(this));
+    }
 
     private void Start()
     {
@@ -63,7 +72,7 @@ public class FieldSystem : MonoBehaviour
         selectedFieldCardContainer.MovePositionOnContainer(fieldSelector.transform);
     }
 
-    private void UpdateInformationDisplay(bool reset = false)
+    public void UpdateInformationDisplay(bool reset = false)
     {
         if(reset)
         {
@@ -155,6 +164,7 @@ public class FieldSystem : MonoBehaviour
             spawnedFieldCard.SetToFaceUp();
         }
         spawnedFieldCard.SetSelectedGuardianStar(selectedGuardianStar);
+        spawnedFieldCard.SetHasAttacked(false);
         selectedFieldCardContainer.SetCard(spawnedFieldCard);
         UpdateInformationDisplay();
     }
@@ -237,6 +247,7 @@ public class FieldSystem : MonoBehaviour
         }
         spawnedFieldCard.SetSelectedGuardianStar(((MonsterCard)cardData).guardianStarOption1);
         fieldCardContainer.SetCard(spawnedFieldCard);
+        spawnedFieldCard.SetHasAttacked(false);
 
         return spawnedFieldCard;
 

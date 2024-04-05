@@ -83,6 +83,7 @@ public class BattleSystem : StaticUIModal<BattleSystem>
         attackerFlareEffect.Hide();
         attackedFlareEffect.Hide();
         Hide();
+        GameplayManager.Instance().FieldSystem().StartFieldPhase();
     }
 
     private void DamageCalculation()
@@ -137,14 +138,14 @@ public class BattleSystem : StaticUIModal<BattleSystem>
 
     private void BattleResolution()
     {
-        DestroyCard();
+        attackerReference.SetHasAttacked(true);
+        DestroyCards();
         UpdateLifePoint();
-
 
         Reset();
     }
 
-    private void DestroyCard()
+    private void DestroyCards()
     {
         if (attackerDestroyed)
         {
