@@ -56,7 +56,7 @@ public class GameplayManager : StaticReference<GameplayManager>
         var fieldCardContainer = enemyFieldSystem.GetFrontRankContainers()[0];
         var fieldCard = enemyFieldSystem.DebugSpawnFieldCard(cardData, false, fieldCardContainer);
         fieldCard.SetToDefensePosition();
-        fieldCard.SetToFaceDown();
+        //fieldCard.SetToFaceDown();
         print("DEBUG: spawned monster card on enemy field");
     }
 

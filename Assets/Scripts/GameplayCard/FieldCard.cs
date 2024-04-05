@@ -23,12 +23,12 @@ public class FieldCard : GameplayCard
     public void SetToAttackPosition()
     {
         inAttackPosition = true;
-        transform.rotation = Quaternion.identity;
+        transform.localRotation = Quaternion.identity;
     }
     public void SetToDefensePosition()
     {
         inAttackPosition = false;
-        transform.rotation = Quaternion.Euler(0, 0, 90);
+        transform.localRotation = Quaternion.Euler(0, 0, 90);
     }
 
     public void ChangePosition()
