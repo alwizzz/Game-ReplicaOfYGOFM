@@ -6,20 +6,27 @@ using Enums;
 
 public class GameplayManager : StaticReference<GameplayManager>
 {
+    [Header("Game Parameters")]
+    [SerializeField] private int initialLifePoint;
+
+    [Header("States")]
     [SerializeField] private Side turn;
     [SerializeField] private Phase phase;
 
-    [Header("Player Parameters")]
+    [Header("Player's Caches")]
     [SerializeField] private HandSystem playerHandSystem;
     [SerializeField] private HandFocusSystem playerHandFocusSystem;
     [SerializeField] private FieldSystem playerFieldSystem;
+    [SerializeField] private LifePointSystem playerLifePointSystem;
 
-    [Header("Enemy Parameters")]
+    [Header("Enemy's Caches")]
     [SerializeField] private HandSystem enemyHandSystem;
     [SerializeField] private HandFocusSystem enemyHandFocusSystem;
     [SerializeField] private FieldSystem enemyFieldSystem;
+    [SerializeField] private LifePointSystem enemyLifePointSystem;
 
-    [Header("Caches")]
+
+    [Header("Other Caches")]
     [SerializeField] private Transform offscreenParking;
 
 
@@ -30,7 +37,16 @@ public class GameplayManager : StaticReference<GameplayManager>
 
     private void Start()
     {
+        Setup();
         Debug();
+    }
+
+    private void Setup()
+    {
+        // Setup lifepoint
+        playerLifePointSystem.Setup(initialLifePoint);
+        enemyLifePointSystem.Setup(initialLifePoint);
+
     }
 
     private void Debug()
@@ -38,13 +54,17 @@ public class GameplayManager : StaticReference<GameplayManager>
         // spawn monster card on enemy field
         var cardData = Resources.Load<Card>("CardLibrary/022-NormalMonster-SummonedSkull");
         var fieldCardContainer = enemyFieldSystem.GetFrontRankContainers()[0];
-        enemyFieldSystem.DebugSpawnFieldCard(cardData, false, fieldCardContainer);
+        var fieldCard = enemyFieldSystem.DebugSpawnFieldCard(cardData, false, fieldCardContainer);
+        fieldCard.SetToDefensePosition();
+        fieldCard.SetToFaceDown();
         print("DEBUG: spawned monster card on enemy field");
     }
 
 
     public bool IsPlayerTurn() => (turn == Side.Player ? true : false);
 
+
+    #region Caches Getter
 
     // considering turn,
     // on player turn, opponent is the enemy
@@ -97,18 +117,36 @@ public class GameplayManager : StaticReference<GameplayManager>
     public FieldSystem PlayerFieldSystem() => playerFieldSystem;
     public FieldSystem EnemyFieldSystem() => enemyFieldSystem;
 
+    #endregion
 
-    public void SetAttackedOnOpponentInBattle()
+    #region Life Point
+    public void UpdateLifePointAfterBattle(int damageDealt)
     {
-        var opponentSelectedFieldContainer = OpponentFieldSystem().GetSelectedFieldContainer();
-        if (opponentSelectedFieldContainer == null)
-        {
-            print("ERROR: currently no selected field container on opponent");
-            return;
-        }
+        if (damageDealt == 0) return;
 
-        opponentSelectedFieldContainer.SetAsAttackedInBattle();
+        if(damageDealt > 0)
+        {
+            if(turn == Side.Player)
+            {
+                enemyLifePointSystem.DecreaseLifePoint(damageDealt);
+            } else
+            {
+                playerLifePointSystem.DecreaseLifePoint(damageDealt);
+            }
+        } else if(damageDealt < 0)
+        {
+            if (turn == Side.Player)
+            {
+                playerLifePointSystem.DecreaseLifePoint(damageDealt);
+            }
+            else
+            {
+                playerLifePointSystem.DecreaseLifePoint(damageDealt);
+            }
+        }
     }
+
+    #endregion
 
 
     public void MoveToOffscreenParking(Transform obj)

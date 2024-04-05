@@ -6,10 +6,19 @@ using TMPro;
 
 public class BattleSystem : StaticUIModal<BattleSystem>
 {
+    [Header("Parameters")]
     [SerializeField] private FieldCard attackerReference;
     [SerializeField] private FieldCard attackedReference;
     [SerializeField] private float preDamageCalculationDelay;
     [SerializeField] private float postDamageCalculationDelay;
+
+    [Header("States")]
+    [Tooltip("Positive for damage received by attacked, " +
+        "Negative for damage received by attacker, " +
+        "and 0 for a tie")]
+    [SerializeField] private int damageDealt;
+    [SerializeField] private bool attackerDestroyed;
+    [SerializeField] private bool attackedDestroyed;
 
 
     [Header("Caches")]
@@ -17,11 +26,6 @@ public class BattleSystem : StaticUIModal<BattleSystem>
     [SerializeField] private BattleCard attackedBattleCard;
     [SerializeField] private DamageFlareEffect attackerFlareEffect;
     [SerializeField] private DamageFlareEffect attackedFlareEffect;
-
-
-
-
-
 
 
     private void Awake()
@@ -42,6 +46,10 @@ public class BattleSystem : StaticUIModal<BattleSystem>
         if (attackerReference.InAttackPosition() == false) return;
 
         Setup();
+
+        attackerDestroyed = false;
+        attackedDestroyed = false;
+
         StartCoroutine(Battle());
     }
 
@@ -56,6 +64,9 @@ public class BattleSystem : StaticUIModal<BattleSystem>
             cardData: attackedReference.GetCardData(),
             inAttackPosition: attackedReference.InAttackPosition()
         );
+
+        attackerReference.SetToFaceUp();
+        attackedReference.SetToFaceUp();
     }
 
     private IEnumerator Battle()
@@ -65,18 +76,15 @@ public class BattleSystem : StaticUIModal<BattleSystem>
         yield return new WaitForSeconds(preDamageCalculationDelay);
 
         DamageCalculation();
+        BattleResolution();
 
         yield return new WaitForSeconds(postDamageCalculationDelay);
 
         attackerFlareEffect.Hide();
         attackedFlareEffect.Hide();
-
         Hide();
     }
 
-    // TODO: separate BattleResolution from DamageCalculation
-    // where DamageCalculation solely calculating damage and
-    // BattleResolution resolves battle result
     private void DamageCalculation()
     {
         int attackerPower = GetPowerPoint(attackerBattleCard);
@@ -86,29 +94,30 @@ public class BattleSystem : StaticUIModal<BattleSystem>
         //bool attackerInAttackPosition = attackerBattleCard.InAttackPosition();
         bool attackedInAttackPosition = attackedBattleCard.InAttackPosition();
 
-
-        if (attackerPower == attackedPower)
+        damageDealt = attackerPower - attackedPower;
+        if (damageDealt == 0)
         { // TIE
-            attackerFlareEffect.SetupAndShow(0);
-            attackedFlareEffect.SetupAndShow(0);
-        } else if(attackerPower > attackedPower)
-        { // ATTACKER WINS
             if(attackedInAttackPosition)
             {
-                int damage = attackedPower - attackerPower;
-                attackedFlareEffect.SetupAndShow(damage);
-            } else
+                attackerDestroyed = true;
+                attackedDestroyed = true;
+            }
+            attackerFlareEffect.SetupAndShow(0);
+            attackedFlareEffect.SetupAndShow(0);
+        } else if(damageDealt > 0)
+        { // ATTACKER WINS
+            if(!attackedInAttackPosition)
             {
-                attackedFlareEffect.SetupAndShow(0);
+                damageDealt = 0;
             } 
-            print("TODO: destroy attacked battle card");
+            attackedFlareEffect.SetupAndShow(damageDealt);
+            attackedDestroyed = true;
         } else
         { // ATTACKED WINS
-            int damage = attackedPower - attackerPower;
-            attackerFlareEffect.SetupAndShow(damage);
+            attackerFlareEffect.SetupAndShow(damageDealt);
             if (attackedInAttackPosition)
             {
-                print("TODO: destroy attacker battle card");
+                attackerDestroyed = true;
             }
         }
 
@@ -126,6 +135,33 @@ public class BattleSystem : StaticUIModal<BattleSystem>
         }
     }
 
+    private void BattleResolution()
+    {
+        DestroyCard();
+        UpdateLifePoint();
+
+
+        Reset();
+    }
+
+    private void DestroyCard()
+    {
+        if (attackerDestroyed)
+        {
+            attackerReference.Destroy();
+        }
+
+        if (attackedDestroyed)
+        {
+            attackedReference.Destroy();
+        }
+    }
+
+    private void UpdateLifePoint()
+    {
+        GameplayManager.Instance().UpdateLifePointAfterBattle(damageDealt);
+    }
+
 
     public void SetAttackerReference(FieldCard reference)
     {
@@ -135,6 +171,20 @@ public class BattleSystem : StaticUIModal<BattleSystem>
     public void SetAttackedReference(FieldCard reference)
     {
         attackedReference = reference;
+    }
+
+
+    public void SetOpponentCardAsAttackedInBattle()
+    {
+        var opponentFieldSystem = GameplayManager.Instance().OpponentFieldSystem();
+        var opponentSelectedFieldContainer = opponentFieldSystem.GetSelectedFieldContainer();
+        if (opponentSelectedFieldContainer == null)
+        {
+            print("ERROR: currently no selected field container on opponent");
+            return;
+        }
+
+        opponentSelectedFieldContainer.SetAsAttackedInBattle();
     }
 
 

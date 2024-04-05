@@ -59,4 +59,12 @@ public class FieldCard : GameplayCard
         selectedGuardianStar = value;
     }
     public GuardianStar GetSelectedGuardianStar() => selectedGuardianStar;
+
+
+    public void Destroy()
+    {
+        container.RemoveCard();
+        print("Destroy Field Card " + GetCardData().cardName);
+        Destroy(gameObject);
+    }
 }

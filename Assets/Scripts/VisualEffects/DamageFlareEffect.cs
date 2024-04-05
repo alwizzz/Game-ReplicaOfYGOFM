@@ -21,6 +21,7 @@ public class DamageFlareEffect : UIModal
 
     public void SetupAndShow(int damage)
     {
+        damage = Mathf.Abs(damage);
         if(damage == 0)
         {
             flareImage.color = undamagedColor;

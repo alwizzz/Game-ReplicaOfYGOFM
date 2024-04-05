@@ -215,7 +215,7 @@ public class FieldSystem : MonoBehaviour
 
     #region DEBUG
 
-    public void DebugSpawnFieldCard(Card cardData, bool isFacedown, FieldCardContainer fieldCardContainer)
+    public FieldCard DebugSpawnFieldCard(Card cardData, bool isFacedown, FieldCardContainer fieldCardContainer)
     {
         //if (selectedFieldCardContainer.IsEmpty() == false)
         //{
@@ -237,6 +237,8 @@ public class FieldSystem : MonoBehaviour
         }
         spawnedFieldCard.SetSelectedGuardianStar(((MonsterCard)cardData).guardianStarOption1);
         fieldCardContainer.SetCard(spawnedFieldCard);
+
+        return spawnedFieldCard;
 
     }
 
