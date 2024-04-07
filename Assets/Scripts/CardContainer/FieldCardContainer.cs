@@ -50,6 +50,7 @@ public class FieldCardContainer : CardContainer
         containedFieldCard = null;
 
         fieldSystem.UpdateInformationDisplay(reset: true);
+        fieldSystem.DecrementCardCount(IsBackRank());
     }
 
 

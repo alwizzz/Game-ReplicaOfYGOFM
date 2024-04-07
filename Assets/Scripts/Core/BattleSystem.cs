@@ -13,6 +13,7 @@ public class BattleSystem : StaticUIModal<BattleSystem>
     [SerializeField] private float postDamageCalculationDelay;
 
     [Header("States")]
+    [SerializeField] private bool isDirectAttack;
     [Tooltip("Positive for damage received by attacked, " +
         "Negative for damage received by attacker, " +
         "and 0 for a tie")]
@@ -42,10 +43,17 @@ public class BattleSystem : StaticUIModal<BattleSystem>
 
     public void StartBattle()
     {
-        if (attackerReference == null || attackedReference == null) return;
+        if (attackerReference == null) return;
         if (attackerReference.InAttackPosition() == false) return;
+        if(attackedReference == null)
+        {
+            
+            isDirectAttack = CheckEmptyOpponentField();
+            //if (isDirectAttack) StartDirectBattle();
+            //return;
+        }
 
-        Setup();
+        Setup(isDirectAttack);
 
         attackerDestroyed = false;
         attackedDestroyed = false;
@@ -53,19 +61,30 @@ public class BattleSystem : StaticUIModal<BattleSystem>
         StartCoroutine(Battle());
     }
 
-    private void Setup()
+
+    private bool CheckEmptyOpponentField()
+    {
+        return GameplayManager.Instance().OpponentFieldSystem().IsFrontRankEmpty();
+    }
+
+    private void Setup(bool isDirectAttack = false)
     {
         attackerBattleCard.SetupBattleCard(
             cardData: attackerReference.GetCardData(),
             inAttackPosition: attackerReference.InAttackPosition()
         );
+        attackerReference.SetToFaceUp();
 
+        if(isDirectAttack)
+        {
+            attackedBattleCard.gameObject.SetActive(false);
+            return;
+        }
+        attackedBattleCard.gameObject.SetActive(true);
         attackedBattleCard.SetupBattleCard(
             cardData: attackedReference.GetCardData(),
             inAttackPosition: attackedReference.InAttackPosition()
         );
-
-        attackerReference.SetToFaceUp();
         attackedReference.SetToFaceUp();
     }
 
@@ -75,7 +94,7 @@ public class BattleSystem : StaticUIModal<BattleSystem>
 
         yield return new WaitForSeconds(preDamageCalculationDelay);
 
-        DamageCalculation();
+        DamageCalculation(isDirectAttack);
         BattleResolution();
 
         yield return new WaitForSeconds(postDamageCalculationDelay);
@@ -86,8 +105,15 @@ public class BattleSystem : StaticUIModal<BattleSystem>
         GameplayManager.Instance().FieldSystem().StartFieldPhase();
     }
 
-    private void DamageCalculation()
+    private void DamageCalculation(bool isDirectAttack)
     {
+        if(isDirectAttack)
+        {
+            damageDealt = GetPowerPoint(attackerBattleCard);
+            attackedFlareEffect.SetupAndShow(damageDealt);
+            return;
+        }
+
         int attackerPower = GetPowerPoint(attackerBattleCard);
         int attackedPower = GetPowerPoint(attackedBattleCard);
 

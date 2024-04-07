@@ -38,7 +38,7 @@ public class GameplayManager : StaticReference<GameplayManager>
     private void Start()
     {
         Setup();
-        Debug();
+        //Debug();
     }
 
     private void Setup()

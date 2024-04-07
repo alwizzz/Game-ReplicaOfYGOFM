@@ -6,10 +6,12 @@ using Enums;
 
 public class FieldSystem : MonoBehaviour
 {
-    [SerializeField] private bool isOnSelection;
+    [SerializeField] private FieldCard fieldCardPrefab;
 
     [Header("States")]
-    [SerializeField] private FieldCard fieldCardPrefab;
+    [SerializeField] private bool isOnSelection;
+    [SerializeField] private int frontRankCardCount;
+    [SerializeField] private int backRankCardCount;
     [SerializeField] private FieldCardContainer selectedFieldCardContainer;
 
     [Header("Caches")]
@@ -167,7 +169,59 @@ public class FieldSystem : MonoBehaviour
         spawnedFieldCard.SetHasAttacked(false);
         selectedFieldCardContainer.SetCard(spawnedFieldCard);
         UpdateInformationDisplay();
+
+        IncrementCardCount(selectedFieldCardContainer.IsBackRank());
     }
+
+    public void IncrementCardCount(bool isBackRank)
+    {
+        if (isBackRank)
+        {
+            if (IsBackRankFull())
+            {
+                print("WARNING: attempt to increment back rank count when it is already full, aborting...");
+                return;
+            }
+            backRankCardCount++;
+        }
+        else
+        {
+            if (IsFrontRankFull())
+            {
+                print("WARNING: attempt to increment front rank count when it is already full, aborting...");
+                return;
+            }
+            frontRankCardCount++;
+        }
+    }
+
+    public void DecrementCardCount(bool isBackRank)
+    {
+        if (isBackRank)
+        {
+            if(IsBackRankEmpty())
+            {
+                print("WARNING: attempt to decrement back rank count when it is already empty, aborting...");
+                return;
+            }
+            backRankCardCount--;
+        }
+        else
+        {
+            if (IsFrontRankEmpty())
+            {
+                print("WARNING: attempt to decrement front rank count when it is already empty, aborting...");
+                return;
+            }
+            frontRankCardCount--;
+        }
+    }
+
+    public bool IsBackRankFull() => (backRankCardCount >= 5 ? true : false);
+    public bool IsBackRankEmpty() => (backRankCardCount <= 5 ? true : false);
+    public bool IsFrontRankFull() => (frontRankCardCount >= 5 ? true : false);
+    public bool IsFrontRankEmpty() => (frontRankCardCount <= 5 ? true : false);
+
 
     #region Field Phase
 
@@ -248,6 +302,8 @@ public class FieldSystem : MonoBehaviour
         spawnedFieldCard.SetSelectedGuardianStar(((MonsterCard)cardData).guardianStarOption1);
         fieldCardContainer.SetCard(spawnedFieldCard);
         spawnedFieldCard.SetHasAttacked(false);
+
+        IncrementCardCount(fieldCardContainer.IsBackRank());
 
         return spawnedFieldCard;
 
