@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+using Enums;
+
 public class HandFocusSystem : UIModal
 {
+    [SerializeField] private Side possession;
     [SerializeField] private HandCard focusedCard;
     [SerializeField] private bool isFaceDown;
 

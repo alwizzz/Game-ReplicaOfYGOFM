@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using TMPro;
+using Enums;
 
 
 public class HandSystem : UIModal
 {
+    [SerializeField] private Side possession;
     [SerializeField] private HandCard handCardPrefab;
-
 
     [Header("States")]
     [SerializeField] private HandCardContainer selectedHandCardContainer;
@@ -28,7 +29,6 @@ public class HandSystem : UIModal
     private void Awake()
     {
         BaseAwake();
-        Show();
     }
 
     private void Start()
@@ -37,6 +37,8 @@ public class HandSystem : UIModal
         //SetSelectedCardContainer(handCardContainers[0]);
         handCardContainers[0].Select();
     }
+
+    private bool IsPlayerPossession() => (possession == Side.Player ? true : false);
 
     public void SetSelectedCardContainer(HandCardContainer handCardContainer)
     {
@@ -52,6 +54,7 @@ public class HandSystem : UIModal
 
     private void UpdateHandSelector()
     {
+        if (!IsPlayerPossession()) return;
         selectedHandCardContainer.MovePositionOnContainer(handSelector.transform);
     }
 
@@ -73,8 +76,16 @@ public class HandSystem : UIModal
 
     #region Update and Organize Hand
 
+    
+    public void OpenHand()
+    {
+        UpdateHand();
+        Show();
+    }
+
+    // TODO: differentiate DrawPhase and HandPhase on UpdateHand
     // TODO: refactor this method
-    public void UpdateHand()
+    private void UpdateHand()
     {
         int length = handCardContainers.Count;
         int i = 0;

@@ -6,6 +6,7 @@ using Enums;
 
 public class FieldSystem : MonoBehaviour
 {
+    [SerializeField] private Side possession;
     [SerializeField] private FieldCard fieldCardPrefab;
 
     [Header("States")]
@@ -24,7 +25,7 @@ public class FieldSystem : MonoBehaviour
     //[SerializeField] private GameObject secondaryFieldSelector; //TODO on further logic like equip
 
     [SerializeField] private CardInformationDisplay cardInformationDisplay;
-    [SerializeField] private GameObject fieldPhaseButtons;
+    [SerializeField] private GameObject fieldPhaseButtons; //TODO: abstract this out of FieldSystem
 
     private void Awake()
     {
@@ -229,6 +230,14 @@ public class FieldSystem : MonoBehaviour
     {
         OpenFullSelection(true);
         fieldPhaseButtons.SetActive(true);
+    }
+
+    public void EndTurn()
+    {
+        CloseSelection();
+        fieldPhaseButtons.SetActive(false);
+
+        GameplayManager.Instance().ToEndPhase();
     }
 
     public void ChangeCardPosition()

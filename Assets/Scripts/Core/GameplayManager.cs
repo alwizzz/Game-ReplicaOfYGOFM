@@ -243,22 +243,25 @@ public class GameplayManager : StaticReference<GameplayManager>
             return;
         }
 
+
         phase = Phase.EndPhase;
         EventManager.EndPhase();
+
+        Invoke(nameof(ChangeTurn), 1f);
     }
 
     #endregion
 
     #region Listener Methods
 
-    private void UpdateHand()
+    private void OpenHand()
     {
         if (IsPlayerTurn())
         {
-            playerHandSystem.UpdateHand();
+            playerHandSystem.OpenHand();
             return;
         }
-        enemyHandSystem.UpdateHand();
+        enemyHandSystem.OpenHand();
     }
 
 
@@ -268,12 +271,12 @@ public class GameplayManager : StaticReference<GameplayManager>
 
     private void OnEnable()
     {
-        EventManager.OnDrawPhase += UpdateHand;
+        EventManager.OnDrawPhase += OpenHand;
     }
 
     private void OnDisable()
     {
-        EventManager.OnDrawPhase -= UpdateHand;
+        EventManager.OnDrawPhase -= OpenHand;
     }
 
     #endregion
