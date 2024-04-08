@@ -33,7 +33,7 @@ public class HandSystem : UIModal
 
     private void Start()
     {
-        UpdateHand();
+        //UpdateHand();
         //SetSelectedCardContainer(handCardContainers[0]);
         handCardContainers[0].Select();
     }
@@ -66,24 +66,15 @@ public class HandSystem : UIModal
 
         isFocusing = true;
         //handOverlay.SetActive(true); // unused as it will then be hidden
-
-        GameplayManager.Instance().HandFocusSystem().SetupAndShow(selectedHandCardContainer.GetCard()); ;
+        var card = selectedHandCardContainer.GetCard();
+        GameplayManager.Instance().ToFocusPhase(card);
         Hide();
     }
 
-    //public void UnfocusSelectedCard()
-    //{
-    //    if (!isFocusing) return;
-
-    //    isFocusing = false;
-    //    handFocusSystem.Hide();
-    //    handOverlay.SetActive(false);
-    //}
-
-
     #region Update and Organize Hand
 
-    private void UpdateHand()
+    // TODO: refactor this method
+    public void UpdateHand()
     {
         int length = handCardContainers.Count;
         int i = 0;
@@ -118,7 +109,7 @@ public class HandSystem : UIModal
         // Draw mode
         for(; i<length;i++)
         {
-            var cardData = GameplayDeck.Instance().Draw();
+            var cardData = GameplayManager.Instance().Deck().Draw();
             if (cardData == null) return;
             var spawnedHandCard = Instantiate(
                 handCardPrefab
@@ -126,6 +117,8 @@ public class HandSystem : UIModal
             spawnedHandCard.Setup(cardData);
             handCardContainers[i].SetCard(spawnedHandCard);
         }
+
+        GameplayManager.Instance().ToHandPhase();
     }
 
     #endregion

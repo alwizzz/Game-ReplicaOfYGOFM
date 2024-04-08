@@ -63,14 +63,13 @@ public class HandFocusSystem : UIModal
 
     public void PlayCard()
     {
-        GameplayManager.Instance().FieldSystem().SpawnFieldCard(
-            focusedCard.GetCardData(),
-            isFaceDown,
-            selector.GetSelectedGuardianStar()
-        );
+        var card = focusedCard.GetCardData();
+        var isFaceDown = this.isFaceDown;
+        var guardianStar = selector.GetSelectedGuardianStar();
 
+        GameplayManager.Instance().ToFieldPhase(card, isFaceDown, guardianStar);
         Hide();
-        GameplayManager.Instance().FieldSystem().StartFieldPhase();
+
     }
 
 }

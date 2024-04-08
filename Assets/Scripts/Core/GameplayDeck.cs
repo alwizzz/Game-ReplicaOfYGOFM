@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 
-public class GameplayDeck : StaticReference<GameplayDeck>
+public class GameplayDeck : MonoBehaviour
 {
     [System.Serializable]
     public struct DeckCard
@@ -21,7 +21,6 @@ public class GameplayDeck : StaticReference<GameplayDeck>
 
     private void Awake()
     {
-        BaseAwake(this);
         queue = new Queue<DeckCard>(deckCards);
         remainingCards = queue.Count;
     }
@@ -37,13 +36,6 @@ public class GameplayDeck : StaticReference<GameplayDeck>
         var drawnDeckCard = queue.Dequeue();
         remainingCards = queue.Count;
         return drawnDeckCard.cardData;
-    }
-
-
-
-    private void OnDestroy()
-    {
-        BaseOnDestroy();
     }
 }
 

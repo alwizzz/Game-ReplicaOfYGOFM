@@ -18,12 +18,14 @@ public class GameplayManager : StaticReference<GameplayManager>
     [SerializeField] private HandFocusSystem playerHandFocusSystem;
     [SerializeField] private FieldSystem playerFieldSystem;
     [SerializeField] private LifePointSystem playerLifePointSystem;
+    [SerializeField] private GameplayDeck playerDeck;
 
     [Header("Enemy's Caches")]
     [SerializeField] private HandSystem enemyHandSystem;
     [SerializeField] private HandFocusSystem enemyHandFocusSystem;
     [SerializeField] private FieldSystem enemyFieldSystem;
     [SerializeField] private LifePointSystem enemyLifePointSystem;
+    [SerializeField] private GameplayDeck enemyDeck;
 
 
     [Header("Other Caches")]
@@ -38,15 +40,18 @@ public class GameplayManager : StaticReference<GameplayManager>
     private void Start()
     {
         Setup();
-        //Debug();
+        Debug();
     }
 
     private void Setup()
     {
+        phase = Phase.EndPhase;
+        turn = Side.Enemy;
+        ChangeTurn();
+
         // Setup lifepoint
         playerLifePointSystem.Setup(initialLifePoint);
         enemyLifePointSystem.Setup(initialLifePoint);
-
     }
 
     private void Debug()
@@ -60,9 +65,23 @@ public class GameplayManager : StaticReference<GameplayManager>
         print("DEBUG: spawned monster card on enemy field");
     }
 
-
     public bool IsPlayerTurn() => (turn == Side.Player ? true : false);
 
+    public void MoveToOffscreenParking(Transform obj)
+    {
+        obj.position = offscreenParking.position;
+    }
+
+    private void NextTurn()
+    {
+        if(IsPlayerTurn())
+        {
+            turn = Side.Enemy;
+        } else
+        {
+            turn = Side.Player;
+        }
+    }
 
     #region Caches Getter
 
@@ -108,6 +127,15 @@ public class GameplayManager : StaticReference<GameplayManager>
         return playerFieldSystem;
     }
 
+    public GameplayDeck Deck()
+    {
+        if (IsPlayerTurn())
+        {
+            return playerDeck;
+        }
+        return enemyDeck;
+    }
+
 
     // direct getter without considering which turn
     public HandSystem PlayerHandSystem() => playerHandSystem;
@@ -148,14 +176,116 @@ public class GameplayManager : StaticReference<GameplayManager>
 
     #endregion
 
+    #region Phase Management
 
-    public void MoveToOffscreenParking(Transform obj)
+    public void ChangeTurn()
     {
-        obj.position = offscreenParking.position;
+        if(phase != Phase.EndPhase)
+        {
+            print("WARNING: unmatching phase, aborting...");
+            return;
+        }
+
+        NextTurn();
+
+        phase = Phase.DrawPhase;
+        EventManager.DrawPhase();
     }
+
+    public void ToHandPhase()
+    {
+        if (phase != Phase.DrawPhase)
+        {
+            print("WARNING: unmatching phase, aborting...");
+            return;
+        }
+
+        phase = Phase.HandPhase;
+        EventManager.HandPhase();
+    }
+
+    public void ToFocusPhase(HandCard card)
+    {
+        if (phase != Phase.HandPhase)
+        {
+            print("WARNING: unmatching phase, aborting...");
+            return;
+        }
+
+        HandFocusSystem().SetupAndShow(card);
+
+        phase = Phase.FocusPhase;
+        EventManager.FocusPhase();
+    }
+
+    public void ToFieldPhase(Card card, bool isFaceDown, GuardianStar guardianStar)
+    {
+        if (phase != Phase.FocusPhase)
+        {
+            print("WARNING: unmatching phase, aborting...");
+            return;
+        }
+
+        FieldSystem().SpawnFieldCard(
+            card, isFaceDown, guardianStar
+        );
+        FieldSystem().StartFieldPhase();
+
+        phase = Phase.FieldPhase;
+        EventManager.FieldPhase();
+    }
+
+    public void ToEndPhase()
+    {
+        if (phase != Phase.FieldPhase)
+        {
+            print("WARNING: unmatching phase, aborting...");
+            return;
+        }
+
+        phase = Phase.EndPhase;
+        EventManager.EndPhase();
+    }
+
+    #endregion
+
+    #region Listener Methods
+
+    private void UpdateHand()
+    {
+        if (IsPlayerTurn())
+        {
+            playerHandSystem.UpdateHand();
+            return;
+        }
+        enemyHandSystem.UpdateHand();
+    }
+
+
+    #endregion
+
+    #region Subcriptions
+
+    private void OnEnable()
+    {
+        EventManager.OnDrawPhase += UpdateHand;
+    }
+
+    private void OnDisable()
+    {
+        EventManager.OnDrawPhase -= UpdateHand;
+    }
+
+    #endregion
+
+
+
 
     private void OnDestroy()
     {
         BaseOnDestroy();
     }
+
+
+
 }
