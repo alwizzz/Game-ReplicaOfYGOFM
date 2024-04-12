@@ -9,7 +9,7 @@ using Enums;
 
 public class HandSystem : UIModal
 {
-    [SerializeField] private Side possession;
+    [SerializeField] private Side owner;
     [SerializeField] private HandCard handCardPrefab;
 
     [Header("States")]
@@ -35,10 +35,9 @@ public class HandSystem : UIModal
     {
         //UpdateHand();
         //SetSelectedCardContainer(handCardContainers[0]);
-        handCardContainers[0].Select();
     }
 
-    private bool IsPlayerPossession() => (possession == Side.Player ? true : false);
+    private bool IsPlayerOwned() => (owner == Side.Player ? true : false);
 
     public void SetSelectedCardContainer(HandCardContainer handCardContainer)
     {
@@ -54,13 +53,13 @@ public class HandSystem : UIModal
 
     private void UpdateHandSelector()
     {
-        if (!IsPlayerPossession()) return;
+        //if (!IsPlayerPossession()) return;
         selectedHandCardContainer.MovePositionOnContainer(handSelector.transform);
     }
 
     private void UpdateInformationDisplay()
     {
-        cardInformationDisplay.UpdateInformation(selectedHandCardContainer.GetCard()); ;
+        cardInformationDisplay.UpdateInformation(selectedHandCardContainer.GetCard());
     }
 
     public void FocusSelectedCard()
@@ -79,7 +78,9 @@ public class HandSystem : UIModal
     
     public void OpenHand()
     {
+        print("oy from " + owner);
         UpdateHand();
+        handCardContainers[0].Select();
         Show();
     }
 

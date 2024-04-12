@@ -180,16 +180,29 @@ public class GameplayManager : StaticReference<GameplayManager>
 
     public void ChangeTurn()
     {
-        if(phase != Phase.EndPhase)
+        if (phase != Phase.EndPhase)
         {
             print("WARNING: unmatching phase, aborting...");
             return;
         }
 
         NextTurn();
-
-        phase = Phase.DrawPhase;
-        EventManager.DrawPhase();
+        if(IsPlayerTurn())
+        {
+            GameplayFieldManager.Instance().FlipToPlayerSide();
+        } else
+        {
+            GameplayFieldManager.Instance().FlipToEnemySide();
+        }
+        
+        StartCoroutine(WaitUntilCoroutine(
+            predicate: () => GameplayFieldManager.Instance().IsRotating() == false,
+            action: () =>
+            {
+                phase = Phase.DrawPhase;
+                EventManager.DrawPhase();
+            }
+        ));
     }
 
     public void ToHandPhase()
@@ -264,19 +277,34 @@ public class GameplayManager : StaticReference<GameplayManager>
         enemyHandSystem.OpenHand();
     }
 
+    private void ResetFieldInformationDisplays()
+    {
+        playerFieldSystem.UpdateInformationDisplay(reset: true);
+        enemyFieldSystem.UpdateInformationDisplay(reset: true);
+    }
 
     #endregion
+
+    private IEnumerator WaitUntilCoroutine(System.Func<bool> predicate, System.Action action)
+    {
+        yield return new WaitUntil(predicate);
+        action();
+    }
+
+
 
     #region Subcriptions
 
     private void OnEnable()
     {
         EventManager.OnDrawPhase += OpenHand;
+        EventManager.OnEndPhase += ResetFieldInformationDisplays;
     }
 
     private void OnDisable()
     {
         EventManager.OnDrawPhase -= OpenHand;
+        EventManager.OnEndPhase -= ResetFieldInformationDisplays;
     }
 
     #endregion

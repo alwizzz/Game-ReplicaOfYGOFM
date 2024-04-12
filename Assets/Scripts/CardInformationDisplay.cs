@@ -24,9 +24,8 @@ public class CardInformationDisplay : MonoBehaviour
 
     private void Awake()
     {
-        ResetInformation();
-
         if (!onField) return; // only the selected guardian star is used in field
+        ResetInformation();
         guardianStar1Image.transform.parent.gameObject.SetActive(false);
     }
     public void UpdateInformation(GameplayCard card)
