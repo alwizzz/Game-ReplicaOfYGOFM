@@ -6,6 +6,7 @@ using TMPro;
 
 public class BattleSystem : StaticUIModal<BattleSystem>
 {
+    [SerializeField] private bool isBattling;
     [Header("Parameters")]
     [SerializeField] private FieldCard attackerReference;
     [SerializeField] private FieldCard attackedReference;
@@ -90,6 +91,7 @@ public class BattleSystem : StaticUIModal<BattleSystem>
 
     private IEnumerator Battle()
     {
+        isBattling = true;
         Show();
 
         yield return new WaitForSeconds(preDamageCalculationDelay);
@@ -103,6 +105,8 @@ public class BattleSystem : StaticUIModal<BattleSystem>
         attackedFlareEffect.Hide();
         Hide();
         GameplayManager.Instance().FieldSystem().StartFieldPhase();
+
+        isBattling = false;
     }
 
     private void DamageCalculation(bool isDirectAttack)
@@ -164,7 +168,7 @@ public class BattleSystem : StaticUIModal<BattleSystem>
 
     private void BattleResolution()
     {
-        attackerReference.SetHasAttacked(true);
+        attackerReference.SetHasBeenUsed(true);
         DestroyCards();
         UpdateLifePoint();
 
@@ -214,6 +218,7 @@ public class BattleSystem : StaticUIModal<BattleSystem>
         opponentSelectedFieldContainer.SetAsAttackedInBattle();
     }
 
+    public bool IsBattling() => isBattling;
 
     private void OnDestroy()
     {

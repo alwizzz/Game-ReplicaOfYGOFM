@@ -30,6 +30,7 @@ public class GameplayManager : StaticReference<GameplayManager>
 
     [Header("Other Caches")]
     [SerializeField] private Transform offscreenParking;
+    [SerializeField] private EnemyBot enemyBot;
 
 
     private void Awake()
@@ -45,13 +46,16 @@ public class GameplayManager : StaticReference<GameplayManager>
 
     private void Setup()
     {
-        phase = Phase.EndPhase;
-        turn = Side.Enemy;
-        ChangeTurn();
+        // Setup EnemyBot
+        enemyBot.Setup(enemyHandSystem, enemyHandFocusSystem, enemyFieldSystem);
 
         // Setup lifepoint
         playerLifePointSystem.Setup(initialLifePoint);
         enemyLifePointSystem.Setup(initialLifePoint);
+
+        phase = Phase.EndPhase;
+        turn = Side.Enemy;
+        ChangeTurn();
     }
 
     private void Debug()
@@ -187,20 +191,16 @@ public class GameplayManager : StaticReference<GameplayManager>
         }
 
         NextTurn();
-        if(IsPlayerTurn())
-        {
-            GameplayFieldManager.Instance().FlipToPlayerSide();
-        } else
-        {
-            GameplayFieldManager.Instance().FlipToEnemySide();
-        }
+        UpdateGameplayField();
         
-        StartCoroutine(WaitUntilCoroutine(
+        
+        StartCoroutine(DelayerByWaitUntil(
             predicate: () => GameplayFieldManager.Instance().IsRotating() == false,
             action: () =>
             {
                 phase = Phase.DrawPhase;
                 EventManager.DrawPhase();
+                
             }
         ));
     }
@@ -215,6 +215,7 @@ public class GameplayManager : StaticReference<GameplayManager>
 
         phase = Phase.HandPhase;
         EventManager.HandPhase();
+        if (IsPlayerTurn() == false) enemyBot.StartPlaying();
     }
 
     public void ToFocusPhase(HandCard card)
@@ -225,7 +226,8 @@ public class GameplayManager : StaticReference<GameplayManager>
             return;
         }
 
-        HandFocusSystem().SetupAndShow(card);
+        HandFocusSystem()
+            .SetupAndShow(card);
 
         phase = Phase.FocusPhase;
         EventManager.FocusPhase();
@@ -285,12 +287,23 @@ public class GameplayManager : StaticReference<GameplayManager>
 
     #endregion
 
-    private IEnumerator WaitUntilCoroutine(System.Func<bool> predicate, System.Action action)
+    private IEnumerator DelayerByWaitUntil(System.Func<bool> predicate, System.Action action)
     {
         yield return new WaitUntil(predicate);
         action();
     }
 
+    private void UpdateGameplayField()
+    {
+        if (IsPlayerTurn())
+        {
+            GameplayFieldManager.Instance().FlipToPlayerSide();
+        }
+        else
+        {
+            GameplayFieldManager.Instance().FlipToEnemySide();
+        }
+    }
 
 
     #region Subcriptions

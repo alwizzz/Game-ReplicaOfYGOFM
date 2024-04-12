@@ -9,13 +9,13 @@ public class FieldCard : GameplayCard
     [Header("Field Card States")]
     [SerializeField] private bool inAttackPosition;
     [SerializeField] private bool isFaceDown;
-    [SerializeField] private bool hasAttacked;
+    [SerializeField] private bool hasBeenUsed;
     [SerializeField] private GuardianStar selectedGuardianStar;
     [SerializeField] private FieldCardContainer container;
 
     [Header("Field Card Caches")]
     [SerializeField] private GameObject faceDownImage;
-    [SerializeField] private GameObject hasAttackedOverlay;
+    [SerializeField] private GameObject hasBeenUsedOverlay;
 
     public void SetContainer(FieldCardContainer container)
     {
@@ -59,12 +59,12 @@ public class FieldCard : GameplayCard
         faceDownImage.SetActive(true);
     }
 
-    public void SetHasAttacked(bool value)
+    public void SetHasBeenUsed(bool value)
     { 
-        hasAttacked = value;
-        hasAttackedOverlay.SetActive(hasAttacked);
+        hasBeenUsed = value;
+        hasBeenUsedOverlay.SetActive(hasBeenUsed);
     }
-    public bool HasAttacked() => hasAttacked;
+    public bool HasBeenUsed() => hasBeenUsed;
 
     #endregion
 

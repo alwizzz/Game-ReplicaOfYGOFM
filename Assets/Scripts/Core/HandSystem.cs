@@ -73,6 +73,8 @@ public class HandSystem : UIModal
         Hide();
     }
 
+    public List<HandCardContainer> GetHandCardContainers() => handCardContainers;
+
     #region Update and Organize Hand
 
     

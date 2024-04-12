@@ -9,6 +9,7 @@ using Enums;
 
 public class GuardianStarOptionSelector : MonoBehaviour
 {
+    [SerializeField] private Side owner;
     [SerializeField] private GuardianStar selectedGuardianStar;
 
     [Header("Cache")]
@@ -41,6 +42,8 @@ public class GuardianStarOptionSelector : MonoBehaviour
         //if (selectedGuardianStar == guardianStarOption1) return;
 
         selectedGuardianStar = guardianStarOption1;
+
+        if (owner == Side.Enemy) return;
         button1.interactable = false;
         button2.interactable = true;
     }
@@ -50,6 +53,8 @@ public class GuardianStarOptionSelector : MonoBehaviour
         //if (selectedGuardianStar == guardianStarOption2) return;
 
         selectedGuardianStar = guardianStarOption2;
+
+        if (owner == Side.Enemy) return;
         button1.interactable = true;
         button2.interactable = false;
     }

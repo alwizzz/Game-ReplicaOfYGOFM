@@ -10,6 +10,7 @@ public class HandFocusSystem : UIModal
     [SerializeField] private Side possession;
     [SerializeField] private HandCard focusedCard;
     [SerializeField] private bool isFaceDown;
+    [SerializeField] private bool isMonster;
 
     [Header("Cache")]
     [SerializeField] private GuardianStarOptionSelector selector;
@@ -30,12 +31,14 @@ public class HandFocusSystem : UIModal
 
         if(cardData.IsMonsterCard())
         {
+            isMonster = true;
             var data = (MonsterCard)cardData;
             selector.gameObject.SetActive(true);
             selector.Setup(data.guardianStarOption1, data.guardianStarOption2);
             GameplayManager.Instance().FieldSystem().OpenFrontRankSelection();
         } else
         {
+            isMonster = false;
             selector.gameObject.SetActive(false);
             GameplayManager.Instance().FieldSystem().OpenBackRankSelection();
         }
@@ -74,5 +77,7 @@ public class HandFocusSystem : UIModal
         Hide();
 
     }
+
+    public bool IsMonster() => isMonster;
 
 }

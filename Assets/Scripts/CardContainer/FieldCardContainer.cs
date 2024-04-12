@@ -80,7 +80,7 @@ public class FieldCardContainer : CardContainer
 
     public void SetAsAttackerInBattle()
     {
-        if (GetCard().HasAttacked()) return; 
+        if (GetCard().HasBeenUsed()) return; 
         BattleSystem.Instance().SetAttackerReference(containedFieldCard);
     }
     public void SetAsAttackedInBattle()

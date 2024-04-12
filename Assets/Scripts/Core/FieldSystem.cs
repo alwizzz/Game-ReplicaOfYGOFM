@@ -6,7 +6,7 @@ using Enums;
 
 public class FieldSystem : MonoBehaviour
 {
-    [SerializeField] private Side possession;
+    [SerializeField] private Side owner;
     [SerializeField] private FieldCard fieldCardPrefab;
 
     [Header("States")]
@@ -167,7 +167,7 @@ public class FieldSystem : MonoBehaviour
             spawnedFieldCard.SetToFaceUp();
         }
         spawnedFieldCard.SetSelectedGuardianStar(selectedGuardianStar);
-        spawnedFieldCard.SetHasAttacked(false);
+        spawnedFieldCard.SetHasBeenUsed(false);
         selectedFieldCardContainer.SetCard(spawnedFieldCard);
         UpdateInformationDisplay();
 
@@ -224,11 +224,16 @@ public class FieldSystem : MonoBehaviour
     public bool IsFrontRankEmpty() => (frontRankCardCount <= 5 ? true : false);
 
 
+    private bool IsPlayerOwned() => (owner == Side.Player ? true : false);
+
+
     #region Field Phase
 
     public void StartFieldPhase()
     {
         OpenFullSelection(true);
+
+        if (IsPlayerOwned() == false) return;
         fieldPhaseButtons.SetActive(true);
     }
 
@@ -286,6 +291,11 @@ public class FieldSystem : MonoBehaviour
     public List<FieldCardContainer> GetBackRankContainers() => backRankFieldCardContainers;
     public FieldCardContainer GetSelectedFieldContainer() => selectedFieldCardContainer;
 
+    public bool HasNoMonster()
+    {
+       return frontRankFieldCardContainers.TrueForAll((e) => e.IsEmpty());
+    }
+
     #region DEBUG
 
     public FieldCard DebugSpawnFieldCard(Card cardData, bool isFacedown, FieldCardContainer fieldCardContainer)
@@ -310,7 +320,7 @@ public class FieldSystem : MonoBehaviour
         }
         spawnedFieldCard.SetSelectedGuardianStar(((MonsterCard)cardData).guardianStarOption1);
         fieldCardContainer.SetCard(spawnedFieldCard);
-        spawnedFieldCard.SetHasAttacked(false);
+        spawnedFieldCard.SetHasBeenUsed(false);
 
         IncrementCardCount(fieldCardContainer.IsBackRank());
 
