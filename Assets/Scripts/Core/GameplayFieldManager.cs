@@ -39,13 +39,14 @@ public class GameplayFieldManager : StaticReference<GameplayFieldManager>
         System.Func<bool> conditionLambda = () =>
         {
             float currentAngle = gameplayField.rotation.eulerAngles.z;
+            //print(currentAngle);
             if (toBeFlipped)
             {
                 return currentAngle < 180f;
             }
             else
             {
-                return currentAngle > 0f;
+                return currentAngle >= 180f;
             }
         };
 

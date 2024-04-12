@@ -145,11 +145,11 @@ MonoBehaviour:
   defensePointText: {fileID: 2934750388514864019}
   inAttackPosition: 0
   isFaceDown: 0
-  hasAttacked: 0
+  hasBeenUsed: 0
   selectedGuardianStar: 0
   container: {fileID: 0}
   faceDownImage: {fileID: 8534612286626639334}
-  hasAttackedOverlay: {fileID: 4317710083127738699}
+  hasBeenUsedOverlay: {fileID: 4317710083127738699}
 --- !u!114 &5894038508976284538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -458,7 +458,7 @@ GameObject:
   - component: {fileID: 131131602309218263}
   - component: {fileID: 3032167918881658074}
   m_Layer: 5
-  m_Name: Panel Overlay HasAttacked
+  m_Name: Panel Overlay HasBeenUsed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

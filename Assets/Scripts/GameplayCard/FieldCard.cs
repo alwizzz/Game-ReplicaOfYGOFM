@@ -64,9 +64,22 @@ public class FieldCard : GameplayCard
         hasBeenUsed = value;
         hasBeenUsedOverlay.SetActive(hasBeenUsed);
     }
-    public bool HasBeenUsed() => hasBeenUsed;
 
     #endregion
+    public bool HasBeenUsed() => hasBeenUsed;
+    public bool IsFaceDown() => isFaceDown;
+    public int GetPowerPoint()
+    {
+        var monsterCard = (MonsterCard)GetCardData();
+        if (InAttackPosition())
+        {
+            return monsterCard.attackPoint;
+        }
+        else
+        {
+            return monsterCard.defensePoint;
+        }
+    }
 
     public void SetSelectedGuardianStar(GuardianStar value)
     {

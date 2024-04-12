@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyBot : MonoBehaviour
 {
     [SerializeField] private bool isPlaying;
+    [SerializeField] private bool isAttacking;
     [SerializeField] private float actionDelay;
 
     private HandSystem handSystem;
@@ -27,17 +28,19 @@ public class EnemyBot : MonoBehaviour
 
     private IEnumerator Play()
     {
-        yield return new WaitForSeconds(actionDelay);
+        isPlaying = true;
 
+        yield return new WaitForSeconds(actionDelay);
         HandAction();
-
         yield return new WaitForSeconds(actionDelay);
-
         FocusAction();
-
         yield return new WaitForSeconds(actionDelay);
-
         FieldAction();
+        yield return new WaitForSeconds(actionDelay);
+        yield return new WaitUntil(() => isAttacking == false);
+        fieldSystem.EndTurn();
+    
+        isPlaying = false;
     }
 
     #region Hand Action
@@ -133,46 +136,79 @@ public class EnemyBot : MonoBehaviour
         var containers = fieldSystem.GetFrontRankContainers();
 
         var opponentField = GameplayManager.Instance().OpponentFieldSystem();
-        if(opponentField.HasNoMonster())
-        {
-            StartCoroutine(DirectAttacks(containers));
-        } else
-        {
-            StartCoroutine(NormalAttacks(containers, opponentField.GetFrontRankContainers()));
-        }
-
+        StartCoroutine(AttackLoop(containers, opponentField));
     }
 
-    private IEnumerator DirectAttacks(List<FieldCardContainer> containers)
+    private IEnumerator AttackLoop(List<FieldCardContainer> containers, FieldSystem opponentField)
     {
-        foreach(var container in containers)
-        {
-            if (container.IsEmpty()) continue;
-            if (container.GetCard().HasBeenUsed()) continue;
+        isAttacking = true;
 
-            var fieldCard = container.GetCard();
-            if (fieldCard.InAttackPosition() == false)
+        var opponentContainers = opponentField.GetFrontRankContainers();
+
+        while (true)
+        {
+            // iterate monsters by the highest attack monster and hasnt been used
+            var chosenMonsterContainer = ChooseHighestAttackMonster(containers);
+
+            // null means all monster has been used
+            if (chosenMonsterContainer == null)
             {
-                fieldCard.SetToAttackPosition();
+                print("all monster has been used");
+                yield return new WaitForSeconds(actionDelay);
+                break;
             }
 
-            container.SetAsAttackerInBattle();
-            BattleSystem.Instance().StartBattle();
+            if(opponentField.IsFrontRankEmpty())
+            {
+                print("direct attack");
+                chosenMonsterContainer.GetCard().SetToAttackPosition();
+                yield return new WaitForSeconds(actionDelay);
+                chosenMonsterContainer.SetAsAttackerInBattle();
+                BattleSystem.Instance().StartBattle();
 
-            yield return new WaitUntil(() => BattleSystem.Instance().IsBattling() == false);
-            yield return new WaitForSeconds(actionDelay);
+                yield return new WaitUntil(() => BattleSystem.Instance().IsBattling() == false);
+                yield return new WaitForSeconds(actionDelay);
+            } else
+            {
+                var fieldCard = chosenMonsterContainer.GetCard();
+                var monsterCard = (MonsterCard)fieldCard.GetCardData();
+                var chosenMonsterAttackPoint = monsterCard.attackPoint;
+                var chosenOpponentContainer = ChooseOpponentMonster(opponentContainers, chosenMonsterAttackPoint);
+
+                // if null then there is no weaker monster on opponent monster than the current chosen monster 
+                if (chosenOpponentContainer == null)
+                {
+                    print($"no weaker monster: {chosenMonsterAttackPoint}");
+                    fieldCard.SetToDefensePosition();
+                    yield return new WaitForSeconds(actionDelay);
+                    fieldCard.SetHasBeenUsed(true);
+                    yield return new WaitForSeconds(actionDelay);
+                } else
+                {
+                    var opponentFieldCard = chosenOpponentContainer.GetCard();
+                    var opponentMonsterPower = opponentFieldCard.GetPowerPoint();
+                    if (opponentFieldCard.IsFaceDown() != false) opponentMonsterPower = 0; // to slips in
+                    if(chosenMonsterAttackPoint == opponentMonsterPower)
+                    {
+                        print($"stall: {chosenMonsterAttackPoint} -> {opponentMonsterPower}");
+                        fieldCard.SetHasBeenUsed(true);
+                        yield return new WaitForSeconds(actionDelay);
+                    } else
+                    {
+                        print($"battle with weaker monster: {chosenMonsterAttackPoint} -> {opponentMonsterPower}");
+                        chosenMonsterContainer.SetAsAttackerInBattle();
+                        chosenOpponentContainer.SetAsAttackedInBattle();
+                        BattleSystem.Instance().StartBattle();
+
+                        yield return new WaitUntil(() => BattleSystem.Instance().IsBattling() == false);
+                        yield return new WaitForSeconds(actionDelay);
+                    }
+                }
+            }
+
         }
-    }
 
-    private IEnumerator NormalAttacks(List<FieldCardContainer> containers, List<FieldCardContainer> opponentContainers)
-    {
-        // iterate monsters by the highest attack monster and hasnt been used
-        var chosenContainer = ChooseHighestAttackMonster(containers);
-
-        // TODO: continue from here, 
-        yield return null;
-
-
+        isAttacking = false;
     }
 
     private FieldCardContainer ChooseHighestAttackMonster(List<FieldCardContainer> containers)
@@ -181,6 +217,8 @@ public class EnemyBot : MonoBehaviour
         var bestAttack = -1;
         for (int i = 0; i < containers.Count; i++)
         {
+            if (containers[i].IsEmpty()) continue;
+
             var fieldCard = containers[i].GetCard();
             if (fieldCard.HasBeenUsed()) continue;
 
@@ -193,6 +231,50 @@ public class EnemyBot : MonoBehaviour
 
         if (index == -1) return null;
         return containers[index];
+    }
+
+    private FieldCardContainer ChooseOpponentMonster(List<FieldCardContainer> opponentContainers, int powerThreshold)
+    {
+        // choose order: weaker > defense face down > attack face down > strongest
+        var weakerIndex = -1;
+        var weakerPower = -1;
+
+        var defenseModeFaceDownIndex = -1;
+        var attackModeFaceDownIndex = -1;
+        for (int i = 0; i < opponentContainers.Count; i++)
+        {
+            if (opponentContainers[i].IsEmpty()) continue;
+
+            var fieldCard = opponentContainers[i].GetCard();
+            if(fieldCard.IsFaceDown())
+            {
+                if(fieldCard.InAttackPosition())
+                {
+                    attackModeFaceDownIndex = i;
+                } else
+                {
+                    defenseModeFaceDownIndex = i;
+                }
+                continue;
+            }
+
+            var monsterPower = fieldCard.GetPowerPoint();
+            if (monsterPower > powerThreshold) continue;
+
+            if (monsterPower <= weakerPower) continue;
+
+            weakerPower = monsterPower;
+            weakerIndex = i;
+        }
+
+        if (weakerIndex != -1) return opponentContainers[weakerIndex];
+        else if (defenseModeFaceDownIndex != -1) return opponentContainers[defenseModeFaceDownIndex];
+        else if (attackModeFaceDownIndex != -1) return opponentContainers[attackModeFaceDownIndex];
+        else
+        {
+            print($"No match for current power threshold {powerThreshold}");
+            return null;
+        }
     }
 
     #endregion

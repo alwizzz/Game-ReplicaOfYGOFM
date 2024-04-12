@@ -219,9 +219,9 @@ public class FieldSystem : MonoBehaviour
     }
 
     public bool IsBackRankFull() => (backRankCardCount >= 5 ? true : false);
-    public bool IsBackRankEmpty() => (backRankCardCount <= 5 ? true : false);
+    public bool IsBackRankEmpty() => (backRankCardCount <= 0 ? true : false);
     public bool IsFrontRankFull() => (frontRankCardCount >= 5 ? true : false);
-    public bool IsFrontRankEmpty() => (frontRankCardCount <= 5 ? true : false);
+    public bool IsFrontRankEmpty() => (frontRankCardCount <= 0 ? true : false);
 
 
     private bool IsPlayerOwned() => (owner == Side.Player ? true : false);
@@ -240,9 +240,10 @@ public class FieldSystem : MonoBehaviour
     public void EndTurn()
     {
         CloseSelection();
-        fieldPhaseButtons.SetActive(false);
-
         GameplayManager.Instance().ToEndPhase();
+
+        if (IsPlayerOwned() == false) return;
+        fieldPhaseButtons.SetActive(false);
     }
 
     public void ChangeCardPosition()
