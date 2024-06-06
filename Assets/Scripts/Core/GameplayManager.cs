@@ -66,7 +66,17 @@ public class GameplayManager : StaticReference<GameplayManager>
         var fieldCard = enemyFieldSystem.DebugSpawnFieldCard(cardData, false, fieldCardContainer);
         fieldCard.SetToDefensePosition();
         //fieldCard.SetToFaceDown();
+        //enemyFieldSystem.IncrementCardCount(false);
         print("DEBUG: spawned monster card on enemy field");
+
+        // spawn monster card on player field
+        cardData = Resources.Load<Card>("CardLibrary/022-NormalMonster-SummonedSkull");
+        fieldCardContainer = playerFieldSystem.GetFrontRankContainers()[0];
+        fieldCard = playerFieldSystem.DebugSpawnFieldCard(cardData, false, fieldCardContainer);
+        //fieldCard.SetToDefensePosition();
+        //fieldCard.SetToFaceDown();
+        //playerFieldSystem.IncrementCardCount(false);
+        print("DEBUG: spawned monster card on player field");
     }
 
     public bool IsPlayerTurn() => (turn == Side.Player ? true : false);

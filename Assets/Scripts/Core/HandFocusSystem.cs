@@ -67,6 +67,7 @@ public class HandFocusSystem : UIModal
         faceUpButton.SetActive(true);
     }
 
+    // called by button
     public void PlayCard()
     {
         var card = focusedCard.GetCardData();

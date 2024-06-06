@@ -25,7 +25,7 @@ public class FieldSystem : MonoBehaviour
     //[SerializeField] private GameObject secondaryFieldSelector; //TODO on further logic like equip
 
     [SerializeField] private CardInformationDisplay cardInformationDisplay;
-    [SerializeField] private GameObject fieldPhaseButtons; //TODO: abstract this out of FieldSystem
+    //[SerializeField] private GameObject fieldPhaseButtons; //TODO: abstract this out of FieldSystem
 
     private void Awake()
     {
@@ -102,17 +102,26 @@ public class FieldSystem : MonoBehaviour
 
     public void OpenFullSelection(bool maintainSelection = false)
     {
-        isOnSelection = true;
+        isOnSelection = true; 
 
         frontRankOverlay.SetActive(false);
         backRankOverlay.SetActive(false);
 
-        if (maintainSelection) return;
-        SetSelectedCardContainer(frontRankFieldCardContainers[0]);
+        if (maintainSelection)
+        {
+            FieldButtonManager.Instance().UpdateButtons(selectedFieldCardContainer);
+        } else
+        {
+            var defaultFieldCardContainer = frontRankFieldCardContainers[0];
+            SetSelectedCardContainer(defaultFieldCardContainer);
+            FieldButtonManager.Instance().UpdateButtons(defaultFieldCardContainer);
+        }
+
     }
 
     public void OpenFrontRankSelection(bool maintainSelection = false)
     {
+        print($"OpenFrontRankSelection on {owner}");
         isOnSelection = true;
 
         frontRankOverlay.SetActive(false);
@@ -151,6 +160,7 @@ public class FieldSystem : MonoBehaviour
 
         if(selectedFieldCardContainer.IsEmpty() == false)
         {
+            print("spawning field card on occupied field card container");
             // currently unable to spawn on occupied container
             // TODO: implement fusion/equip in this manner
             return;
@@ -174,7 +184,7 @@ public class FieldSystem : MonoBehaviour
         IncrementCardCount(selectedFieldCardContainer.IsBackRank());
     }
 
-    public void IncrementCardCount(bool isBackRank)
+    private void IncrementCardCount(bool isBackRank)
     {
         if (isBackRank)
         {
@@ -234,7 +244,9 @@ public class FieldSystem : MonoBehaviour
         OpenFullSelection(true);
 
         if (IsPlayerOwned() == false) return;
-        fieldPhaseButtons.SetActive(true);
+        //fieldPhaseButtons.SetActive(true);
+        FieldButtonManager.Instance().Show();
+        FieldButtonManager.Instance().UpdateBattleButtons(false);
     }
 
     public void EndTurn()
@@ -243,7 +255,8 @@ public class FieldSystem : MonoBehaviour
         GameplayManager.Instance().ToEndPhase();
 
         if (IsPlayerOwned() == false) return;
-        fieldPhaseButtons.SetActive(false);
+        //fieldPhaseButtons.SetActive(false);
+        FieldButtonManager.Instance().Hide();
     }
 
     public void ChangeCardPosition()
@@ -252,6 +265,7 @@ public class FieldSystem : MonoBehaviour
         if (selectedFieldCardContainer.IsEmpty()) return;
 
         selectedFieldCardContainer.GetCard().ChangePosition();
+        
     }
 
     public void UseFieldCard()
@@ -284,6 +298,16 @@ public class FieldSystem : MonoBehaviour
         CloseSelection(maintainSelection:true);
 
         GameplayManager.Instance().OpponentFieldSystem().OpenFrontRankSelection();
+        FieldButtonManager.Instance().UpdateBattleButtons(true);
+    }
+
+    public void CancelBattleMode()
+    {
+        print("CANCEL BATTLE MODE");
+
+        GameplayManager.Instance().OpponentFieldSystem().CloseSelection(false);
+        OpenFullSelection(true);
+        FieldButtonManager.Instance().UpdateBattleButtons(false);
     }
 
     #endregion

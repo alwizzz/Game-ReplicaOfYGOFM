@@ -14,7 +14,7 @@ public class HandSystem : UIModal
 
     [Header("States")]
     [SerializeField] private HandCardContainer selectedHandCardContainer;
-    [SerializeField] private bool isFocusing;
+    //[SerializeField] private bool isFocusing;
 
     [Header("Caches")]
     [SerializeField] private List<HandCardContainer> handCardContainers;
@@ -64,9 +64,9 @@ public class HandSystem : UIModal
 
     public void FocusSelectedCard()
     {
-        if (isFocusing) return;
+        //if (isFocusing) return;
 
-        isFocusing = true;
+        //isFocusing = true;
         //handOverlay.SetActive(true); // unused as it will then be hidden
         var card = selectedHandCardContainer.GetCard();
         GameplayManager.Instance().ToFocusPhase(card);

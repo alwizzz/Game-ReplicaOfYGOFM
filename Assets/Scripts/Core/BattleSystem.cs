@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 using TMPro;
 
@@ -22,7 +24,6 @@ public class BattleSystem : StaticUIModal<BattleSystem>
     [SerializeField] private bool attackerDestroyed;
     [SerializeField] private bool attackedDestroyed;
 
-
     [Header("Caches")]
     [SerializeField] private BattleCard attackerBattleCard;
     [SerializeField] private BattleCard attackedBattleCard;
@@ -40,6 +41,7 @@ public class BattleSystem : StaticUIModal<BattleSystem>
     {
         attackerReference = null;
         attackedReference = null;
+        
     }
 
     public void StartBattle()
@@ -65,6 +67,7 @@ public class BattleSystem : StaticUIModal<BattleSystem>
 
     private bool CheckEmptyOpponentField()
     {
+
         return GameplayManager.Instance().OpponentFieldSystem().IsFrontRankEmpty();
     }
 
@@ -79,14 +82,19 @@ public class BattleSystem : StaticUIModal<BattleSystem>
         if(isDirectAttack)
         {
             attackedBattleCard.gameObject.SetActive(false);
-            return;
+            //return;
+        } else
+        {
+            // error will be raised if going to do direct attack when opponent front rank is not empty
+
+            attackedBattleCard.gameObject.SetActive(true);
+            attackedBattleCard.SetupBattleCard(
+                cardData: attackedReference.GetCardData(),
+                inAttackPosition: attackedReference.InAttackPosition()
+            );
+            attackedReference.SetToFaceUp();
         }
-        attackedBattleCard.gameObject.SetActive(true);
-        attackedBattleCard.SetupBattleCard(
-            cardData: attackedReference.GetCardData(),
-            inAttackPosition: attackedReference.InAttackPosition()
-        );
-        attackedReference.SetToFaceUp();
+
     }
 
     private IEnumerator Battle()
@@ -105,6 +113,7 @@ public class BattleSystem : StaticUIModal<BattleSystem>
         attackedFlareEffect.Hide();
         Hide();
         GameplayManager.Instance().FieldSystem().StartFieldPhase();
+        GameplayManager.Instance().OpponentFieldSystem().CloseSelection(false);
 
         isBattling = false;
     }

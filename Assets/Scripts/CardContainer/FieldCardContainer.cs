@@ -14,24 +14,27 @@ public class FieldCardContainer : CardContainer
 
     //[SerializeField] private int index;
     [SerializeField] private FieldCard containedFieldCard;
+    [SerializeField] private bool isEmpty;
     [SerializeField] private bool isSelected;
+
 
     public void Setup(FieldSystem fieldSystem)
     {
         this.fieldSystem = fieldSystem;
+        isEmpty = true;
     }
-
 
     public FieldCard GetCard() => containedFieldCard;
     public bool IsEmpty() => (containedFieldCard == null ? true : false);
 
     public void SetCard(FieldCard fieldCard)
     {
-        if (containedFieldCard != null)
+        if (isEmpty == false)
         {
             print("ERROR: attempt to set contained card when currently one exists, aborting...");
             return;
         }
+        isEmpty = false;
 
         MovePositionOnContainer(fieldCard.transform, setParent: true);
         containedFieldCard = fieldCard;
@@ -40,11 +43,12 @@ public class FieldCardContainer : CardContainer
 
     public void RemoveCard()
     {
-        if (containedFieldCard == null)
+        if (isEmpty == true)
         {
             print("WARNING: attempt to remove contained card when it is already null");
             return;
         }
+        isEmpty = true;
 
         containedFieldCard.ResetContainer();
         containedFieldCard = null;
@@ -56,9 +60,14 @@ public class FieldCardContainer : CardContainer
 
     public void Select()
     {
-        if (isSelected) return;
+        //if (isSelected) return;
 
         isSelected = true;
+
+        if(IsPlayerOwned())
+        {
+            FieldButtonManager.Instance().UpdateButtons(this);
+        }
 
         if (IsPlayerOwned())
         {
