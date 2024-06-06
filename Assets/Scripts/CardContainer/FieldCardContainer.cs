@@ -64,13 +64,9 @@ public class FieldCardContainer : CardContainer
 
         isSelected = true;
 
-        if(IsPlayerOwned())
-        {
-            FieldButtonManager.Instance().UpdateButtons(this);
-        }
-
         if (IsPlayerOwned())
         {
+            FieldButtonManager.Instance().UpdateButtons(this);
             GameplayManager.Instance().PlayerFieldSystem().SetSelectedCardContainer(this);
         } else
         {

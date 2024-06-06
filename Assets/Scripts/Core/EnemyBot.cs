@@ -160,6 +160,8 @@ public class EnemyBot : MonoBehaviour
 
             if(opponentField.IsFrontRankEmpty())
             {
+                // opponent has no monster in their field, doing a direct attack
+
                 print("direct attack");
                 chosenMonsterContainer.GetCard().SetToAttackPosition();
                 yield return new WaitForSeconds(actionDelay);
@@ -170,9 +172,12 @@ public class EnemyBot : MonoBehaviour
                 yield return new WaitForSeconds(actionDelay);
             } else
             {
+                // opponent has monster in their field
+
                 var fieldCard = chosenMonsterContainer.GetCard();
                 var monsterCard = (MonsterCard)fieldCard.GetCardData();
                 var chosenMonsterAttackPoint = monsterCard.attackPoint;
+
                 var chosenOpponentContainer = ChooseOpponentMonster(opponentContainers, chosenMonsterAttackPoint);
 
                 // if null then there is no weaker monster on opponent monster than the current chosen monster 
@@ -259,18 +264,27 @@ public class EnemyBot : MonoBehaviour
             }
 
             var monsterPower = fieldCard.GetPowerPoint();
-            if (monsterPower > powerThreshold) continue;
+            if (monsterPower >= powerThreshold) continue;
 
-            if (monsterPower <= weakerPower) continue;
+            if (monsterPower < weakerPower) continue;
 
             weakerPower = monsterPower;
             weakerIndex = i;
         }
 
-        if (weakerIndex != -1) return opponentContainers[weakerIndex];
-        else if (defenseModeFaceDownIndex != -1) return opponentContainers[defenseModeFaceDownIndex];
-        else if (attackModeFaceDownIndex != -1) return opponentContainers[attackModeFaceDownIndex];
-        else
+        if (weakerIndex != -1)
+        {
+            print("found weaker monster");
+            return opponentContainers[weakerIndex];
+        } else if (defenseModeFaceDownIndex != -1)
+        {
+            print("found defense facedown monster");
+            return opponentContainers[defenseModeFaceDownIndex];
+        } else if (attackModeFaceDownIndex != -1)
+        {
+            print("found attack facedown monster");
+            return opponentContainers[attackModeFaceDownIndex];
+        } else
         {
             print($"No match for current power threshold {powerThreshold}");
             return null;
