@@ -24,7 +24,7 @@ public class HandCardContainer : CardContainer
         containedHandCard.SetContainer(this);
     }
 
-    public void RemoveCard()
+    public void RemoveCard(bool alsoDestroy = false)
     {
         if(containedHandCard == null)
         {
@@ -33,6 +33,12 @@ public class HandCardContainer : CardContainer
         }
 
         containedHandCard.ResetContainer();
+        
+        if(alsoDestroy)
+        {
+            Destroy(containedHandCard.gameObject);
+        } 
+
         containedHandCard = null;
     }
 

@@ -482,7 +482,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 54332262}
         m_TargetAssemblyTypeName: FieldButtonManager, Assembly-CSharp
-        m_MethodName: OnChangePositionButtonUpdate
+        m_MethodName: ForceUpdateButtons
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

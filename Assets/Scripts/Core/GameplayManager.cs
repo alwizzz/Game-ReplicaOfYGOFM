@@ -210,7 +210,6 @@ public class GameplayManager : StaticReference<GameplayManager>
             {
                 phase = Phase.DrawPhase;
                 EventManager.DrawPhase();
-                
             }
         ));
     }
@@ -315,18 +314,29 @@ public class GameplayManager : StaticReference<GameplayManager>
         }
     }
 
+    private void RefreshFieldStatus()
+    {
+        var currentField = FieldSystem();
+        currentField.RefreshStatus();
+    }
+
 
     #region Subcriptions
 
     private void OnEnable()
     {
         EventManager.OnDrawPhase += OpenHand;
+        EventManager.OnDrawPhase += RefreshFieldStatus;
+
         EventManager.OnEndPhase += ResetFieldInformationDisplays;
+
     }
 
     private void OnDisable()
     {
         EventManager.OnDrawPhase -= OpenHand;
+        EventManager.OnDrawPhase -= RefreshFieldStatus;
+
         EventManager.OnEndPhase -= ResetFieldInformationDisplays;
     }
 

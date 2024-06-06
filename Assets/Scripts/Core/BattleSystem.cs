@@ -115,6 +115,11 @@ public class BattleSystem : StaticUIModal<BattleSystem>
         GameplayManager.Instance().FieldSystem().StartFieldPhase();
         GameplayManager.Instance().OpponentFieldSystem().CloseSelection(false);
 
+        if(GameplayManager.Instance().IsPlayerTurn())
+        {
+            FieldButtonManager.Instance().ForceUpdateButtons();
+        }
+
         isBattling = false;
     }
 

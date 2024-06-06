@@ -25,27 +25,37 @@ public class FieldButtonManager : StaticUIModal<FieldButtonManager>
         {
             useCardButton.interactable = false;
             changePositionButton.interactable = false;
+
+            return;
+        }
+
+        if (container.IsBackRank())
+        {
+            changePositionButton.interactable = false;
+            useCardButton.interactable = true;
+
+            return;
+        }
+
+
+        var fieldCard = container.GetCard();
+        if(fieldCard.HasBeenUsed())
+        {
+            useCardButton.interactable = false;
+            changePositionButton.interactable = false;
+
+            return;
+        }
+
+
+        changePositionButton.interactable = true;
+        if (fieldCard.InAttackPosition())
+        {
+            useCardButton.interactable = true;
         }
         else
         {
-            if (container.IsBackRank())
-            {
-                changePositionButton.interactable = false;
-                useCardButton.interactable = true;
-            }
-            else
-            {
-                // BUG: use card interactable not updated when clicking ChangePosition button 
-                // because the implementation currently only exist on FieldCardContaiener.Select()
-                changePositionButton.interactable = true;
-                if(container.GetCard().InAttackPosition())
-                {
-                    useCardButton.interactable = true;
-                } else
-                {
-                    useCardButton.interactable = false;
-                }
-            }
+            useCardButton.interactable = false;
         }
     }
 
@@ -70,10 +80,11 @@ public class FieldButtonManager : StaticUIModal<FieldButtonManager>
         }
     }
 
-    public void OnChangePositionButtonUpdate()
+    public void ForceUpdateButtons()
     {
         // force to reselect current selected field card container to
-        // apply the changes
+        // reinvoke UpdateButtons and apply the changes
+        print("force update buttons");
         GameplayManager.Instance().PlayerFieldSystem().GetSelectedFieldContainer().Select();
     }
 

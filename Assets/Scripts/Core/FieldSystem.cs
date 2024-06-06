@@ -321,6 +321,19 @@ public class FieldSystem : MonoBehaviour
        return frontRankFieldCardContainers.TrueForAll((e) => e.IsEmpty());
     }
 
+    public void RefreshStatus()
+    {
+        print("refresh status on " + owner);
+        // Refresh has been used status on field cards
+        frontRankFieldCardContainers.ForEach(e =>
+        {
+            if(e.IsEmpty() == false)
+            {
+                e.GetCard().SetHasBeenUsed(false);
+            }
+        });
+    }
+
     #region DEBUG
 
     public FieldCard DebugSpawnFieldCard(Card cardData, bool isFacedown, FieldCardContainer fieldCardContainer)
