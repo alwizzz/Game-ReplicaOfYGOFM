@@ -9,6 +9,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 {
     [SerializeField] private Side possession;
     [SerializeField] private HandCard focusedCard;
+    [SerializeField] private HandCard handCardReferenceFromHand;
     [SerializeField] private bool isFaceDown;
     [SerializeField] private bool isMonster;
 
@@ -28,6 +29,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
     {
         var cardData = handCard.GetCardData();
         focusedCard.Setup(cardData);
+        handCardReferenceFromHand = handCard;
 
         if(cardData.IsMonsterCard())
         {
@@ -75,6 +77,8 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         var guardianStar = selector.GetSelectedGuardianStar();
 
         GameplayManager.Instance().ToFieldPhase(card, isFaceDown, guardianStar);
+        handCardReferenceFromHand.GetContainer().RemoveCard(alsoDestroy: true);
+
         Hide();
 
     }

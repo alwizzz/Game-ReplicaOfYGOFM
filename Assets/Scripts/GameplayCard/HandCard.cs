@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class HandCard : GameplayCard
@@ -13,4 +14,6 @@ public class HandCard : GameplayCard
     }
 
     public void ResetContainer() { container = null; }
+
+    public HandCardContainer GetContainer() { return container; }
 }

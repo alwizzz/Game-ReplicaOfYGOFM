@@ -227,24 +227,25 @@ public class GameplayManager : StaticReference<GameplayManager>
         if (IsPlayerTurn() == false) enemyBot.StartPlaying();
     }
 
-    public void ToFocusPhase(HandCard card)
-    {
-        if (phase != Phase.HandPhase)
-        {
-            print("WARNING: unmatching phase, aborting...");
-            return;
-        }
+    // public void ToFocusPhase(HandCard card)
+    // {
+    //     if (phase != Phase.HandPhase)
+    //     {
+    //         print("WARNING: unmatching phase, aborting...");
+    //         return;
+    //     }
 
-        HandFocusSystem()
-            .SetupAndShow(card);
+    //     HandFocusSystem()
+    //         .SetupAndShow(card);
 
-        phase = Phase.FocusPhase;
-        EventManager.FocusPhase();
-    }
+    //     phase = Phase.FocusPhase;
+    //     EventManager.FocusPhase();
+    // }
 
     public void ToFieldPhase(Card card, bool isFaceDown, GuardianStar guardianStar)
     {
-        if (phase != Phase.FocusPhase)
+        // if (phase != Phase.FocusPhase)
+        if (phase != Phase.HandPhase)
         {
             print("WARNING: unmatching phase, aborting...");
             return;

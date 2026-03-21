@@ -24,14 +24,14 @@ public class EventManager : MonoBehaviour
         OnHandPhase?.Invoke();
     }
 
-    public delegate void FocusPhaseAction();
-    public static event FocusPhaseAction OnFocusPhase;
+    // public delegate void FocusPhaseAction();
+    // public static event FocusPhaseAction OnFocusPhase;
 
-    public static void FocusPhase()
-    {
-        print("FocusPhase flag raised!");
-        OnFocusPhase?.Invoke();
-    }
+    // public static void FocusPhase()
+    // {
+    //     print("FocusPhase flag raised!");
+    //     OnFocusPhase?.Invoke();
+    // }
 
     public delegate void FieldPhaseAction();
     public static event FieldPhaseAction OnFieldPhase;

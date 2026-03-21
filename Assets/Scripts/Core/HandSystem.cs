@@ -65,11 +65,15 @@ public class HandSystem : UIModal<HandSystem>
 
     public void FocusSelectedCard()
     {
+        // TODO: when focus is after fusion card attempt, it shouldnt be "return" able
         var card = selectedHandCardContainer.GetCard();
-        GameplayManager.Instance().ToFocusPhase(card);
+        // GameplayManager.Instance().ToFocusPhase(card);
+        GameplayManager.Instance().HandFocusSystem().SetupAndShow(card);
+
         Hide();
 
-        selectedHandCardContainer.RemoveCard(alsoDestroy: true);
+        // selectedHandCardContainer.RemoveCard(alsoDestroy: false);
+        // selectedHandCardContainer.RemoveCard(alsoDestroy: true);
     }
 
     public List<HandCardContainer> GetHandCardContainers() => handCardContainers;

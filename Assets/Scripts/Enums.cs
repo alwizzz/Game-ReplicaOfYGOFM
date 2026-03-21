@@ -13,7 +13,7 @@ namespace Enums
     {
         DrawPhase,
         HandPhase,
-        FocusPhase,
+        // FocusPhase,
         FieldPhase,
         EndPhase
     }
@@ -76,7 +76,6 @@ namespace Enums
 
         OnPlayerSummon,
         OnOpponentSummon,
-
     }
 
 
