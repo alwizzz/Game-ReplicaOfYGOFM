@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 using TMPro;
 
-public class BattleSystem : StaticUIModal<BattleSystem>
+// public class BattleSystem : StaticUIModal<BattleSystem>
+public class BattleSystem : UIModal<BattleSystem>
 {
     [SerializeField] private bool isBattling;
     [Header("Parameters")]

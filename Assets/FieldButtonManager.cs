@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class FieldButtonManager : StaticUIModal<FieldButtonManager>
+// public class FieldButtonManager : StaticUIModal<FieldButtonManager>
+public class FieldButtonManager : UIModal<FieldButtonManager>
 {
     [SerializeField] private Button changePositionButton;
     [SerializeField] private Button useCardButton;

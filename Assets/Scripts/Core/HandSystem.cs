@@ -8,7 +8,7 @@ using TMPro;
 using Enums;
 
 
-public class HandSystem : UIModal
+public class HandSystem : UIModal<HandSystem>
 {
     [SerializeField] private Side owner;
     [SerializeField] private HandCard handCardPrefab;
@@ -29,7 +29,7 @@ public class HandSystem : UIModal
 
     private void Awake()
     {
-        BaseAwake();
+        BaseAwake(this);
     }
 
     private void Start()

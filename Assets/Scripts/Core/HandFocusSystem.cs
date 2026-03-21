@@ -5,7 +5,7 @@ using UnityEngine;
 
 using Enums;
 
-public class HandFocusSystem : UIModal
+public class HandFocusSystem : UIModal<HandFocusSystem>
 {
     [SerializeField] private Side possession;
     [SerializeField] private HandCard focusedCard;
@@ -21,7 +21,7 @@ public class HandFocusSystem : UIModal
 
     private void Awake()
     {
-        BaseAwake();
+        BaseAwake(this);
     }
 
     public void SetupAndShow(HandCard handCard)

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 using TMPro;
 
-public class DamageFlareEffect : UIModal
+public class DamageFlareEffect : UIModal<DamageFlareEffect>
 {
     [SerializeField] private Color damagedColor;
     [SerializeField] private Color undamagedColor;
@@ -16,7 +16,7 @@ public class DamageFlareEffect : UIModal
 
     private void Awake()
     {
-        BaseAwake();
+        BaseAwake(this);
     }
 
     public void SetupAndShow(int damage)
