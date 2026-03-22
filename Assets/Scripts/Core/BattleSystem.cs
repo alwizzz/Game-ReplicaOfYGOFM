@@ -6,13 +6,15 @@ using UnityEngine.UI;
 
 using TMPro;
 
+using Enums;
+
 // public class BattleSystem : StaticUIModal<BattleSystem>
 public class BattleSystem : UIModal<BattleSystem>
 {
     [SerializeField] private bool isBattling;
     [Header("Parameters")]
-    [SerializeField] private FieldCard attackerReference;
-    [SerializeField] private FieldCard attackedReference;
+    [SerializeField] private FieldCard attackerFieldCardReference;
+    [SerializeField] private FieldCard attackedFieldCardReference;
     [SerializeField] private float preDamageCalculationDelay;
     [SerializeField] private float postDamageCalculationDelay;
 
@@ -40,16 +42,16 @@ public class BattleSystem : UIModal<BattleSystem>
 
     private void Reset()
     {
-        attackerReference = null;
-        attackedReference = null;
-        
+        attackerFieldCardReference = null;
+        attackedFieldCardReference = null;
+        isDirectAttack = false;
     }
 
     public void StartBattle()
     {
-        if (attackerReference == null) return;
-        if (attackerReference.InAttackPosition() == false) return;
-        if(attackedReference == null)
+        if (attackerFieldCardReference == null) return;
+        if (attackerFieldCardReference.InAttackPosition() == false) return;
+        if(attackedFieldCardReference == null)
         {
             
             isDirectAttack = CheckEmptyOpponentField();
@@ -75,10 +77,10 @@ public class BattleSystem : UIModal<BattleSystem>
     private void Setup(bool isDirectAttack = false)
     {
         attackerBattleCard.SetupBattleCard(
-            cardData: attackerReference.GetCardData(),
-            inAttackPosition: attackerReference.InAttackPosition()
+            cardData: attackerFieldCardReference.GetCardData(),
+            inAttackPosition: attackerFieldCardReference.InAttackPosition()
         );
-        attackerReference.SetToFaceUp();
+        attackerFieldCardReference.SetToFaceUp();
 
         if(isDirectAttack)
         {
@@ -90,10 +92,10 @@ public class BattleSystem : UIModal<BattleSystem>
 
             attackedBattleCard.gameObject.SetActive(true);
             attackedBattleCard.SetupBattleCard(
-                cardData: attackedReference.GetCardData(),
-                inAttackPosition: attackedReference.InAttackPosition()
+                cardData: attackedFieldCardReference.GetCardData(),
+                inAttackPosition: attackedFieldCardReference.InAttackPosition()
             );
-            attackedReference.SetToFaceUp();
+            attackedFieldCardReference.SetToFaceUp();
         }
 
     }
@@ -135,6 +137,12 @@ public class BattleSystem : UIModal<BattleSystem>
 
         int attackerPower = GetPowerPoint(attackerBattleCard);
         int attackedPower = GetPowerPoint(attackedBattleCard);
+
+        // handle guardian star interaction
+        GuardianStar attackerGs = attackerFieldCardReference.GetSelectedGuardianStar();
+        GuardianStar attackedGs = attackedFieldCardReference.GetSelectedGuardianStar();
+        GuardianStarCalculator.ApplyBonusPower(ref attackerPower, attackerGs, ref attackedPower, attackedGs);
+
 
         // attacker must have been in attack position
         //bool attackerInAttackPosition = attackerBattleCard.InAttackPosition();
@@ -183,7 +191,7 @@ public class BattleSystem : UIModal<BattleSystem>
 
     private void BattleResolution()
     {
-        attackerReference.SetHasBeenUsed(true);
+        attackerFieldCardReference.SetHasBeenUsed(true);
         DestroyCards();
         UpdateLifePoint();
 
@@ -194,12 +202,12 @@ public class BattleSystem : UIModal<BattleSystem>
     {
         if (attackerDestroyed)
         {
-            attackerReference.Destroy();
+            attackerFieldCardReference.Destroy();
         }
 
         if (attackedDestroyed)
         {
-            attackedReference.Destroy();
+            attackedFieldCardReference.Destroy();
         }
     }
 
@@ -211,12 +219,12 @@ public class BattleSystem : UIModal<BattleSystem>
 
     public void SetAttackerReference(FieldCard reference)
     {
-        attackerReference = reference;
+        attackerFieldCardReference = reference;
     }
 
     public void SetAttackedReference(FieldCard reference)
     {
-        attackedReference = reference;
+        attackedFieldCardReference = reference;
     }
 
 
