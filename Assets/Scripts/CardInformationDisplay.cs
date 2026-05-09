@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 
 using Enums;
+using System.Diagnostics;
 
 public class CardInformationDisplay : MonoBehaviour
 {
