@@ -83,6 +83,13 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
     }
 
+    public void ReturnToHand()
+    {
+        Hide();
+        GameplayManager.Instance().HandSystem().Show();
+        GameplayManager.Instance().FieldSystem().CloseSelection();
+    }
+
     public bool IsMonster() => isMonster;
 
 }
