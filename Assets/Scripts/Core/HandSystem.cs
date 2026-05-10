@@ -26,17 +26,73 @@ public class HandSystem : UIModal<HandSystem>
     //[SerializeField] private HandFocusSystem handFocusSystem;
     [SerializeField] private GameObject handOverlay;
 
+    public override void Show()
+    {
+        base.Show();
+        Canvas.ForceUpdateCanvases();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(
+            // (RectTransform)handCardContainers[0].transform.GetComponent<RectTransform>()
+            GetComponent<RectTransform>()
+        );
+    }
 
     private void Awake()
     {
         BaseAwake(this);
+
+        // // debug
+        // if(IsPlayerOwned() && handCardContainers[0] != null)
+        // {
+        //     print($"Awake: {handCardContainers[0].transform.position}" + System.Environment.StackTrace);
+        // }
     }
 
     private void Start()
     {
         //UpdateHand();
         //SetSelectedCardContainer(handCardContainers[0]);
+        // debug
+        // if(IsPlayerOwned() && handCardContainers[0] != null)
+        // {
+        //     print($"Start: {handCardContainers[0].transform.position}" + System.Environment.StackTrace);
+        // }
+
+        // Canvas.ForceUpdateCanvases();
+        // LayoutRebuilder.ForceRebuildLayoutImmediate(
+        //     (RectTransform)handCardContainers[0].transform.GetComponent<RectTransform>()
+        // );
     }
+
+#region debugging
+
+
+
+    // private void OnEnable()
+    // {
+    //     // debug
+    //     if(IsPlayerOwned() && handCardContainers[0] != null)
+    //     {
+    //         print($"OnEnable: {handCardContainers[0].transform.position}" + System.Environment.StackTrace);
+    //     }
+    // }
+    // private void Update()
+    // {
+    //     // debug
+    //     if(IsPlayerOwned() && handCardContainers[0] != null)
+    //     {
+    //         print($"Update: {handCardContainers[0].transform.position}" + System.Environment.StackTrace);
+    //     }
+    // }
+    // private void LateUpdate()
+    // {
+    //     // debug
+    //     if(IsPlayerOwned() && handCardContainers[0] != null)
+    //     {
+    //         print($"LateUpdate: {handCardContainers[0].transform.position}" + System.Environment.StackTrace);
+    //     }
+    // }
+
+#endregion
 
     private bool IsPlayerOwned() => (owner == Side.Player ? true : false);
 
@@ -85,8 +141,10 @@ public class HandSystem : UIModal<HandSystem>
     {
         print("oy from " + owner);
         UpdateHand();
-        handCardContainers[0].Select();
+        // var defaultHandCardContainer = handCardContainers[0];
+        // SetSelectedCardContainer(defaultHandCardContainer);
         Show();
+        handCardContainers[0].Select();
     }
 
     // TODO: differentiate DrawPhase and HandPhase on UpdateHand

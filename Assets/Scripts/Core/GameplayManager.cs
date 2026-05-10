@@ -33,13 +33,17 @@ public class GameplayManager : StaticReference<GameplayManager>
     [SerializeField] private EnemyBot enemyBot;
 
 
+
+
     private void Awake()
     {
         BaseAwake(this);
     }
 
-    private void Start()
+    IEnumerator Start()
     {
+        yield return null;
+
         Setup();
         Debug();
     }
