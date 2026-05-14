@@ -55,24 +55,4 @@ public static class GuardianStarCalculator
 
         return result;
     }
-
-    // public static bool? ApplyBonusPower(ref int refAPower, GuardianStar refAGuardianStar, 
-    //     ref int refBPower, GuardianStar refBGuardianStar)
-    // {
-    //     bool? result = GetInteraction(refAGuardianStar, refBGuardianStar);
-    //     if(result == true)
-    //     {
-    //         refAPower += BONUS_POWER_VALUE;
-    //         Debug.Log($"refA buffed to {refAPower} by guardian star effect ({refAGuardianStar} wins to {refBGuardianStar})");
-    //     } else if(result == false)
-    //     {
-    //         refBPower += BONUS_POWER_VALUE;
-    //         Debug.Log($"refB buffed to {refBPower} by guardian star effect ({refAGuardianStar} loses to {refBGuardianStar})");
-    //     } else
-    //     {
-    //         Debug.Log($"guardian star has no interaction ({refAGuardianStar} and {refBGuardianStar})");
-    //     }
-
-    //     return result;
-    // }
 }

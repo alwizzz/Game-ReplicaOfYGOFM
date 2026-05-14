@@ -127,11 +127,13 @@ public class FieldSystem : MonoBehaviour
         print($"OpenFrontRankSelection on {owner}");
         isOnSelection = true;
 
-        if (IsPlayerOwned())
-        {
-            frontRankOverlay.SetActive(false);
-            backRankOverlay.SetActive(true);
-        }
+        frontRankOverlay.SetActive(false);
+        backRankOverlay.SetActive(true);
+        // if (IsPlayerOwned())
+        // {
+        //     frontRankOverlay.SetActive(false);
+        //     backRankOverlay.SetActive(true);
+        // }
 
         if (maintainSelection) return;
         SetSelectedCardContainer(frontRankFieldCardContainers[0]);

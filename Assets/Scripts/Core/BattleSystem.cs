@@ -60,7 +60,8 @@ public class BattleSystem : UIModal<BattleSystem>
         {
             
             isDirectAttack = CheckEmptyOpponentField();
-            // TODO: if in this case isDirectAttack is false, it would raise an error
+            if(!isDirectAttack){return;}
+
         }
 
         Setup(isDirectAttack);
