@@ -283,17 +283,17 @@ public class GameplayManager : StaticReference<GameplayManager>
 
     #region Full Field Control
 
-    public void StartFreeSelection()
-    {
-        enemyFieldSystem.OpenFullSelection(false); 
-        // player on last order so selected field card continer is on player's
-        playerFieldSystem.OpenFullSelection(false); 
-    }
-    public void StopFreeSelection()
-    {
-        enemyFieldSystem.CloseSelection(); 
-        playerFieldSystem.CloseSelection(); 
-    }
+    // public void StartFreeSelection()
+    // {
+    //     enemyFieldSystem.OpenFullSelection(false); 
+    //     // player on last order so selected field card continer is on player's
+    //     playerFieldSystem.OpenFullSelection(false); 
+    // }
+    // public void StopFreeSelection()
+    // {
+    //     enemyFieldSystem.CloseSelection(); 
+    //     playerFieldSystem.CloseSelection(); 
+    // }
 
     #endregion
 

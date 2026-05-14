@@ -35,12 +35,12 @@ public class HandSystem : UIModal<HandSystem>
             GetComponent<RectTransform>()
         );
 
-        GameplayManager.Instance().StartFreeSelection();
+        // GameplayManager.Instance().StartFreeSelection();
     }
     public override void Hide()
     {
         base.Hide();
-        GameplayManager.Instance().StopFreeSelection();
+        // GameplayManager.Instance().StopFreeSelection();
     }
 
     private void Awake()
