@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Enums;
+// using System.Drawing;
 
 // TODO: name isnt that suitable because it also stores color informations and dummy sprites
 public class ResourceManager : StaticReference<ResourceManager>
@@ -20,11 +21,16 @@ public class ResourceManager : StaticReference<ResourceManager>
     [SerializeField] private List<NamedSprite> typeIcons;
     [SerializeField] private List<NamedSprite> guardianStarIcons;
 
-    [Header("Color Parameters")]
+    [Header("Card Colors")]
     [SerializeField] private Color monsterCardColor;
     [SerializeField] private Color spellCardColor;
     [SerializeField] private Color trapCardColor;
     [SerializeField] private Color ritualCardColor;
+
+
+    [Header("Point Number Colors")]
+    [SerializeField] private Color normalNumberColor;
+    [SerializeField] private Color bonusedNumberColor;
 
     private void Awake()
     {
@@ -84,6 +90,11 @@ public class ResourceManager : StaticReference<ResourceManager>
             print("WARNING: invalid card data types, returning white color as null");
             return Color.white;
         }
+    }
+
+    public Color GetNumberColor(bool isNormal)
+    {
+        return isNormal ? normalNumberColor : bonusedNumberColor;
     }
 
     private void OnDestroy()

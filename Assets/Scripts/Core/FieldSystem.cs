@@ -53,9 +53,15 @@ public class FieldSystem : MonoBehaviour
         selectedFieldCardContainer = fieldCardContainer;
         UpdateFieldSelector();
 
-        // TODO: manage hiding info on opponent's facedown card
-        if(selectedFieldCardContainer.IsEmpty())
-        {
+        bool isEnemy = owner == Side.Enemy;
+        bool isFaceDown = selectedFieldCardContainer.IsEmpty() ? false : selectedFieldCardContainer.GetCard().IsFaceDown();
+        if(
+            selectedFieldCardContainer.IsEmpty()
+            ||
+            (
+                isEnemy && isFaceDown
+            )
+        ){
             UpdateInformationDisplay(reset:true);
         } else
         {
@@ -83,7 +89,7 @@ public class FieldSystem : MonoBehaviour
             return;
         }
 
-        cardInformationDisplay.UpdateInformation(selectedFieldCardContainer.GetCard()); ;
+        cardInformationDisplay.UpdateInformation(selectedFieldCardContainer.GetCard());
     }
 
     public void ResetSelection()

@@ -4,6 +4,8 @@ using UnityEngine;
 
 using TMPro;
 using Enums;
+// using System.Drawing;
+using System.Resources;
 
 public class BattleCard : GameplayCard
 {
@@ -60,16 +62,25 @@ public class BattleCard : GameplayCard
     {
         print("Text Animation started");
 
+        Color startColor = ResourceManager.Instance().GetNumberColor(true); // normal color
+        Color targetColor = ResourceManager.Instance().GetNumberColor(false); // bonused color
+
         float elapsed = 0f;
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
+
             int currentValue = Mathf.RoundToInt(
                 Mathf.Lerp(startValue, targetValue, t)
             );
             textRef.text = currentValue.ToString();
-            print($"Text Animation: {currentValue}, {startValue}, {targetValue}");
+
+            // Color lerp
+            var lerpedColor = Color.Lerp(startColor, targetColor, t);
+            textRef.color = lerpedColor;
+
+            // print($"Text Animation {lerpedColor}, {startColor}, {targetColor}");
             yield return null;
         }
         // Ensure exact final value
