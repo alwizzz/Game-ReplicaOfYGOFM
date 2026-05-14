@@ -15,11 +15,15 @@ public class BattleSystem : UIModal<BattleSystem>
     [Header("Parameters")]
     [SerializeField] private FieldCard attackerFieldCardReference;
     [SerializeField] private FieldCard attackedFieldCardReference;
+    [SerializeField] private float firstDelay;
     [SerializeField] private float preDamageCalculationDelay;
     [SerializeField] private float postDamageCalculationDelay;
 
     [Header("States")]
     [SerializeField] private bool isDirectAttack;
+    [SerializeField] private bool? gsInteractionResult;
+
+
     [Tooltip("Positive for damage received by attacked, " +
         "Negative for damage received by attacker, " +
         "and 0 for a tie")]
@@ -45,6 +49,7 @@ public class BattleSystem : UIModal<BattleSystem>
         attackerFieldCardReference = null;
         attackedFieldCardReference = null;
         isDirectAttack = false;
+        gsInteractionResult = null;
     }
 
     public void StartBattle()
@@ -55,12 +60,12 @@ public class BattleSystem : UIModal<BattleSystem>
         {
             
             isDirectAttack = CheckEmptyOpponentField();
-            //if (isDirectAttack) StartDirectBattle();
-            //return;
+            // TODO: if in this case isDirectAttack is false, it would raise an error
         }
 
         Setup(isDirectAttack);
 
+        // default value
         attackerDestroyed = false;
         attackedDestroyed = false;
 
@@ -70,7 +75,6 @@ public class BattleSystem : UIModal<BattleSystem>
 
     private bool CheckEmptyOpponentField()
     {
-
         return GameplayManager.Instance().OpponentFieldSystem().IsFrontRankEmpty();
     }
 
@@ -105,13 +109,18 @@ public class BattleSystem : UIModal<BattleSystem>
         isBattling = true;
         Show();
 
+        yield return new WaitForSeconds(firstDelay);
+
+        gsInteractionResult = GuardianStarInteraction(isDirectAttack);
+
         yield return new WaitForSeconds(preDamageCalculationDelay);
 
-        DamageCalculation(isDirectAttack);
+        DamageCalculation(isDirectAttack, gsInteractionResult);
         BattleResolution();
 
         yield return new WaitForSeconds(postDamageCalculationDelay);
 
+        // cleanups
         attackerFlareEffect.Hide();
         attackedFlareEffect.Hide();
         Hide();
@@ -126,7 +135,50 @@ public class BattleSystem : UIModal<BattleSystem>
         isBattling = false;
     }
 
-    private void DamageCalculation(bool isDirectAttack)
+    private bool? GuardianStarInteraction(bool isDirectAttack)
+    {
+        if(isDirectAttack){ return null; }
+
+        GuardianStar attackerGs = attackerFieldCardReference.GetSelectedGuardianStar();
+        GuardianStar attackedGs = attackedFieldCardReference.GetSelectedGuardianStar();
+        bool? interactionResult = GuardianStarCalculator.GetInteraction(
+            attackerGs, 
+            attackedGs
+        );
+
+        if(interactionResult != null)
+        {
+            int bonusPower = GameplayManager.Instance().GuardianStarBonusPower();
+            BattleCard affectedBattleCard;
+            bool targetsAttackPoint;
+            if(interactionResult == true)
+            {
+                affectedBattleCard = attackerBattleCard;
+                // attacker always on attack position
+                targetsAttackPoint = true;
+            } else // automatically "false"
+            // } else if(interactionResult == false)
+            {
+                affectedBattleCard = attackedBattleCard;
+                bool attackedInAttackPosition = attackedBattleCard.InAttackPosition();
+                if (attackedInAttackPosition)
+                {
+                    targetsAttackPoint = true;
+                } else
+                {
+                    targetsAttackPoint = false;
+                }
+            }
+
+            affectedBattleCard.PlayBonusPowerTextAnimation(
+                targetsAttackPoint, bonusPower, preDamageCalculationDelay
+            );
+        }
+
+        return interactionResult;
+    }
+
+    private void DamageCalculation(bool isDirectAttack, bool? gsInteractionResult)
     {
         if(isDirectAttack)
         {
@@ -138,10 +190,17 @@ public class BattleSystem : UIModal<BattleSystem>
         int attackerPower = GetPowerPoint(attackerBattleCard);
         int attackedPower = GetPowerPoint(attackedBattleCard);
 
-        // handle guardian star interaction
-        GuardianStar attackerGs = attackerFieldCardReference.GetSelectedGuardianStar();
-        GuardianStar attackedGs = attackedFieldCardReference.GetSelectedGuardianStar();
-        GuardianStarCalculator.ApplyBonusPower(ref attackerPower, attackerGs, ref attackedPower, attackedGs);
+        if(gsInteractionResult != null)
+        {
+            int bonusPower = GameplayManager.Instance().GuardianStarBonusPower();
+            if(gsInteractionResult == true)
+            {
+                attackerPower += bonusPower;
+            } else if(gsInteractionResult == false)
+            {
+                attackedPower += bonusPower;
+            }
+        }
 
 
         // attacker must have been in attack position

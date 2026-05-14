@@ -58,6 +58,7 @@ namespace Enums
         Pluto // Thunder
     }
 
+
     public enum TrapEffect
     {
         None,

@@ -7,9 +7,7 @@ using Enums;
 
 public static class GuardianStarCalculator
 {
-    private const int BONUS_POWER_VALUE = 500;
-
-    private static bool? GetInteraction(GuardianStar refA, GuardianStar refB)
+    public static bool? GetInteraction(GuardianStar refA, GuardianStar refB)
     {
         bool? result = null;
 
@@ -58,23 +56,23 @@ public static class GuardianStarCalculator
         return result;
     }
 
-    public static void ApplyBonusPower(ref int refAPower, GuardianStar refAGuardianStar, 
-        ref int refBPower, GuardianStar refBGuardianStar)
-    {
-        
+    // public static bool? ApplyBonusPower(ref int refAPower, GuardianStar refAGuardianStar, 
+    //     ref int refBPower, GuardianStar refBGuardianStar)
+    // {
+    //     bool? result = GetInteraction(refAGuardianStar, refBGuardianStar);
+    //     if(result == true)
+    //     {
+    //         refAPower += BONUS_POWER_VALUE;
+    //         Debug.Log($"refA buffed to {refAPower} by guardian star effect ({refAGuardianStar} wins to {refBGuardianStar})");
+    //     } else if(result == false)
+    //     {
+    //         refBPower += BONUS_POWER_VALUE;
+    //         Debug.Log($"refB buffed to {refBPower} by guardian star effect ({refAGuardianStar} loses to {refBGuardianStar})");
+    //     } else
+    //     {
+    //         Debug.Log($"guardian star has no interaction ({refAGuardianStar} and {refBGuardianStar})");
+    //     }
 
-        bool? result = GetInteraction(refAGuardianStar, refBGuardianStar);
-        if(result == true)
-        {
-            refAPower += BONUS_POWER_VALUE;
-            Debug.Log($"refA buffed to {refAPower} by guardian star effect ({refAGuardianStar} wins to {refBGuardianStar})");
-        } else if(result == false)
-        {
-            refBPower += BONUS_POWER_VALUE;
-            Debug.Log($"refB buffed to {refBPower} by guardian star effect ({refAGuardianStar} loses to {refBGuardianStar})");
-        } else
-        {
-            Debug.Log($"guardian star has no interaction ({refAGuardianStar} and {refBGuardianStar})");
-        }
-    }
+    //     return result;
+    // }
 }

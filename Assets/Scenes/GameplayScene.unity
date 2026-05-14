@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialLifePoint: 8000
+  guardianStarBonusPower: 500
   turn: 0
   phase: 0
   playerHandSystem: {fileID: 885102175}
@@ -2515,7 +2516,8 @@ MonoBehaviour:
   isBattling: 0
   attackerFieldCardReference: {fileID: 0}
   attackedFieldCardReference: {fileID: 0}
-  preDamageCalculationDelay: 1.5
+  firstDelay: 1.5
+  preDamageCalculationDelay: 0.5
   postDamageCalculationDelay: 2
   isDirectAttack: 0
   damageDealt: 0

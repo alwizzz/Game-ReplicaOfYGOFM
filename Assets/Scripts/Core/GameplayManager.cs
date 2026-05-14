@@ -8,6 +8,7 @@ public class GameplayManager : StaticReference<GameplayManager>
 {
     [Header("Game Parameters")]
     [SerializeField] private int initialLifePoint;
+    [SerializeField] private int guardianStarBonusPower;
 
     [Header("States")]
     [SerializeField] private Side turn;
@@ -162,6 +163,7 @@ public class GameplayManager : StaticReference<GameplayManager>
     public HandFocusSystem EnemyHandFocusSystem() => enemyHandFocusSystem;
     public FieldSystem PlayerFieldSystem() => playerFieldSystem;
     public FieldSystem EnemyFieldSystem() => enemyFieldSystem;
+    public int GuardianStarBonusPower() => guardianStarBonusPower;
 
     #endregion
 

@@ -14,8 +14,11 @@ public abstract class GameplayCard : MonoBehaviour
     [SerializeField] private Image baseImage;
     [SerializeField] private Image cardImage;
     [SerializeField] private GameObject cardAttributes;
-    [SerializeField] private TextMeshProUGUI attackPointText;
-    [SerializeField] private TextMeshProUGUI defensePointText;
+
+    [SerializeField] protected int attackPoint;
+    [SerializeField] protected int defensePoint;
+    [SerializeField] protected TextMeshProUGUI attackPointText;
+    [SerializeField] protected TextMeshProUGUI defensePointText;
 
 
     public void Setup(Card cardData)
@@ -35,12 +38,20 @@ public abstract class GameplayCard : MonoBehaviour
         {
             cardAttributes.SetActive(true);
             var data = (MonsterCard)cardData;
+
+            attackPoint = data.attackPoint;
+            defensePoint = data.defensePoint;
+
             attackPointText.text = data.attackPoint.ToString();
             defensePointText.text = data.defensePoint.ToString();
         }
         else // is NonMonsterCard
         {
             cardAttributes.SetActive(false);
+
+            // dummy values
+            attackPoint = 0;
+            defensePoint = 0;
         }
     }
 
