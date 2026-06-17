@@ -20,6 +20,11 @@ public class BattleCard : GameplayCard
         base.Setup(cardData);
         this.inAttackPosition = inAttackPosition;
 
+        // safeguard in case previously there was bonus animation played
+        Color normalColor = ResourceManager.Instance().GetNumberColor(true);
+        attackPointText.color = normalColor;
+        defensePointText.color = normalColor;
+
         UpdateOverlay();
     }
 
@@ -90,5 +95,4 @@ public class BattleCard : GameplayCard
     }
 
     public bool InAttackPosition() => inAttackPosition;
-
 }

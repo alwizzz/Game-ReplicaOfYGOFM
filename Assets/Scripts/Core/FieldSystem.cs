@@ -11,6 +11,7 @@ public class FieldSystem : MonoBehaviour
 
     [Header("States")]
     [SerializeField] private bool isOnSelection;
+    [SerializeField] private bool isOnBattleMode;
     [SerializeField] private int frontRankCardCount;
     [SerializeField] private int backRankCardCount;
     [SerializeField] private FieldCardContainer selectedFieldCardContainer;
@@ -311,6 +312,7 @@ public class FieldSystem : MonoBehaviour
     private void OpenBattleMode()
     {
         print("BATTLE MODE");
+        isOnBattleMode = true;
         selectedFieldCardContainer.SetAsAttackerInBattle();
         CloseSelection(maintainSelection:true);
 
@@ -325,6 +327,8 @@ public class FieldSystem : MonoBehaviour
         GameplayManager.Instance().OpponentFieldSystem().CloseSelection(false);
         OpenFullSelection(true);
         FieldButtonManager.Instance().UpdateBattleButtons(false);
+
+        isOnBattleMode = false;
     }
 
     #endregion
@@ -332,6 +336,7 @@ public class FieldSystem : MonoBehaviour
     public List<FieldCardContainer> GetFrontRankContainers() => frontRankFieldCardContainers;
     public List<FieldCardContainer> GetBackRankContainers() => backRankFieldCardContainers;
     public FieldCardContainer GetSelectedFieldContainer() => selectedFieldCardContainer;
+    public bool IsOnBattleMode() => isOnBattleMode;
 
     public bool HasNoMonster()
     {
