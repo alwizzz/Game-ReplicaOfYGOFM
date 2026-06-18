@@ -54,8 +54,6 @@ public class EnemyBot : MonoBehaviour
 
     private void ChooseCardFromHand()
     {
-
-
         var containers = handSystem.GetHandCardContainers();
 
         int bestAttackPoint = -1;
@@ -163,7 +161,12 @@ public class EnemyBot : MonoBehaviour
                 // opponent has no monster in their field, doing a direct attack
 
                 print("direct attack");
+
+                chosenMonsterContainer.Select();
                 chosenMonsterContainer.GetCard().SetToAttackPosition();
+                // also selecting enemy field card container first index for visualization
+                opponentContainers[0].Select(); // TODO: edge case safeguard: make sure it is empty
+
                 yield return new WaitForSeconds(actionDelay);
                 chosenMonsterContainer.SetAsAttackerInBattle();
                 BattleSystem.Instance().StartBattle();
@@ -193,6 +196,7 @@ public class EnemyBot : MonoBehaviour
                     var opponentFieldCard = chosenOpponentContainer.GetCard();
                     var opponentMonsterPower = opponentFieldCard.GetPowerPoint();
                     if (opponentFieldCard.IsFaceDown() != false) opponentMonsterPower = 0; // to slips in
+
                     if(chosenMonsterAttackPoint == opponentMonsterPower)
                     {
                         print($"stall: {chosenMonsterAttackPoint} -> {opponentMonsterPower}");
@@ -201,6 +205,12 @@ public class EnemyBot : MonoBehaviour
                     } else
                     {
                         print($"battle with weaker monster: {chosenMonsterAttackPoint} -> {opponentMonsterPower}");
+
+                        // animate enemy selecting the field card container first
+                        chosenOpponentContainer.Select();
+                        yield return new WaitForSeconds(actionDelay);
+
+
                         chosenMonsterContainer.SetAsAttackerInBattle();
                         chosenOpponentContainer.SetAsAttackedInBattle();
                         BattleSystem.Instance().StartBattle();

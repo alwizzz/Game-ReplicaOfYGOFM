@@ -10,7 +10,8 @@ public class GameplayFieldManager : StaticReference<GameplayFieldManager>
     [SerializeField] private float rotateSpeed;
 
     [Header("Caches")]
-    [SerializeField] private Transform gameplayField;
+    [SerializeField] private Transform gameplayFieldUI;
+    [SerializeField] private Transform cardInformationDisplayUI;
     [SerializeField] private GameObject playerFieldCardInformationDisplay;
     [SerializeField] private GameObject enemyFieldCardInformationDisplay;
 
@@ -38,7 +39,7 @@ public class GameplayFieldManager : StaticReference<GameplayFieldManager>
         isRotating = true;
         System.Func<bool> conditionLambda = () =>
         {
-            float currentAngle = gameplayField.rotation.eulerAngles.z;
+            float currentAngle = gameplayFieldUI.rotation.eulerAngles.z;
             //print(currentAngle);
             if (toBeFlipped)
             {
@@ -53,15 +54,24 @@ public class GameplayFieldManager : StaticReference<GameplayFieldManager>
         playerFieldCardInformationDisplay.SetActive(false);
         enemyFieldCardInformationDisplay.SetActive(false);
 
+        // animating
         while (conditionLambda())
         {
-            gameplayField.Rotate(Vector3.forward * rotateSpeed * Time.deltaTime);
+            gameplayFieldUI.Rotate(Vector3.forward * rotateSpeed * Time.deltaTime);
             yield return null;
         }
-        gameplayField.rotation = Quaternion.Euler(
+
+        // post animation
+        gameplayFieldUI.rotation = Quaternion.Euler(
             0f,
             0f,
             toBeFlipped ? 180f : 0f
+        );
+        // ensure this UI is not flipped in global rotation
+        cardInformationDisplayUI.rotation = Quaternion.Euler( 
+            0f,
+            0f,
+            0f
         );
 
         SwapInformationDisplays();

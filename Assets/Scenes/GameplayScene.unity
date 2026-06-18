@@ -900,7 +900,8 @@ MonoBehaviour:
   isFlipped: 0
   isRotating: 0
   rotateSpeed: 100
-  gameplayField: {fileID: 1734141450}
+  gameplayFieldUI: {fileID: 1734141450}
+  cardInformationDisplayUI: {fileID: 1569581036}
   playerFieldCardInformationDisplay: {fileID: 4539239444340284030}
   enemyFieldCardInformationDisplay: {fileID: 6612516505772626544}
 --- !u!4 &514200118
@@ -3355,7 +3356,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1569581035}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7327,19 +7328,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5700461253790348146, guid: a6abdae06e0623640ae3c1497de5e979, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -1
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5700461253790348146, guid: a6abdae06e0623640ae3c1497de5e979, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5700461253790348146, guid: a6abdae06e0623640ae3c1497de5e979, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5700461253790348146, guid: a6abdae06e0623640ae3c1497de5e979, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5700461253790348146, guid: a6abdae06e0623640ae3c1497de5e979, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -7359,7 +7360,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5700461253790348146, guid: a6abdae06e0623640ae3c1497de5e979, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6215857728035329360, guid: a6abdae06e0623640ae3c1497de5e979, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -8726,10 +8727,10 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 35664128}
+  - {fileID: 514200118}
   - {fileID: 491376981}
   - {fileID: 1650161664}
   - {fileID: 7420781461561857690}
-  - {fileID: 514200118}
   - {fileID: 857886468}
   - {fileID: 1340304228}
   - {fileID: 727214031}
