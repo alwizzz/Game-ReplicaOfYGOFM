@@ -389,7 +389,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6442359851227494433}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -427,6 +427,8 @@ MonoBehaviour:
   baseImage: {fileID: 3296782192315659853}
   cardImage: {fileID: 437400938997619305}
   cardAttributes: {fileID: 7620814648963977182}
+  attackPoint: 0
+  defensePoint: 0
   attackPointText: {fileID: 3661145548399263246}
   defensePointText: {fileID: 5579926617376293476}
   container: {fileID: 0}

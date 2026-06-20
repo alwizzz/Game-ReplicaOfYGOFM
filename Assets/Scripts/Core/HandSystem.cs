@@ -6,6 +6,7 @@ using System;
 
 using TMPro;
 using Enums;
+using Unity.VisualScripting;
 
 
 public class HandSystem : UIModal<HandSystem>
@@ -15,6 +16,9 @@ public class HandSystem : UIModal<HandSystem>
 
     [Header("States")]
     [SerializeField] private HandCardContainer selectedHandCardContainer;
+    [SerializeField] private bool isFusionMode;
+    [SerializeField] private List<HandCardContainer> fusionList;
+
     //[SerializeField] private bool isFocusing;
 
     [Header("Caches")]
@@ -25,6 +29,8 @@ public class HandSystem : UIModal<HandSystem>
 
     //[SerializeField] private HandFocusSystem handFocusSystem;
     [SerializeField] private GameObject handOverlay;
+    [SerializeField] private Button fusionButton;
+    private Image fusionButtonImage;
 
     public override void Show()
     {
@@ -46,7 +52,7 @@ public class HandSystem : UIModal<HandSystem>
     private void Awake()
     {
         BaseAwake(this);
-
+        
         // // debug
         // if(IsPlayerOwned() && handCardContainers[0] != null)
         // {
@@ -56,6 +62,8 @@ public class HandSystem : UIModal<HandSystem>
 
     private void Start()
     {
+        fusionButtonImage = fusionButton.GetComponent<Image>();
+        
         //UpdateHand();
         //SetSelectedCardContainer(handCardContainers[0]);
         // debug
@@ -113,6 +121,7 @@ public class HandSystem : UIModal<HandSystem>
         selectedHandCardContainer = handCardContainer;
         UpdateHandSelector();
         UpdateInformationDisplay();
+        HandleFusionFlow(handCardContainer);
     }
 
     private void UpdateHandSelector()
@@ -128,10 +137,33 @@ public class HandSystem : UIModal<HandSystem>
 
     public void FocusSelectedCard()
     {
-        // TODO: when focus is after fusion card attempt, it shouldnt be "return" able
-        var card = selectedHandCardContainer.GetCard();
-        // GameplayManager.Instance().ToFocusPhase(card);
-        GameplayManager.Instance().HandFocusSystem().SetupAndShow(card);
+        // TODO: in the future it should handle whether the focus is on single card or player is doing a fusion
+
+        if (isFusionMode) // fusion flow
+        {
+            if(fusionList.Count == 0)
+            {
+                // basically the same as Single flow
+                var card = selectedHandCardContainer.GetCard();
+                GameplayManager.Instance().HandFocusSystem().SetupSingleFlow(card);
+            } else if(fusionList.Count == 1)
+            {
+                // similar with Single flow but the card is the only element on fusionList
+                var card = fusionList[0].GetCard();
+                GameplayManager.Instance().HandFocusSystem().SetupSingleFlow(card);
+            } else
+            {
+                // actual fusion flow
+                List<HandCard> fusionHandCardList = new List<HandCard>();
+                fusionList.ForEach(e => fusionHandCardList.Add(e.GetCard()));
+
+                GameplayManager.Instance().HandFocusSystem().SetupFusionFlow(fusionHandCardList);
+            }
+        } else // single flow
+        {
+            var card = selectedHandCardContainer.GetCard();
+            GameplayManager.Instance().HandFocusSystem().SetupSingleFlow(card);
+        }
 
         Hide();
 
@@ -220,5 +252,47 @@ public class HandSystem : UIModal<HandSystem>
 
     #endregion
 
+    #region Fusion Mode
 
+    public void ToggleFusionMode()
+    {
+        if (isFusionMode)
+        {
+            fusionList.ForEach(e => e.ToggleFusionTag()); // TODO: might bugged if toggling isnt doing toggle off
+            fusionList.Clear();
+
+            fusionButtonImage.color = Color.white;
+            isFusionMode = false;
+        } else
+        {
+            fusionButtonImage.color = Color.gray;
+            isFusionMode = true;
+        }
+    }
+
+    private void HandleFusionFlow(HandCardContainer handCardContainer)
+    {
+        if (!isFusionMode) return;
+
+        bool isTogglingOn = handCardContainer.ToggleFusionTag();
+        if(isTogglingOn)
+        {
+            int fusionListLength = fusionList.Count;
+            handCardContainer.UpdateFusionOrder(fusionListLength + 1);
+            fusionList.Add(handCardContainer);
+        } else
+        {
+            fusionList.Remove(handCardContainer);
+            if(fusionList.Count != 0)
+            {
+                // adjust fusion on every fusion tag
+                for(int i=0; i<fusionList.Count; i++)
+                {
+                    fusionList[i].UpdateFusionOrder(i+1);
+                }
+            }
+        }
+    }
+
+    #endregion
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class HandCardContainer : CardContainer
@@ -7,6 +8,14 @@ public class HandCardContainer : CardContainer
     //[SerializeField] private int index;
     [SerializeField] private HandCard containedHandCard;
     [SerializeField] private bool isSelected;
+
+    [SerializeField] private GameObject fusionTag;
+    private TextMeshProUGUI fusionOrderText;
+
+    void Start()
+    {
+        fusionOrderText = fusionTag.GetComponentInChildren<TextMeshProUGUI>();
+    }
 
     public HandCard GetCard() => containedHandCard;
     public bool IsEmpty() => (containedHandCard == null ? true : false);
@@ -22,6 +31,9 @@ public class HandCardContainer : CardContainer
         MovePositionOnContainer(handCard.transform, setParent:true);
         containedHandCard = handCard;
         containedHandCard.SetContainer(this);
+
+        // safeguard to make sure fusionTag always ordered last
+        fusionTag.transform.SetAsLastSibling();
     }
 
     public void RemoveCard(bool alsoDestroy = false)
@@ -53,7 +65,9 @@ public class HandCardContainer : CardContainer
 
     public void Select()
     {
-        if (isSelected) return;
+        // multiclick floodgate is risen up to enable fusion flow handling
+        // if (isSelected) return; 
+
         if (IsEmpty()) return; // unable to be selected if empty
 
         isSelected = true;
@@ -72,5 +86,25 @@ public class HandCardContainer : CardContainer
         if (!isSelected) return;
 
         isSelected = false;
+    }
+
+    public bool ToggleFusionTag()
+    {
+        if(fusionTag.activeSelf == true)
+        {
+            // toggling off
+            fusionTag.SetActive(false);
+        } else
+        {
+            // toggling on
+            fusionTag.SetActive(true);
+        }
+
+        return fusionTag.activeSelf;
+    }
+    
+    public void UpdateFusionOrder(int fusionOrder)
+    {
+        fusionOrderText.text = fusionOrder.ToString();
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 
+using TMPro;
+
 public class HandCard : GameplayCard
 {
     [Header("Hand Card")]
