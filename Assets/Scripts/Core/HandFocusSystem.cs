@@ -181,6 +181,13 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
         returnButton.SetActive(false);
         fuseButton.SetActive(false);
+
+        StartCoroutine(AnimateFusion());
+    }
+
+    private IEnumerator AnimateFusion()
+    {
+        yield return null;
     }
 
 #endregion
