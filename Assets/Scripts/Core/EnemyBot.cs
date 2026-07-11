@@ -35,6 +35,8 @@ public class EnemyBot : MonoBehaviour
         yield return new WaitForSeconds(actionDelay);
         FocusAction();
         yield return new WaitForSeconds(actionDelay);
+        ResolveAction();
+        yield return new WaitForSeconds(actionDelay);
         FieldAction();
         yield return new WaitForSeconds(actionDelay);
         yield return new WaitUntil(() => isAttacking == false);
@@ -95,6 +97,13 @@ public class EnemyBot : MonoBehaviour
         emptyContainer.Select();
         handFocusSystem.SetToFaceDown();
         handFocusSystem.PlayCard();
+    }
+
+    private void ResolveAction()
+    {
+        // an adjustment of new Resolve Flow
+
+        handFocusSystem.Proceed();
     }
 
     private FieldCardContainer GetEmptyContainer()
