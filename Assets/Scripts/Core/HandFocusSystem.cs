@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 
 using Enums;
+using TMPro;
 
 public class HandFocusSystem : UIModal<HandFocusSystem>
 {
@@ -22,7 +23,17 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
     [SerializeField] private GameObject faceUpButton; 
 
     [Header("Segment Fusion Flow")]
+    [SerializeField] private List<Card> fusionListData;
+    [SerializeField] private List<HandCard> fusionListHandReference;
+    [SerializeField] private List<HandCard> fusionListDisplay;
     [SerializeField] private GameObject panelFusionFlow;
+    [SerializeField] private GameObject returnButton;
+    [SerializeField] private GameObject fuseButton;
+    [SerializeField] private TextMeshProUGUI fuseResultText;
+
+
+
+
     [Header("Segment Resolve")]
     [SerializeField] private bool isFaceDownResolve;
     [SerializeField] private GameObject panelResolve;
@@ -118,25 +129,10 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
 #region Fusion Flow
 
-    public void SetupFusionFlow(List<HandCard> fusionList)
+    public void SetupFusionFlow(List<HandCard> list)
     {
-        // var cardData = handCard.GetCardData();
-        // focusedCard.Setup(cardData);
-        // handCardReferenceFromHand = handCard;
-
-        // if(cardData.IsMonsterCard())
-        // {
-        //     isMonster = true;
-        //     var data = (MonsterCard)cardData;
-        //     selector.gameObject.SetActive(true);
-        //     selector.Setup(data.guardianStarOption1, data.guardianStarOption2);
-        //     GameplayManager.Instance().FieldSystem().OpenFrontRankSelection();
-        // } else
-        // {
-        //     isMonster = false;
-        //     selector.gameObject.SetActive(false);
-        //     GameplayManager.Instance().FieldSystem().OpenBackRankSelection();
-        // }
+        // fuse flow always assume the end result is monster card
+        GameplayManager.Instance().FieldSystem().OpenFrontRankSelection();
 
         panelSingleFlow.SetActive(false);
         panelFusionFlow.SetActive(true);
@@ -149,7 +145,42 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
             panelFusionFlow.GetComponent<Image>().color = Color.blue;
         }
 
+        fuseResultText.gameObject.SetActive(false);
+        returnButton.SetActive(true);
+        fuseButton.SetActive(true);
+
+        fusionListHandReference = list;
+        fusionListHandReference.ForEach(e => fusionListData.Add(e.GetCardData()));
+        SetupFusionDisplay();
+
         Show();
+    }
+
+    private void SetupFusionDisplay()
+    {
+        for(int i=0; i<fusionListDisplay.Count; i++)
+        {
+            if(i >= fusionListData.Count)
+            {
+                fusionListDisplay[i].gameObject.SetActive(false);
+            } else
+            {
+                fusionListDisplay[i].Setup(fusionListData[i]);
+                fusionListDisplay[i].gameObject.SetActive(true);
+            }
+        }
+    }
+
+    public void Fuse() // called by button
+    {
+        // TODO: later on if the selected field card container has card, it means 
+        // we are adding a card on fusionList's first idx
+
+        // destroy reference on hand
+        fusionListHandReference.ForEach(e => e.GetContainer().RemoveCard(alsoDestroy: true));
+
+        returnButton.SetActive(false);
+        fuseButton.SetActive(false);
     }
 
 #endregion
@@ -177,13 +208,16 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         if(isFaceDown) faceDownCardImageResolve.SetActive(true);
         else faceDownCardImageResolve.SetActive(false);
 
+        // a way to show that in this flow it is no more time for choosing the field card container
+        GameplayManager.Instance().FieldSystem().CloseSelection(maintainSelection:true);
+
         // TODO: check if cardData alr got GS selected, then dont need to choose again
         if (isMonster)
         {
+            var data = (MonsterCard)cardData;
+            selector.Setup(data.guardianStarOption1, data.guardianStarOption2);
             if (true)
             {
-                var data = (MonsterCard)cardData;
-                selector.Setup(data.guardianStarOption1, data.guardianStarOption2);
                 selector.gameObject.SetActive(true);
                 proceedButton.SetActive(true);
             } else

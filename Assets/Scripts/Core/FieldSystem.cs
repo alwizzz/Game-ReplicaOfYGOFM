@@ -174,7 +174,9 @@ public class FieldSystem : MonoBehaviour
 
     public void SpawnFieldCard(Card cardData, bool isFacedown, GuardianStar selectedGuardianStar)
     {
-        if (!isOnSelection) return;
+        // currently commented cuz now there's scenario that the selection is closed but the selectedFieldCardContainer still used
+        // so now, more determining variable is the selectedFieldCardContainer.IsEmpty()
+        // if (!isOnSelection) return;
 
         if(selectedFieldCardContainer.IsEmpty() == false)
         {
