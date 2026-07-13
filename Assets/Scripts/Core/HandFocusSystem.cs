@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 using Enums;
 using TMPro;
+using System;
 
 public class HandFocusSystem : UIModal<HandFocusSystem>
 {
@@ -116,7 +117,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         handCardReferenceFromHand.GetContainer().RemoveCard(alsoDestroy: true);
 
         // Hide();
-        Resolve(card, isFaceDown);
+        Resolve(card, isFaceDown, true);
     }
 
     public void ReturnToHand()
@@ -187,7 +188,34 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
     private IEnumerator AnimateFusion()
     {
-        yield return null;
+        fuseResultText.gameObject.SetActive(true);
+
+        while(fusionListData.Count > 1)
+        {
+            Card material1 = fusionListData[0];
+            Card material2 = fusionListData[1];
+
+            FusionCalculator.FusionResult result = FusionCalculator.GetFusionResult(material1, material2);
+
+            fusionListData[0] = result.card; // change first index as fusion result
+            fusionListData.RemoveAt(1); // exhaust index-1 as it was the material2
+            SetupFusionDisplay(); // update display
+
+            fuseResultText.text = result.isFusioned == true ? "Fusioned" : "Nope";
+
+            // print(material1);
+            // print(material2);
+            // print(result);
+
+            yield return new WaitForSeconds(1f);
+        }
+
+        fuseResultText.gameObject.SetActive(false);
+        yield return new WaitForSeconds(1f);
+
+        Card resultCard = fusionListData[0];
+        isMonster = resultCard.IsMonsterCard();
+        Resolve(resultCard, false, false); // fusion result is always face up
     }
 
 #endregion
@@ -195,7 +223,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
 #region Resolve flow
 
-    private void Resolve(Card cardData, bool isFaceDown)
+    private void Resolve(Card cardData, bool isFaceDown, bool fromSingleFlow)
     {
         if(isOnResolve) return;
         isOnResolve = true;
@@ -223,15 +251,14 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         {
             var data = (MonsterCard)cardData;
             selector.Setup(data.guardianStarOption1, data.guardianStarOption2);
-            if (true)
-            {
-                selector.gameObject.SetActive(true);
-                proceedButton.SetActive(true);
-            } else
-            {
-                // selector.gameObject.SetActive(true);
-                // proceedButton.SetActive(true);
-            }
+            proceedButton.SetActive(true);
+        } else
+        {
+            selector.gameObject.SetActive(false);
+            proceedButton.SetActive(false);
+
+            IEnumerator Delayed(float delay, Action action) { yield return new WaitForSeconds(delay); action?.Invoke(); }
+            StartCoroutine(Delayed(2f, () => Proceed()));
         }
     }
 

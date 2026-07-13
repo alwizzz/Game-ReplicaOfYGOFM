@@ -870,7 +870,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &790072591877956865
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3293,7 +3293,7 @@ MonoBehaviour:
   guardianStarOption2: 0
   button2: {fileID: 5880206004010935872}
   imageIcon2: {fileID: 5775250710699651141}
-  text2: {fileID: 3105561768490759501}
+  text2: {fileID: 2965532291612645278}
 --- !u!1 &7981624763997477276
 GameObject:
   m_ObjectHideFlags: 0

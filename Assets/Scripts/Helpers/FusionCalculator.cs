@@ -7,52 +7,40 @@ using Enums;
 
 public static class FusionCalculator
 {
-    // public static bool? GetInteraction(GuardianStar refA, GuardianStar refB)
-    // {
-    //     bool? result = null;
+    [System.Serializable]
+    public struct FusionResult
+    {
+        public Card card;
+        public bool isFusioned;
+    }
 
-    //     switch ((refA, refB))
-    //     {
-    //         // loop 1
-    //         case (GuardianStar.Sun, GuardianStar.Moon): result = true; break;
-    //         case (GuardianStar.Sun, GuardianStar.Mercury): result = false; break;
+    public static FusionResult GetFusionResult(Card m1, Card m2) // m as in
+    {
+        // strictly, m1 is the left-side card, m2 is the right-side card
+        // where fusion flow goes from right to left
 
-    //         case (GuardianStar.Mercury, GuardianStar.Sun): result = true; break;
-    //         case (GuardianStar.Mercury, GuardianStar.Venus): result = false; break;
+        // initialize
+        Card card;
+        bool isFusioned = false;
 
-    //         case (GuardianStar.Venus, GuardianStar.Mercury): result = true; break;
-    //         case (GuardianStar.Venus, GuardianStar.Moon): result = false; break;
+        if(m1.IsMonsterCard() && m2.IsMonsterCard())
+        {
+            card = m2;
+        } else if(!m1.IsMonsterCard() && !m2.IsMonsterCard())
+        {
+            card = m2;
+        } else if(m1.IsMonsterCard() && !m2.IsMonsterCard())
+        {
+            card = m1;
+        } else // the only remaining case is !m1.IsMonsterCard() && m2.IsMonsterCard()
+        {
+            card = m2;
+        }
 
-    //         case (GuardianStar.Moon, GuardianStar.Venus): result = true; break;
-    //         case (GuardianStar.Moon, GuardianStar.Sun): result = false; break;
- 
-    //         // loop 2
-    //         case (GuardianStar.Mars, GuardianStar.Jupiter): result = true; break;
-    //         case (GuardianStar.Mars, GuardianStar.Neptune): result = false; break;
-
-    //         case (GuardianStar.Jupiter, GuardianStar.Saturn): result = true; break;
-    //         case (GuardianStar.Jupiter, GuardianStar.Mars): result = false; break;
-
-    //         case (GuardianStar.Saturn, GuardianStar.Uranus): result = true; break;
-    //         case (GuardianStar.Saturn, GuardianStar.Jupiter): result = false; break;
-
-    //         case (GuardianStar.Uranus, GuardianStar.Pluto): result = true; break;
-    //         case (GuardianStar.Uranus, GuardianStar.Saturn): result = false; break;
-
-    //         case (GuardianStar.Pluto, GuardianStar.Neptune): result = true; break;
-    //         case (GuardianStar.Pluto, GuardianStar.Uranus): result = false; break;
-
-    //         case (GuardianStar.Neptune, GuardianStar.Mars): result = true; break;
-    //         case (GuardianStar.Neptune, GuardianStar.Pluto): result = false; break;
-
-    //         default:
-    //             {
-    //                 Debug.Log("no interaction");
-    //                 result = null;
-    //                 break;
-    //             }
-    //     }
-
-    //     return result;
-    // }
+        return new FusionResult
+        {
+            card = card,
+            isFusioned = isFusioned
+        };
+    }
 }
