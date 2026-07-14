@@ -268,7 +268,16 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
         var card = resolvedHandCard.GetCardData();
         var isFaceDown = isFaceDownResolve;
-        var guardianStar = selector.GetSelectedGuardianStar();
+
+        GuardianStar guardianStar;
+        if (card.IsMonsterCard())
+        {
+            guardianStar = selector.GetSelectedGuardianStar();
+        } else
+        {
+            guardianStar = GuardianStar.NONE;
+        }
+
 
         GameplayManager.Instance().ToFieldPhase(card, isFaceDown, guardianStar);
 

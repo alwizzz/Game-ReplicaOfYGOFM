@@ -257,9 +257,13 @@ public class GameplayManager : StaticReference<GameplayManager>
             return;
         }
 
-        FieldSystem().SpawnFieldCard(
-            card, isFaceDown, guardianStar
-        );
+        if(!card.IsMonsterCard() && !isFaceDown)
+        {
+            // TODO: activate the non monster card
+        } else
+        {
+            FieldSystem().SpawnFieldCard(card, isFaceDown, guardianStar);
+        }
         FieldSystem().StartFieldPhase();
 
         phase = Phase.FieldPhase;

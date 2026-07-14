@@ -55,7 +55,9 @@ namespace Enums
         Saturn, // Wind
         Uranus, // Earth
         Neptune, // Water
-        Pluto // Thunder
+        Pluto, // Thunder
+
+        NONE, // used for non monster
     }
 
 
