@@ -31,6 +31,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
     [SerializeField] private GameObject returnButton;
     [SerializeField] private GameObject fuseButton;
     [SerializeField] private TextMeshProUGUI fuseResultText;
+    [SerializeField] private FieldCard cachedFieldCard;
 
 
 
@@ -152,12 +153,12 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
         fusionListHandReference = list;
         fusionListHandReference.ForEach(e => fusionListData.Add(e.GetCardData()));
-        SetupFusionDisplay();
+        UpdateFusionDisplay();
 
         Show();
     }
 
-    private void SetupFusionDisplay()
+    private void UpdateFusionDisplay()
     {
         for(int i=0; i<fusionListDisplay.Count; i++)
         {
@@ -174,16 +175,30 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
     public void Fuse() // called by button
     {
-        // TODO: later on if the selected field card container has card, it means 
-        // we are adding a card on fusionList's first idx
-
         // destroy reference on hand
         fusionListHandReference.ForEach(e => e.GetContainer().RemoveCard(alsoDestroy: true));
 
         returnButton.SetActive(false);
         fuseButton.SetActive(false);
 
-        StartCoroutine(AnimateFusion());
+        FieldCardContainer selectedFieldContainer = GameplayManager.Instance().FieldSystem().GetSelectedFieldContainer();
+        FieldCard selectedFieldCard = selectedFieldContainer.GetCard();
+        if(selectedFieldCard != null)
+        {
+            cachedFieldCard = selectedFieldCard;
+            Card cardData = selectedFieldCard.GetCardData();
+            fusionListData.Insert(0, cardData);
+            UpdateFusionDisplay();
+            selectedFieldCard.Destroy();
+            // print("XXX" + cachedFieldCard.HasBeenUsed()); // make sure the cache still exist
+
+            IEnumerator Delayed(float delay, Action action) { yield return new WaitForSeconds(delay); action?.Invoke(); }
+            StartCoroutine(Delayed(1f, () => StartCoroutine(AnimateFusion())));    
+        } else
+        {
+            StartCoroutine(AnimateFusion());
+        }
+
     }
 
     private IEnumerator AnimateFusion()
@@ -199,7 +214,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
             fusionListData[0] = result.card; // change first index as fusion result
             fusionListData.RemoveAt(1); // exhaust index-1 as it was the material2
-            SetupFusionDisplay(); // update display
+            UpdateFusionDisplay(); // update display
 
             fuseResultText.text = result.isFusioned == true ? "Fusioned" : "Nope";
 
