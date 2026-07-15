@@ -31,7 +31,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
     [SerializeField] private GameObject returnButton;
     [SerializeField] private GameObject fuseButton;
     [SerializeField] private TextMeshProUGUI fuseResultText;
-    [SerializeField] private FieldCard cachedFieldCard;
+    [SerializeField] private GameplayCard.Modifier? cachedGameplayCardModifier;
 
 
 
@@ -112,7 +112,6 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
     {
         var card = focusedCard.GetCardData();
         var isFaceDown = this.isFaceDown;
-        // var guardianStar = selector.GetSelectedGuardianStar();
 
         // GameplayManager.Instance().ToFieldPhase(card, isFaceDown, guardianStar);
         handCardReferenceFromHand.GetContainer().RemoveCard(alsoDestroy: true);
@@ -126,7 +125,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
             SwitchFromSingleFlowToFusionFlow(card, selectedFieldCard);
         } else
         {
-            Resolve(card, isFaceDown, true);
+            Resolve(card, isFaceDown);
         }
 
         // Hide();
@@ -197,15 +196,17 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         FieldCard selectedFieldCard = selectedFieldContainer.GetCard();
         if(selectedFieldCard != null)
         {
-            cachedFieldCard = selectedFieldCard;
+            cachedGameplayCardModifier = selectedFieldCard.GetModifier();
             Card cardData = selectedFieldCard.GetCardData();
+            print("XXX" + cachedGameplayCardModifier);
+
             fusionListData.Insert(0, cardData);
             UpdateFusionDisplay();
             selectedFieldCard.Destroy();
-            // print("XXX" + cachedFieldCard.HasBeenUsed()); // make sure the cache still exist
 
-            IEnumerator Delayed(float delay, Action action) { yield return new WaitForSeconds(delay); action?.Invoke(); }
-            StartCoroutine(Delayed(1f, () => StartCoroutine(AnimateFusion())));    
+            // IEnumerator Delayed(float delay, Action action) { yield return new WaitForSeconds(delay); action?.Invoke(); }
+            // StartCoroutine(Delayed(1f, () => StartCoroutine(AnimateFusion())));    
+            Helpers.Instance().DelayedAction(1f, () => StartCoroutine(AnimateFusion()));
         } else
         {
             StartCoroutine(AnimateFusion());
@@ -216,6 +217,8 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
     private IEnumerator AnimateFusion()
     {
         fuseResultText.gameObject.SetActive(true);
+
+        bool retainFirstMonster = true;
 
         while(fusionListData.Count > 1)
         {
@@ -230,6 +233,11 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
             fuseResultText.text = result.isFusioned == true ? "Fusioned" : "Nope";
 
+            if(retainFirstMonster == true && result.retainMonster != true)
+            {
+                retainFirstMonster = false;
+            }
+
             // print(material1);
             // print(material2);
             // print(result);
@@ -237,12 +245,18 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
             yield return new WaitForSeconds(1f);
         }
 
+        bool retainModification = false;
+        if(cachedGameplayCardModifier != null && retainFirstMonster == true)
+        {
+            retainModification = true;
+        }
+
         fuseResultText.gameObject.SetActive(false);
         yield return new WaitForSeconds(1f);
 
         Card resultCard = fusionListData[0];
         isMonster = resultCard.IsMonsterCard();
-        Resolve(resultCard, false, false); // fusion result is always face up
+        Resolve(resultCard, false, retainModification:retainModification); // fusion result is always face up
     }
 
     private void SwitchFromSingleFlowToFusionFlow(Card cardFromHand, FieldCard selectedFieldCard)
@@ -259,17 +273,17 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
         // data handling
 
-        cachedFieldCard = selectedFieldCard;
+        cachedGameplayCardModifier = selectedFieldCard.GetModifier();
         Card cardFromField = selectedFieldCard.GetCardData();
 
         fusionListData.Insert(0, cardFromField);
         fusionListData.Insert(1, cardFromHand);
         UpdateFusionDisplay();
         selectedFieldCard.Destroy(); // NOTE: cardFromHand's HandCard has been destroyed on Single Flow logic
-        // print("XXX" + cachedFieldCard.HasBeenUsed()); // make sure the cache still exist
 
-        IEnumerator Delayed(float delay, Action action) { yield return new WaitForSeconds(delay); action?.Invoke(); }
-        StartCoroutine(Delayed(1f, () => StartCoroutine(AnimateFusion())));   
+        // IEnumerator Delayed(float delay, Action action) { yield return new WaitForSeconds(delay); action?.Invoke(); }
+        // StartCoroutine(Delayed(1f, () => StartCoroutine(AnimateFusion())));   
+        Helpers.Instance().DelayedAction(1f, () => StartCoroutine(AnimateFusion()));
     }
 
 #endregion
@@ -277,8 +291,10 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
 #region Resolve flow
 
-    private void Resolve(Card cardData, bool isFaceDown, bool fromSingleFlow)
+    private void Resolve(Card cardData, bool isFaceDown, bool retainModification = false)
     {
+        // NOTE: retainModification is only from fusion flow
+
         if(isOnResolve) return;
         isOnResolve = true;
         panelResolve.SetActive(true);
@@ -298,21 +314,62 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         else faceDownCardImageResolve.SetActive(false);
 
         // a way to show that in this flow it is no more time for choosing the field card container
-        GameplayManager.Instance().FieldSystem().CloseSelection(maintainSelection:true);
+        GameplayManager.Instance().FieldSystem().CloseSelection(retainSelection:true);
 
         // TODO: check if cardData alr got GS selected, then dont need to choose again
         if (isMonster)
         {
-            var data = (MonsterCard)cardData;
-            selector.Setup(data.guardianStarOption1, data.guardianStarOption2);
-            proceedButton.SetActive(true);
+            if (retainModification)
+            {
+                if(cachedGameplayCardModifier == null)
+                {
+                    print($"WARN: attempt to retainModification but cachedGameplayCardModifier is null, fallbacked");
+
+                    // fallback
+                    var data = (MonsterCard)cardData;
+                    selector.Setup(data.guardianStarOption1, data.guardianStarOption2);
+                    proceedButton.SetActive(true);
+                } else
+                {
+                    var data = (MonsterCard)cardData;
+                    selector.Setup(data.guardianStarOption1, data.guardianStarOption2);
+
+                    var cachedGuardianStar = cachedGameplayCardModifier?.selectedGuardianStar;
+                    if(cachedGuardianStar == data.guardianStarOption1)
+                    {
+                        selector.gameObject.SetActive(false);
+                        proceedButton.SetActive(false);
+
+                        selector.SelectOption1(); // ghost setup
+                        Helpers.Instance().DelayedAction(1f, () => Proceed());
+                    } else if(cachedGuardianStar == data.guardianStarOption2)
+                    {
+                        selector.gameObject.SetActive(false);
+                        proceedButton.SetActive(false);
+
+                        selector.SelectOption2(); // ghost setup
+                        Helpers.Instance().DelayedAction(1f, () => Proceed());
+                    } else
+                    {
+                        print($"WARN: attempt to retain GS but cache's GS ({cachedGuardianStar}) doesnt match with data, fallbacked");
+                        // fallback
+                        proceedButton.SetActive(true);
+                    }
+                }
+            } else
+            {
+                var data = (MonsterCard)cardData;
+                selector.Setup(data.guardianStarOption1, data.guardianStarOption2);
+                proceedButton.SetActive(true);
+            }
         } else
         {
             selector.gameObject.SetActive(false);
             proceedButton.SetActive(false);
 
-            IEnumerator Delayed(float delay, Action action) { yield return new WaitForSeconds(delay); action?.Invoke(); }
-            StartCoroutine(Delayed(2f, () => Proceed()));
+            // IEnumerator Delayed(float delay, Action action) { yield return new WaitForSeconds(delay); action?.Invoke(); }
+            // StartCoroutine(Delayed(2f, () => Proceed()));
+            Helpers.Instance().DelayedAction(2f, () => Proceed());
         }
     }
 
@@ -337,6 +394,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
         // cleanup
         fusionListData.Clear();
+        cachedGameplayCardModifier = null;
         Hide();
     }
 

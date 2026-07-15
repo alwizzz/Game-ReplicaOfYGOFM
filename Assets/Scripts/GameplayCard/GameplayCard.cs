@@ -4,11 +4,31 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using TMPro;
+using System;
+
+using Enums;
 
 
 public abstract class GameplayCard : MonoBehaviour
 {
+    [Serializable]
+    public struct Modifier
+    {
+        public int attackPointModifier;
+        public int defensePointModifier;     
+        public List<String> modifierList; // TODO: for logging purpose, should then be using modifier enums instead of string
+
+        public GuardianStar selectedGuardianStar;
+    }
+
+
     [SerializeField] private Card cardData;
+    [SerializeField] private Modifier modifier;
+
+
+    // [Header("Modifier")]
+    // [SerializeField] protected int attackPointModifier = 0;
+    // [SerializeField] protected int defensePointModifier = 0;
 
     [Header("Caches")]
     [SerializeField] private Image baseImage;
@@ -19,6 +39,8 @@ public abstract class GameplayCard : MonoBehaviour
     [SerializeField] protected int defensePoint;
     [SerializeField] protected TextMeshProUGUI attackPointText;
     [SerializeField] protected TextMeshProUGUI defensePointText;
+
+
 
 
     public void Setup(Card cardData)
@@ -55,6 +77,13 @@ public abstract class GameplayCard : MonoBehaviour
         }
     }
 
+    public void SetSelectedGuardianStar(GuardianStar value)
+    {
+        modifier.selectedGuardianStar = value;
+    }
+    public GuardianStar GetSelectedGuardianStar() => modifier.selectedGuardianStar;
+
     public Card GetCardData() => cardData;
+    public Modifier GetModifier() => modifier;
 
 }

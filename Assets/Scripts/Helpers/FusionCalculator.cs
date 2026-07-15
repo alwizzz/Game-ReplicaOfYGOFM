@@ -12,6 +12,7 @@ public static class FusionCalculator
     {
         public Card card;
         public bool isFusioned;
+        public bool retainMonster; // specifically used for Fusion Flow's retainModification logic
     }
 
     public static FusionResult GetFusionResult(Card m1, Card m2) // m as in
@@ -21,18 +22,20 @@ public static class FusionCalculator
 
         // initialize
         Card card;
-        bool isFusioned = false;
+        bool isFusioned = false; // TODO: still dummy value
+        bool retainMonster = false; // TODO: still pretty much dummy value
 
-        if(m1.IsMonsterCard() && m2.IsMonsterCard())
+        if(m1.IsMonsterCard() && m2.IsMonsterCard()) // m1 monster, m2 monster
         {
             card = m2;
-        } else if(!m1.IsMonsterCard() && !m2.IsMonsterCard())
+        } else if(!m1.IsMonsterCard() && !m2.IsMonsterCard()) // m1 nonmoster, m2 nonmonster
         {
             card = m2;
-        } else if(m1.IsMonsterCard() && !m2.IsMonsterCard())
+        } else if(m1.IsMonsterCard() && !m2.IsMonsterCard()) // m1 monster, m2 nonmonster
         {
             card = m1;
-        } else // the only remaining case is !m1.IsMonsterCard() && m2.IsMonsterCard()
+            retainMonster = true;
+        } else // the only remaining case is m1 nonmonster, m2 monster
         {
             card = m2;
         }
@@ -40,7 +43,8 @@ public static class FusionCalculator
         return new FusionResult
         {
             card = card,
-            isFusioned = isFusioned
+            isFusioned = isFusioned,
+            retainMonster = retainMonster
         };
     }
 }

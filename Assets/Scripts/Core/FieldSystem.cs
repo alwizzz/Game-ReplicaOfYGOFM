@@ -107,7 +107,7 @@ public class FieldSystem : MonoBehaviour
 
     #region Selection Options
 
-    public void OpenFullSelection(bool maintainSelection = false)
+    public void OpenFullSelection(bool retainSelection = false)
     {
         isOnSelection = true; 
 
@@ -117,7 +117,7 @@ public class FieldSystem : MonoBehaviour
             backRankOverlay.SetActive(false);
         }
 
-        if (maintainSelection)
+        if (retainSelection)
         {
             FieldButtonManager.Instance().UpdateButtons(selectedFieldCardContainer);
         } else
@@ -129,7 +129,7 @@ public class FieldSystem : MonoBehaviour
 
     }
 
-    public void OpenFrontRankSelection(bool maintainSelection = false)
+    public void OpenFrontRankSelection(bool retainSelection = false)
     {
         print($"OpenFrontRankSelection on {owner}");
         isOnSelection = true;
@@ -142,11 +142,11 @@ public class FieldSystem : MonoBehaviour
         //     backRankOverlay.SetActive(true);
         // }
 
-        if (maintainSelection) return;
+        if (retainSelection) return;
         SetSelectedCardContainer(frontRankFieldCardContainers[0]);
     }
 
-    public void OpenBackRankSelection(bool maintainSelection = false)
+    public void OpenBackRankSelection(bool retainSelection = false)
     {
         isOnSelection = true;
 
@@ -156,17 +156,17 @@ public class FieldSystem : MonoBehaviour
             backRankOverlay.SetActive(false);
         }
 
-        if (maintainSelection) return;
+        if (retainSelection) return;
         SetSelectedCardContainer(backRankFieldCardContainers[0]);
     }
 
-    public void CloseSelection(bool maintainSelection = false)
+    public void CloseSelection(bool retainSelection = false)
     {
         isOnSelection = false;
         frontRankOverlay.SetActive(true);
         backRankOverlay.SetActive(true);
 
-        if (maintainSelection) return;
+        if (retainSelection) return;
         ResetSelection();
     }
 
@@ -316,7 +316,7 @@ public class FieldSystem : MonoBehaviour
         print("BATTLE MODE");
         isOnBattleMode = true;
         selectedFieldCardContainer.SetAsAttackerInBattle();
-        CloseSelection(maintainSelection:true);
+        CloseSelection(retainSelection:true);
 
         GameplayManager.Instance().OpponentFieldSystem().OpenFrontRankSelection();
         FieldButtonManager.Instance().UpdateBattleButtons(true);

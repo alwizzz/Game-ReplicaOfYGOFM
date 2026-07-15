@@ -55,7 +55,9 @@ public class CardInformationDisplay : MonoBehaviour
             if(onField)
             {
                 var fieldCard = (FieldCard)card;
-                var selectedGuardianStar = fieldCard.GetSelectedGuardianStar();
+                // var selectedGuardianStar = fieldCard.GetSelectedGuardianStar();
+                var selectedGuardianStar = fieldCard.GetModifier().selectedGuardianStar;
+                
 
                 guardianStar2Image.sprite = ResourceManager
                     .Instance().GetGuardianStarIcon(selectedGuardianStar);

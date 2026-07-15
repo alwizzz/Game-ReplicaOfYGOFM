@@ -81,11 +81,11 @@ public class FieldCard : GameplayCard
         }
     }
 
-    public void SetSelectedGuardianStar(GuardianStar value)
-    {
-        selectedGuardianStar = value;
-    }
-    public GuardianStar GetSelectedGuardianStar() => selectedGuardianStar;
+    // public void SetSelectedGuardianStar(GuardianStar value)
+    // {
+    //     selectedGuardianStar = value;
+    // }
+    // public GuardianStar GetSelectedGuardianStar() => selectedGuardianStar;
 
 
     public void Destroy()
