@@ -70,7 +70,6 @@ public class GameplayManager : StaticReference<GameplayManager>
         var fieldCardContainer = enemyFieldSystem.GetFrontRankContainers()[0];
         var fieldCard = enemyFieldSystem.DebugSpawnFieldCard(cardData, false, fieldCardContainer);
         fieldCard.SetToDefensePosition();
-        // fieldCard.SetToFaceDown();
         //enemyFieldSystem.IncrementCardCount(false);
         print("DEBUG: spawned monster card on enemy field");
 
@@ -79,9 +78,16 @@ public class GameplayManager : StaticReference<GameplayManager>
         fieldCardContainer = playerFieldSystem.GetFrontRankContainers()[0];
         fieldCard = playerFieldSystem.DebugSpawnFieldCard(cardData, false, fieldCardContainer);
         //fieldCard.SetToDefensePosition();
-        //fieldCard.SetToFaceDown();
         //playerFieldSystem.IncrementCardCount(false);
         print("DEBUG: spawned monster card on player field");
+
+        // spawn magic card on player field
+        cardData = Resources.Load<Card>("CardLibrary/657-EquipSpell-Megamorph");
+        fieldCardContainer = playerFieldSystem.GetBackRankContainers()[0];
+        fieldCard = playerFieldSystem.DebugSpawnFieldCard(cardData, true, fieldCardContainer);
+        //fieldCard.SetToDefensePosition();
+        //playerFieldSystem.IncrementCardCount(false);
+        print("DEBUG: spawned non moster card on player field");
     }
 
     public bool IsPlayerTurn() => (turn == Side.Player ? true : false);

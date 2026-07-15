@@ -371,7 +371,15 @@ public class FieldSystem : MonoBehaviour
 
         var spawnedFieldCard = Instantiate(fieldCardPrefab);
         spawnedFieldCard.Setup(cardData);
-        spawnedFieldCard.SetToAttackPosition(); // default when spawning
+
+        if (cardData.IsMonsterCard())
+        {
+            spawnedFieldCard.SetToAttackPosition(); // default when spawning
+            spawnedFieldCard.SetSelectedGuardianStar(((MonsterCard)cardData).guardianStarOption1);
+        } else
+        {
+            // 
+        }
         if (isFacedown)
         {
             spawnedFieldCard.SetToFaceDown();
@@ -380,7 +388,6 @@ public class FieldSystem : MonoBehaviour
         {
             spawnedFieldCard.SetToFaceUp();
         }
-        spawnedFieldCard.SetSelectedGuardianStar(((MonsterCard)cardData).guardianStarOption1);
         fieldCardContainer.SetCard(spawnedFieldCard);
         spawnedFieldCard.SetHasBeenUsed(false);
 
