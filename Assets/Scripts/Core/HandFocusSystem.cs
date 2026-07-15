@@ -117,8 +117,20 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         // GameplayManager.Instance().ToFieldPhase(card, isFaceDown, guardianStar);
         handCardReferenceFromHand.GetContainer().RemoveCard(alsoDestroy: true);
 
+        // TODO: logic to switch to Fusion flow
+        FieldCardContainer selectedFieldContainer = GameplayManager.Instance().FieldSystem().GetSelectedFieldContainer();
+        FieldCard selectedFieldCard = selectedFieldContainer.GetCard();
+        if(selectedFieldCard != null)
+        {
+            // NOTE: isFaceDown becomes irrelevant as fusion flow always set every card to face up
+            SwitchFromSingleFlowToFusionFlow(card, selectedFieldCard);
+        } else
+        {
+            Resolve(card, isFaceDown, true);
+        }
+
         // Hide();
-        Resolve(card, isFaceDown, true);
+        
     }
 
     public void ReturnToHand()
@@ -233,6 +245,33 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         Resolve(resultCard, false, false); // fusion result is always face up
     }
 
+    private void SwitchFromSingleFlowToFusionFlow(Card cardFromHand, FieldCard selectedFieldCard)
+    {   
+        // UI handling
+        panelSingleFlow.SetActive(false);
+        panelFusionFlow.SetActive(true);
+        if(possession == Side.Player) // just to mark it
+        {
+            panelFusionFlow.GetComponent<Image>().color = Color.blue;
+        }
+        returnButton.SetActive(false);
+        fuseButton.SetActive(false);
+
+        // data handling
+
+        cachedFieldCard = selectedFieldCard;
+        Card cardFromField = selectedFieldCard.GetCardData();
+
+        fusionListData.Insert(0, cardFromField);
+        fusionListData.Insert(1, cardFromHand);
+        UpdateFusionDisplay();
+        selectedFieldCard.Destroy(); // NOTE: cardFromHand's HandCard has been destroyed on Single Flow logic
+        // print("XXX" + cachedFieldCard.HasBeenUsed()); // make sure the cache still exist
+
+        IEnumerator Delayed(float delay, Action action) { yield return new WaitForSeconds(delay); action?.Invoke(); }
+        StartCoroutine(Delayed(1f, () => StartCoroutine(AnimateFusion())));   
+    }
+
 #endregion
 
 
@@ -296,6 +335,8 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
         GameplayManager.Instance().ToFieldPhase(card, isFaceDown, guardianStar);
 
+        // cleanup
+        fusionListData.Clear();
         Hide();
     }
 
