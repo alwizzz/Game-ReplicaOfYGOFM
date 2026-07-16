@@ -62,15 +62,14 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         if(cardData.IsMonsterCard())
         {
             isMonster = true;
-            var data = (MonsterCard)cardData;
-            // selector.gameObject.SetActive(true);
-            // selector.Setup(data.guardianStarOption1, data.guardianStarOption2);
             GameplayManager.Instance().FieldSystem().OpenFrontRankSelection();
         } else
         {
             isMonster = false;
-            // selector.gameObject.SetActive(false);
-            GameplayManager.Instance().FieldSystem().OpenBackRankSelection();
+            // GameplayManager.Instance().FieldSystem().OpenBackRankSelection();
+            
+            // non monster now do a full selection, to enable fusion flow to monster card, possibly for equip spell card
+            GameplayManager.Instance().FieldSystem().OpenFullSelection();
         }
 
         panelSingleFlow.SetActive(true);
@@ -125,6 +124,11 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
             SwitchFromSingleFlowToFusionFlow(card, selectedFieldCard);
         } else
         {
+        if(!isMonster && isFaceDown && !selectedFieldContainer.IsBackRank())
+            {
+                // force to face up, as nonmonster cant be facedown in front rank
+                isFaceDown = false;
+            }
             Resolve(card, isFaceDown);
         }
 
