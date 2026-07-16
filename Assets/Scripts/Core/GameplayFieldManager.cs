@@ -75,6 +75,7 @@ public class GameplayFieldManager : StaticReference<GameplayFieldManager>
         );
 
         SwapInformationDisplays();
+        RefreshFieldCardOrientation();
         playerFieldCardInformationDisplay.SetActive(true);
         enemyFieldCardInformationDisplay.SetActive(true);
 
@@ -87,6 +88,26 @@ public class GameplayFieldManager : StaticReference<GameplayFieldManager>
         var tempPosition = playerFieldCardInformationDisplay.transform.position;
         playerFieldCardInformationDisplay.transform.position = enemyFieldCardInformationDisplay.transform.position;
         enemyFieldCardInformationDisplay.transform.position = tempPosition;
+    }
+
+    public void RefreshFieldCardOrientation()
+    {
+        System.Action<FieldCardContainer> lambda = (fieldCardContainer) =>
+        {
+            if(fieldCardContainer.IsEmpty()) return;
+            FieldCard fieldCard = fieldCardContainer.GetCard();
+            fieldCard.RefreshOrientation();
+        };
+
+        var playerFieldSystem = GameplayManager.Instance().PlayerFieldSystem();
+        playerFieldSystem.GetFrontRankContainers().ForEach(lambda);
+        playerFieldSystem.GetBackRankContainers().ForEach(lambda);
+
+        var enemyFieldSystem = GameplayManager.Instance().EnemyFieldSystem();
+        enemyFieldSystem.GetFrontRankContainers().ForEach(lambda);
+        enemyFieldSystem.GetBackRankContainers().ForEach(lambda);
+
+        print("XXX");
     }
 
     public bool IsRotating() => isRotating;

@@ -47,6 +47,7 @@ public class GameplayManager : StaticReference<GameplayManager>
 
         Setup();
         Debug();
+        GameplayFieldManager.Instance().RefreshFieldCardOrientation();
     }
 
     private void Setup()
@@ -69,7 +70,7 @@ public class GameplayManager : StaticReference<GameplayManager>
         var cardData = Resources.Load<Card>("CardLibrary/022-NormalMonster-SummonedSkull");
         var fieldCardContainer = enemyFieldSystem.GetFrontRankContainers()[0];
         var fieldCard = enemyFieldSystem.DebugSpawnFieldCard(cardData, false, fieldCardContainer);
-        fieldCard.SetToDefensePosition();
+        // fieldCard.SetToDefensePosition();
         //enemyFieldSystem.IncrementCardCount(false);
         print("DEBUG: spawned monster card on enemy field");
 

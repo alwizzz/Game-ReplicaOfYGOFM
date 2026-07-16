@@ -81,6 +81,23 @@ public class FieldCard : GameplayCard
         }
     }
 
+    public void RefreshOrientation()
+    {
+        if(GetCardData().IsMonsterCard())
+        {
+            if (inAttackPosition)
+            {
+                transform.rotation = Quaternion.identity;
+            } else
+            {
+                transform.rotation = Quaternion.Euler(0, 0, 90);
+            }
+        } else
+        {
+            transform.rotation = Quaternion.identity;
+        }
+    }
+
     // public void SetSelectedGuardianStar(GuardianStar value)
     // {
     //     selectedGuardianStar = value;
