@@ -37,7 +37,7 @@ public class GameplayFieldManager : StaticReference<GameplayFieldManager>
     private IEnumerator Flip(bool toBeFlipped)
     {
         isRotating = true;
-        System.Func<bool> conditionLambda = () =>
+        bool _CheckAngleCondition() // not static as the local function use contexts outside its scope (gameplayFieldUI)
         {
             float currentAngle = gameplayFieldUI.rotation.eulerAngles.z;
             //print(currentAngle);
@@ -49,13 +49,13 @@ public class GameplayFieldManager : StaticReference<GameplayFieldManager>
             {
                 return currentAngle >= 180f;
             }
-        };
+        }
 
         playerFieldCardInformationDisplay.SetActive(false);
         enemyFieldCardInformationDisplay.SetActive(false);
 
         // animating
-        while (conditionLambda())
+        while (_CheckAngleCondition())
         {
             gameplayFieldUI.Rotate(Vector3.forward * rotateSpeed * Time.deltaTime);
             yield return null;
@@ -92,22 +92,21 @@ public class GameplayFieldManager : StaticReference<GameplayFieldManager>
 
     public void RefreshFieldCardOrientation()
     {
-        System.Action<FieldCardContainer> lambda = (fieldCardContainer) =>
+        // static as the local function does not use context outside its scope
+        static void _Refresh(FieldCardContainer fieldCardContainer)
         {
-            if(fieldCardContainer.IsEmpty()) return;
+            if (fieldCardContainer.IsEmpty()) return;
             FieldCard fieldCard = fieldCardContainer.GetCard();
             fieldCard.RefreshOrientation();
-        };
+        }
 
         var playerFieldSystem = GameplayManager.Instance().PlayerFieldSystem();
-        playerFieldSystem.GetFrontRankContainers().ForEach(lambda);
-        playerFieldSystem.GetBackRankContainers().ForEach(lambda);
+        playerFieldSystem.GetFrontRankContainers().ForEach(_Refresh);
+        playerFieldSystem.GetBackRankContainers().ForEach(_Refresh);
 
         var enemyFieldSystem = GameplayManager.Instance().EnemyFieldSystem();
-        enemyFieldSystem.GetFrontRankContainers().ForEach(lambda);
-        enemyFieldSystem.GetBackRankContainers().ForEach(lambda);
-
-        print("XXX");
+        enemyFieldSystem.GetFrontRankContainers().ForEach(_Refresh);
+        enemyFieldSystem.GetBackRankContainers().ForEach(_Refresh);
     }
 
     public bool IsRotating() => isRotating;
