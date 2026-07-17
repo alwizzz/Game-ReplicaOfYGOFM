@@ -16,15 +16,13 @@ public abstract class GameplayCard : MonoBehaviour
     {
         public int attackPointModifier;
         public int defensePointModifier;     
-        public List<String> modifierList; // TODO: for logging purpose, should then be using modifier enums instead of string
-
-        // public GuardianStar selectedGuardianStar;
+        public Card source;
     }
 
 
     [SerializeField] private Card cardData;
     [SerializeField] private GuardianStar selectedGuardianStar;
-    [SerializeField] private Modifier modifier;
+    [SerializeField] private List<Modifier> modifierList;
 
 
     // [Header("Modifier")]
@@ -87,6 +85,6 @@ public abstract class GameplayCard : MonoBehaviour
     public GuardianStar GetSelectedGuardianStar() => selectedGuardianStar;
 
     public Card GetCardData() => cardData;
-    public Modifier GetModifier() => modifier;
+    public List<Modifier> GetModifier() => modifierList;
 
 }
