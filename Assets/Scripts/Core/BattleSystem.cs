@@ -140,10 +140,10 @@ public class BattleSystem : UIModal<BattleSystem>
     {
         if(isDirectAttack){ return null; }
 
-        // GuardianStar attackerGs = attackerFieldCardReference.GetSelectedGuardianStar();
-        // GuardianStar attackedGs = attackedFieldCardReference.GetSelectedGuardianStar();
-        GuardianStar attackerGs = attackerFieldCardReference.GetModifier().selectedGuardianStar;
-        GuardianStar attackedGs = attackedFieldCardReference.GetModifier().selectedGuardianStar;
+        GuardianStar attackerGs = attackerFieldCardReference.GetSelectedGuardianStar();
+        GuardianStar attackedGs = attackedFieldCardReference.GetSelectedGuardianStar();
+        // GuardianStar attackerGs = attackerFieldCardReference.GetModifier().selectedGuardianStar;
+        // GuardianStar attackedGs = attackedFieldCardReference.GetModifier().selectedGuardianStar;
         bool? interactionResult = GuardianStarCalculator.GetInteraction(
             attackerGs, 
             attackedGs

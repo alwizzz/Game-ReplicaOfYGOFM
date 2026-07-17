@@ -375,7 +375,8 @@ public class FieldSystem : MonoBehaviour
         if (cardData.IsMonsterCard())
         {
             spawnedFieldCard.SetToAttackPosition(); // default when spawning
-            spawnedFieldCard.SetSelectedGuardianStar(((MonsterCard)cardData).guardianStarOption1);
+            // spawnedFieldCard.SetSelectedGuardianStar(((MonsterCard)cardData).guardianStarOption1);
+            spawnedFieldCard.SetSelectedGuardianStar(((MonsterCard)cardData).guardianStarOption2);
         } else
         {
             // 

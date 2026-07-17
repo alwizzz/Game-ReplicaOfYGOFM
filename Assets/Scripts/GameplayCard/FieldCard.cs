@@ -10,7 +10,7 @@ public class FieldCard : GameplayCard
     [SerializeField] private bool inAttackPosition;
     [SerializeField] private bool isFaceDown;
     [SerializeField] private bool hasBeenUsed;
-    [SerializeField] private GuardianStar selectedGuardianStar;
+    // [SerializeField] private GuardianStar selectedGuardianStar;
     [SerializeField] private FieldCardContainer container;
 
     [Header("Field Card Caches")]

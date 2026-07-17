@@ -31,7 +31,8 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
     [SerializeField] private GameObject returnButton;
     [SerializeField] private GameObject fuseButton;
     [SerializeField] private TextMeshProUGUI fuseResultText;
-    [SerializeField] private GameplayCard.Modifier? cachedGameplayCardModifier;
+    // [SerializeField] private GameplayCard.Modifier? cachedGameplayCardModifier;
+    [SerializeField] private GuardianStar? cachedGuardianStar;
 
 
 
@@ -200,9 +201,9 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         FieldCard selectedFieldCard = selectedFieldContainer.GetCard();
         if(selectedFieldCard != null)
         {
-            cachedGameplayCardModifier = selectedFieldCard.GetModifier();
+            // cachedGameplayCardModifier = selectedFieldCard.GetModifier();
+            cachedGuardianStar = selectedFieldCard.GetSelectedGuardianStar();
             Card cardData = selectedFieldCard.GetCardData();
-            print("XXX" + cachedGameplayCardModifier);
 
             fusionListData.Insert(0, cardData);
             UpdateFusionDisplay();
@@ -250,7 +251,8 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         }
 
         bool retainModification = false;
-        if(cachedGameplayCardModifier != null && retainFirstMonster == true)
+        // if(cachedGameplayCardModifier != null && retainFirstMonster == true)
+        if(cachedGuardianStar != null && retainFirstMonster == true)
         {
             retainModification = true;
         }
@@ -277,7 +279,8 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
         // data handling
 
-        cachedGameplayCardModifier = selectedFieldCard.GetModifier();
+        // cachedGameplayCardModifier = selectedFieldCard.GetModifier();
+        cachedGuardianStar = selectedFieldCard.GetSelectedGuardianStar();
         Card cardFromField = selectedFieldCard.GetCardData();
 
         fusionListData.Insert(0, cardFromField);
@@ -325,7 +328,8 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         {
             if (retainModification)
             {
-                if(cachedGameplayCardModifier == null)
+                // if(cachedGameplayCardModifier == null)
+                if(cachedGuardianStar == null)
                 {
                     print($"WARN: attempt to retainModification but cachedGameplayCardModifier is null, fallbacked");
 
@@ -338,7 +342,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
                     var data = (MonsterCard)cardData;
                     selector.Setup(data.guardianStarOption1, data.guardianStarOption2);
 
-                    var cachedGuardianStar = cachedGameplayCardModifier?.selectedGuardianStar;
+                    // var cachedGuardianStar = cachedGameplayCardModifier?.selectedGuardianStar;
                     if(cachedGuardianStar == data.guardianStarOption1)
                     {
                         selector.gameObject.SetActive(false);
@@ -398,7 +402,8 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
         // cleanup
         fusionListData.Clear();
-        cachedGameplayCardModifier = null;
+        // cachedGameplayCardModifier = null;
+        cachedGuardianStar = null;
         Hide();
     }
 
