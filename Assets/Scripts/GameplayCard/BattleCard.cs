@@ -15,9 +15,10 @@ public class BattleCard : GameplayCard
     [SerializeField] private GameObject AttackPanelOverlay;
     [SerializeField] private GameObject DefensePanelOverlay;
 
-    public void SetupBattleCard(Card cardData, bool inAttackPosition)
+    public void SetupBattleCard(Card cardData, List<GameplayCard.Modifier> modifierList, bool inAttackPosition)
     {
-        base.Setup(cardData);
+        Setup(cardData);
+        SetModifierList(modifierList);
         this.inAttackPosition = inAttackPosition;
 
         // safeguard in case previously there was bonus animation played
@@ -48,11 +49,11 @@ public class BattleCard : GameplayCard
 
         if(targetsAttackPoint)
         {
-            originalValue = attackPoint;  
+            originalValue = GetAttackPoint();  
             textRef = attackPointText; 
         } else
         {
-            originalValue = defensePoint;    
+            originalValue = GetDefensePoint();    
             textRef = defensePointText; 
         }
 

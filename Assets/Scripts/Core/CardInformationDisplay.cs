@@ -29,15 +29,15 @@ public class CardInformationDisplay : MonoBehaviour
         ResetInformation();
         guardianStar1Image.transform.parent.gameObject.SetActive(false);
     }
-    public void UpdateInformation(GameplayCard card)
+    public void UpdateInformation(GameplayCard gameplayCard)
     {
-        if(card == null)
+        if(gameplayCard == null)
         {
-            print("ERROR: card is null");
+            print("ERROR: gameplayCard is null");
             return;
         }
 
-        var data = card.GetCardData();
+        var data = gameplayCard.GetCardData();
         nameText.text = data.cardName;
         if (data.IsMonsterCard())
         {
@@ -45,8 +45,10 @@ public class CardInformationDisplay : MonoBehaviour
             nameOverlay.SetActive(false);
             attributesOverlay.SetActive(false);
 
-            attackPointText.text = monsterData.attackPoint.ToString();
-            defensePointText.text = monsterData.defensePoint.ToString();
+            // attackPointText.text = monsterData.attackPoint.ToString();
+            // defensePointText.text = monsterData.defensePoint.ToString();
+            attackPointText.text = gameplayCard.GetAttackPoint().ToString();
+            defensePointText.text = gameplayCard.GetDefensePoint().ToString();
             levelText.text = monsterData.level.ToString();
 
             typeImage.sprite = ResourceManager
@@ -54,7 +56,7 @@ public class CardInformationDisplay : MonoBehaviour
 
             if(onField)
             {
-                var fieldCard = (FieldCard)card;
+                var fieldCard = (FieldCard)gameplayCard;
                 var selectedGuardianStar = fieldCard.GetSelectedGuardianStar();
                 // var selectedGuardianStar = fieldCard.GetModifier().selectedGuardianStar;
                 

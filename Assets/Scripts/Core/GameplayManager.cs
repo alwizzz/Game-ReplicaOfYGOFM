@@ -80,6 +80,9 @@ public class GameplayManager : StaticReference<GameplayManager>
         fieldCard = playerFieldSystem.DebugSpawnFieldCard(cardData, false, fieldCardContainer);
         //fieldCard.SetToDefensePosition();
         //playerFieldSystem.IncrementCardCount(false);
+        fieldCard.SetModifierList(new List<GameplayCard.Modifier>{
+            new GameplayCard.Modifier(1000, 1000, Resources.Load<Card>("CardLibrary/657-EquipSpell-Megamorph"))
+        });
         print("DEBUG: spawned monster card on player field");
 
         // spawn magic card on player field

@@ -70,8 +70,7 @@ public abstract class GameplayCard : MonoBehaviour
             attackPoint = data.attackPoint;
             defensePoint = data.defensePoint;
 
-            attackPointText.text = data.attackPoint.ToString();
-            defensePointText.text = data.defensePoint.ToString();
+            RefreshAttackDefenseText();
         }
         else // is NonMonsterCard
         {
@@ -83,6 +82,12 @@ public abstract class GameplayCard : MonoBehaviour
         }
     }
 
+    public void RefreshAttackDefenseText()
+    {
+        attackPointText.text = GetAttackPoint().ToString();
+        defensePointText.text = GetDefensePoint().ToString();
+    }
+
     public void SetSelectedGuardianStar(GuardianStar value)
     {
         // modifier.selectedGuardianStar = value;
@@ -92,7 +97,35 @@ public abstract class GameplayCard : MonoBehaviour
     public GuardianStar GetSelectedGuardianStar() => selectedGuardianStar;
 
     public Card GetCardData() => cardData;
-    public void SetModifierList(List<Modifier> value) => modifierList = value;
+
+    public void SetModifierList(List<Modifier> value){
+        modifierList = value;
+        RefreshAttackDefenseText();
+        RefreshAttackDefenseText();
+    }
     public List<Modifier> GetModifierList() => modifierList;
+
+    public int GetBaseAttackPoint() => attackPoint;
+    public int GetAttackPoint() {
+        int result = attackPoint;
+        modifierList?.ForEach(modifier =>
+        {
+            result += modifier.attackPointModifier;
+            print("XXX");
+        });
+
+        return result;
+    }
+    
+    public int GetBaseDefensePoint() => defensePoint;
+    public int GetDefensePoint() {
+        int result = defensePoint;
+        modifierList?.ForEach(modifier =>
+        {
+            result += modifier.defensePointModifier;
+        });
+
+        return result;
+    }
 
 }

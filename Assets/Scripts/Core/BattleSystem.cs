@@ -58,10 +58,8 @@ public class BattleSystem : UIModal<BattleSystem>
         if (attackerFieldCardReference.InAttackPosition() == false) return;
         if(attackedFieldCardReference == null)
         {
-            
             isDirectAttack = CheckEmptyOpponentField();
-            if(!isDirectAttack){return;}
-
+            if(!isDirectAttack) return;
         }
 
         Setup(isDirectAttack);
@@ -83,6 +81,7 @@ public class BattleSystem : UIModal<BattleSystem>
     {
         attackerBattleCard.SetupBattleCard(
             cardData: attackerFieldCardReference.GetCardData(),
+            modifierList: attackerFieldCardReference.GetModifierList(),
             inAttackPosition: attackerFieldCardReference.InAttackPosition()
         );
         attackerFieldCardReference.SetToFaceUp();
@@ -98,6 +97,7 @@ public class BattleSystem : UIModal<BattleSystem>
             attackedBattleCard.gameObject.SetActive(true);
             attackedBattleCard.SetupBattleCard(
                 cardData: attackedFieldCardReference.GetCardData(),
+                modifierList: attackedFieldCardReference.GetModifierList(),
                 inAttackPosition: attackedFieldCardReference.InAttackPosition()
             );
             attackedFieldCardReference.SetToFaceUp();
@@ -241,14 +241,21 @@ public class BattleSystem : UIModal<BattleSystem>
 
     private int GetPowerPoint(BattleCard battleCard)
     {
-        var monsterCard = (MonsterCard)battleCard.GetCardData();
         if(battleCard.InAttackPosition())
         {
-            return monsterCard.attackPoint;
+            return battleCard.GetAttackPoint();
         } else
         {
-            return monsterCard.defensePoint;
+            return battleCard.GetDefensePoint();
         }
+        // var monsterCard = (MonsterCard)battleCard.GetCardData();
+        // if(battleCard.InAttackPosition())
+        // {
+        //     return monsterCard.attackPoint;
+        // } else
+        // {
+        //     return monsterCard.defensePoint;
+        // }
     }
 
     private void BattleResolution()
