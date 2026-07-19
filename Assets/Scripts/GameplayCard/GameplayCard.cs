@@ -41,8 +41,8 @@ public abstract class GameplayCard : MonoBehaviour
     [SerializeField] private Image cardImage;
     [SerializeField] private GameObject cardAttributes;
 
-    [SerializeField] protected int attackPoint;
-    [SerializeField] protected int defensePoint;
+    [SerializeField] protected int baseAttackPoint;
+    [SerializeField] protected int baseDefensePoint;
     [SerializeField] protected TextMeshProUGUI attackPointText;
     [SerializeField] protected TextMeshProUGUI defensePointText;
 
@@ -68,8 +68,8 @@ public abstract class GameplayCard : MonoBehaviour
             cardAttributes.SetActive(true);
             var data = (MonsterCard)cardData;
 
-            attackPoint = data.attackPoint;
-            defensePoint = data.defensePoint;
+            baseAttackPoint = data.attackPoint;
+            baseDefensePoint = data.defensePoint;
 
             RefreshAttackDefenseText();
         }
@@ -78,8 +78,8 @@ public abstract class GameplayCard : MonoBehaviour
             cardAttributes.SetActive(false);
 
             // dummy values
-            attackPoint = 0;
-            defensePoint = 0;
+            baseAttackPoint = 0;
+            baseDefensePoint = 0;
         }
     }
 
@@ -106,9 +106,9 @@ public abstract class GameplayCard : MonoBehaviour
     }
     public List<Modifier> GetModifierList() => modifierList;
 
-    public int GetBaseAttackPoint() => attackPoint;
+    public int GetBaseAttackPoint() => baseAttackPoint;
     public int GetAttackPoint() {
-        int result = attackPoint;
+        int result = baseAttackPoint;
         modifierList?.ForEach(modifier =>
         {
             result += modifier.attackPointModifier;
@@ -118,9 +118,9 @@ public abstract class GameplayCard : MonoBehaviour
         return result;
     }
     
-    public int GetBaseDefensePoint() => defensePoint;
+    public int GetBaseDefensePoint() => baseDefensePoint;
     public int GetDefensePoint() {
-        int result = defensePoint;
+        int result = baseDefensePoint;
         modifierList?.ForEach(modifier =>
         {
             result += modifier.defensePointModifier;

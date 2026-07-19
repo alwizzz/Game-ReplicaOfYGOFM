@@ -248,14 +248,6 @@ public class BattleSystem : UIModal<BattleSystem>
         {
             return battleCard.GetDefensePoint();
         }
-        // var monsterCard = (MonsterCard)battleCard.GetCardData();
-        // if(battleCard.InAttackPosition())
-        // {
-        //     return monsterCard.attackPoint;
-        // } else
-        // {
-        //     return monsterCard.defensePoint;
-        // }
     }
 
     private void BattleResolution()

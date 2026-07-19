@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Enums;
+
 [CreateAssetMenu(
     fileName = "XXX-FieldSpell-Name",
     menuName = "Cards/FieldSpell",
@@ -9,6 +11,7 @@ using UnityEngine;
 )]
 public class FieldSpellCard : SpellCard
 {
+    public override SpellCardType GetSpellCardType() => SpellCardType.Field;
     public override void Activate()
     {
         Debug.Log("Activate FIELD SPELL!");

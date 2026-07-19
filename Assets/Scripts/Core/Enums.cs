@@ -60,6 +60,14 @@ namespace Enums
         NONE, // used for non monster
     }
 
+    public enum SpellCardType
+    {
+        Normal,
+        Equip,
+        Field,
+        Ritual,
+
+    }
 
     public enum TrapEffect
     {

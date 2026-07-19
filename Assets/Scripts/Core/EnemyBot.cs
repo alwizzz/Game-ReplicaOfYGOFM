@@ -62,14 +62,14 @@ public class EnemyBot : MonoBehaviour
         int bestIndex = -1;
         for(int i=0; i<containers.Count; i++)
         {
-            var cardData = containers[i].GetCard().GetCardData();
+            var handCard = containers[i].GetCard();
+            var cardData = handCard.GetCardData();
             if (cardData.IsMonsterCard() == false) continue;
 
-            var monsterData = (MonsterCard)cardData;
-            if (monsterData.attackPoint <= bestAttackPoint) continue;
+            if (handCard.GetAttackPoint() <= bestAttackPoint) continue;
 
             bestIndex = i;
-            bestAttackPoint = monsterData.attackPoint;
+            bestAttackPoint = handCard.GetAttackPoint();
         }
 
         if(bestIndex == -1) // random card
@@ -185,10 +185,9 @@ public class EnemyBot : MonoBehaviour
             } else
             {
                 // opponent has monster in their field
-
+                
                 var fieldCard = chosenMonsterContainer.GetCard();
-                var monsterCard = (MonsterCard)fieldCard.GetCardData();
-                var chosenMonsterAttackPoint = monsterCard.attackPoint;
+                var chosenMonsterAttackPoint = fieldCard.GetAttackPoint();
 
                 var chosenOpponentContainer = ChooseOpponentMonster(opponentContainers, chosenMonsterAttackPoint);
 
@@ -246,10 +245,9 @@ public class EnemyBot : MonoBehaviour
             var fieldCard = containers[i].GetCard();
             if (fieldCard.HasBeenUsed()) continue;
 
-            var monsterCard = (MonsterCard)fieldCard.GetCardData();
-            if (monsterCard.attackPoint <= bestAttack) continue;
+            if (fieldCard.GetAttackPoint() <= bestAttack) continue;
 
-            bestAttack = monsterCard.attackPoint;
+            bestAttack = fieldCard.GetAttackPoint();
             index = i;
         }
 

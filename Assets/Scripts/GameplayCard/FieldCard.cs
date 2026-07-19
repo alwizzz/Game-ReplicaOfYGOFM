@@ -70,14 +70,13 @@ public class FieldCard : GameplayCard
     public bool IsFaceDown() => isFaceDown;
     public int GetPowerPoint()
     {
-        var monsterCard = (MonsterCard)GetCardData();
         if (InAttackPosition())
         {
-            return monsterCard.attackPoint;
+            return GetAttackPoint();
         }
         else
         {
-            return monsterCard.defensePoint;
+            return GetDefensePoint();
         }
     }
 

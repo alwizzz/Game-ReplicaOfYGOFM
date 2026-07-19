@@ -34,17 +34,22 @@ public static class FusionCalculator
         } else if(!m1.IsMonsterCard() && !m2.IsMonsterCard()) // m1 nonmoster, m2 nonmonster
         {
             outputCard = m2;
-
-            // NOTE: meanwhile retainMonster is initially used to tell if the m1 isnt changed,
-            // the definition still fits on this case
-            retainMonster = true; 
         } else if(m1.IsMonsterCard() && !m2.IsMonsterCard()) // m1 monster, m2 nonmonster
         {
             outputCard = m1;
+            modifier = TryEquip(m2, m1);
+            if(modifier.HasValue) type = FusionResultType.Equipped;
+            
             retainMonster = true;
         } else // the only remaining case is m1 nonmonster, m2 monster
         {
             outputCard = m2;
+            modifier = TryEquip(m1, m2);
+            if(modifier.HasValue) type = FusionResultType.Equipped;
+
+            // NOTE: meanwhile retainMonster is initially used to tell if the m1 isnt changed,
+            // the definition still fits on this case
+            retainMonster = true; 
         }
 
         return new FusionResult
@@ -56,22 +61,22 @@ public static class FusionCalculator
         };
     }
 
-    private static bool CanEquip(Card equipSpellCardToBe, Card monsterCardToBe)
+    private static GameplayCard.Modifier? TryEquip(Card equipSpellCardToBe, Card monsterCardToBe)
     {
         // validate
         if(equipSpellCardToBe is not EquipSpellCard equipSpellCard 
             || monsterCardToBe is not MonsterCard monsterCard) 
-        return false;
+        return null;
 
         // TODO doing more cases
         if(equipSpellCard.cardName == "Megamorph")
         {
             // megamorph accepts every monster card
-            return true;
+            return new GameplayCard.Modifier(1000, 1000, equipSpellCardToBe);;
         } else
         {
             Debug.Log("unhandled case");
-            return false;
+            return null;
         }
 
     }

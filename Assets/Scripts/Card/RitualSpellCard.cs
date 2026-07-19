@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Enums;
+
 [CreateAssetMenu(
     fileName = "XXX-RitualSpell-Name",
     menuName = "Cards/RitualSpell",
@@ -9,6 +11,7 @@ using UnityEngine;
 )]
 public class RitualSpellCard : SpellCard
 {
+    public override SpellCardType GetSpellCardType() => SpellCardType.Ritual;
     public override void Activate()
     {
         Debug.Log("Activate RITUAL SPELL!");
