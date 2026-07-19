@@ -77,12 +77,16 @@ public class GameplayManager : StaticReference<GameplayManager>
         // spawn monster card on player field
         cardData = Resources.Load<Card>("CardLibrary/022-NormalMonster-SummonedSkull");
         fieldCardContainer = playerFieldSystem.GetFrontRankContainers()[0];
-        fieldCard = playerFieldSystem.DebugSpawnFieldCard(cardData, false, fieldCardContainer);
+        fieldCard = playerFieldSystem.DebugSpawnFieldCard(
+            cardData, 
+            false, 
+            fieldCardContainer,
+            new List<GameplayCard.Modifier>{
+                new GameplayCard.Modifier(1000, 1000, Resources.Load<Card>("CardLibrary/657-EquipSpell-Megamorph"))
+            }
+        );
         //fieldCard.SetToDefensePosition();
         //playerFieldSystem.IncrementCardCount(false);
-        fieldCard.SetModifierList(new List<GameplayCard.Modifier>{
-            new GameplayCard.Modifier(1000, 1000, Resources.Load<Card>("CardLibrary/657-EquipSpell-Megamorph"))
-        });
         print("DEBUG: spawned monster card on player field");
 
         // spawn magic card on player field

@@ -361,8 +361,12 @@ public class FieldSystem : MonoBehaviour
 
     #region DEBUG
 
-    public FieldCard DebugSpawnFieldCard(Card cardData, bool isFacedown, FieldCardContainer fieldCardContainer)
-    {
+    public FieldCard DebugSpawnFieldCard(
+        Card cardData, 
+        bool isFacedown, 
+        FieldCardContainer fieldCardContainer,
+        List<GameplayCard.Modifier> modifierList = null
+    ){
         //if (selectedFieldCardContainer.IsEmpty() == false)
         //{
         //    // currently unable to spawn on occupied container
@@ -371,7 +375,7 @@ public class FieldSystem : MonoBehaviour
         //}
 
         var spawnedFieldCard = Instantiate(fieldCardPrefab);
-        spawnedFieldCard.Setup(cardData);
+        spawnedFieldCard.Setup(cardData, modifierList);
 
         if (cardData.IsMonsterCard())
         {

@@ -174,7 +174,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         Show();
     }
 
-    private void UpdateFusionDisplay()
+    private void UpdateFusionDisplay(List<GameplayCard.Modifier> modifierListOnFirstIndex = null)
     {
         for(int i=0; i<fusionListDisplay.Count; i++)
         {
@@ -183,7 +183,13 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
                 fusionListDisplay[i].gameObject.SetActive(false);
             } else
             {
-                fusionListDisplay[i].Setup(fusionListData[i]);
+                if(i==0 && modifierListOnFirstIndex != null)
+                {
+                    fusionListDisplay[i].Setup(fusionListData[i], modifierListOnFirstIndex);
+                } else
+                {
+                    fusionListDisplay[i].Setup(fusionListData[i]);
+                }
                 fusionListDisplay[i].gameObject.SetActive(true);
             }
         }
@@ -204,12 +210,14 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
             // cachedGameplayCardModifier = selectedFieldCard.GetModifier();
             cachedGuardianStar = selectedFieldCard.GetSelectedGuardianStar();
             Card cardData = selectedFieldCard.GetCardData();
+            var modifierList = selectedFieldCard.GetModifierList();
 
             fusionListData.Insert(0, cardData);
-            UpdateFusionDisplay();
+            // UpdateFusionDisplay();
+            UpdateFusionDisplay(modifierList);
             selectedFieldCard.Destroy();
 
-            Helpers.Instance().DelayedAction(1f, () => StartCoroutine(RunFusion()));
+            Helpers.Instance().DelayedAction(1f, () => StartCoroutine(RunFusion(modifierList)));
         } else
         {
             StartCoroutine(RunFusion());
@@ -231,14 +239,16 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
             FusionCalculator.FusionResult result = FusionCalculator.GetFusionResult(material1, material2);
 
-            fusionListData[0] = result.card; // change first index as fusion result
-            fusionListData.RemoveAt(1); // exhaust index-1 as it was the material2
-            UpdateFusionDisplay(); // update display
-
             if(result.type == FusionResultType.Rejected)
             {
                 fuseResultText.text = "Rejected";
-                modifierList = null;
+                if (result.retainMonster)
+                {
+                    // carried over   
+                } else
+                {
+                    modifierList = null;
+                }
             } else if(result.type == FusionResultType.Fused)
             {
                 fuseResultText.text = "Fused";
@@ -251,6 +261,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
                     print("WARN: a modifier should be added but the data is null");
                 } else
                 {
+                    // carried over and also appended
                     modifierList.Add(result.modifier.Value);
                 }
             }
@@ -260,9 +271,9 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
                 retainFirstMonster = false;
             }
 
-            // print(material1);
-            // print(material2);
-            // print(result);
+            fusionListData[0] = result.card; // change first index as fusion result
+            fusionListData.RemoveAt(1); // exhaust index-1 as it was the material2
+            UpdateFusionDisplay(modifierList); // update display
 
             yield return new WaitForSeconds(1f);
         }
@@ -299,13 +310,14 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         // cachedGameplayCardModifier = selectedFieldCard.GetModifier();
         cachedGuardianStar = selectedFieldCard.GetSelectedGuardianStar();
         Card cardFromField = selectedFieldCard.GetCardData();
+        var modifierList = selectedFieldCard.GetModifierList();
 
         fusionListData.Insert(0, cardFromField);
         fusionListData.Insert(1, cardFromHand);
-        UpdateFusionDisplay();
+        UpdateFusionDisplay(modifierList);
         selectedFieldCard.Destroy(); // NOTE: cardFromHand's HandCard has been destroyed on Single Flow logic
 
-        Helpers.Instance().DelayedAction(1f, () => StartCoroutine(RunFusion()));
+        Helpers.Instance().DelayedAction(1f, () => StartCoroutine(RunFusion(modifierList)));
     }
 
 #endregion

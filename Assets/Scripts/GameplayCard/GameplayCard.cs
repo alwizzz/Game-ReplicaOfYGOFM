@@ -49,9 +49,10 @@ public abstract class GameplayCard : MonoBehaviour
 
 
 
-    public void Setup(Card cardData)
+    public void Setup(Card cardData, List<GameplayCard.Modifier> modifierList = null)
     {
         this.cardData = cardData;
+        SetModifierList(modifierList);
 
         baseImage.color = ResourceManager.Instance().GetGameplayCardBaseColor(cardData);
         var cardSprite = cardData.spriteBig;
