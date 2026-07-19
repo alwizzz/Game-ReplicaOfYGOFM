@@ -342,8 +342,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         panelFusionFlow.SetActive(false);
 
         // setup
-        resolvedHandCard.Setup(cardData);
-        resolvedHandCard.SetModifierList(modifierList);
+        resolvedHandCard.Setup(cardData, modifierList);
         isFaceDownResolve = isFaceDown;
         if(isFaceDown) faceDownCardImageResolve.SetActive(true);
         else faceDownCardImageResolve.SetActive(false);
