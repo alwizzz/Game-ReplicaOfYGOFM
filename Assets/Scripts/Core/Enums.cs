@@ -81,6 +81,13 @@ namespace Enums
         OnOpponentSummon,
     }
 
+    public enum FusionResultType
+    {
+        Rejected,
+        Fused,
+        Equipped // technically can be said as subtype of fused
+    }
+
 
 }
 

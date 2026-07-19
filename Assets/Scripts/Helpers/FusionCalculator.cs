@@ -11,7 +11,8 @@ public static class FusionCalculator
     public struct FusionResult
     {
         public Card card;
-        public bool isFusioned;
+
+        public FusionResultType type;
         public bool retainMonster; // specifically used for Fusion Flow's retainModification logic
     }
 
@@ -22,7 +23,7 @@ public static class FusionCalculator
 
         // initialize
         Card outputCard;
-        bool isFusioned = false; // TODO: still dummy value
+        FusionResultType type = FusionResultType.Rejected;
         bool retainMonster = false; // TODO: still pretty much dummy value
 
         if(m1.IsMonsterCard() && m2.IsMonsterCard()) // m1 monster, m2 monster
@@ -31,6 +32,10 @@ public static class FusionCalculator
         } else if(!m1.IsMonsterCard() && !m2.IsMonsterCard()) // m1 nonmoster, m2 nonmonster
         {
             outputCard = m2;
+
+            // NOTE: meanwhile retainMonster is initially used to tell if the m1 isnt changed,
+            // the definition still fits on this case
+            retainMonster = true; 
         } else if(m1.IsMonsterCard() && !m2.IsMonsterCard()) // m1 monster, m2 nonmonster
         {
             outputCard = m1;
@@ -43,7 +48,7 @@ public static class FusionCalculator
         return new FusionResult
         {
             card = outputCard,
-            isFusioned = isFusioned,
+            type = type,
             retainMonster = retainMonster
         };
     }

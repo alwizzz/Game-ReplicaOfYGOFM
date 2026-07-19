@@ -210,16 +210,16 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
             selectedFieldCard.Destroy();
 
             // IEnumerator Delayed(float delay, Action action) { yield return new WaitForSeconds(delay); action?.Invoke(); }
-            // StartCoroutine(Delayed(1f, () => StartCoroutine(AnimateFusion())));    
-            Helpers.Instance().DelayedAction(1f, () => StartCoroutine(AnimateFusion()));
+            // StartCoroutine(Delayed(1f, () => StartCoroutine(RunFusion())));    
+            Helpers.Instance().DelayedAction(1f, () => StartCoroutine(RunFusion()));
         } else
         {
-            StartCoroutine(AnimateFusion());
+            StartCoroutine(RunFusion());
         }
 
     }
 
-    private IEnumerator AnimateFusion()
+    private IEnumerator RunFusion()
     {
         fuseResultText.gameObject.SetActive(true);
 
@@ -236,7 +236,16 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
             fusionListData.RemoveAt(1); // exhaust index-1 as it was the material2
             UpdateFusionDisplay(); // update display
 
-            fuseResultText.text = result.isFusioned == true ? "Fusioned" : "Nope";
+            if(result.type == FusionResultType.Rejected)
+            {
+                fuseResultText.text = "Rejected";
+            } else if(result.type == FusionResultType.Fused)
+            {
+                fuseResultText.text = "Fused";
+            } else if(result.type == FusionResultType.Equipped)
+            {
+                fuseResultText.text = "Equipped";
+            }
 
             if(retainFirstMonster == true && result.retainMonster != true)
             {
@@ -289,8 +298,8 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         selectedFieldCard.Destroy(); // NOTE: cardFromHand's HandCard has been destroyed on Single Flow logic
 
         // IEnumerator Delayed(float delay, Action action) { yield return new WaitForSeconds(delay); action?.Invoke(); }
-        // StartCoroutine(Delayed(1f, () => StartCoroutine(AnimateFusion())));   
-        Helpers.Instance().DelayedAction(1f, () => StartCoroutine(AnimateFusion()));
+        // StartCoroutine(Delayed(1f, () => StartCoroutine(RunFusion())));   
+        Helpers.Instance().DelayedAction(1f, () => StartCoroutine(RunFusion()));
     }
 
 #endregion
