@@ -209,8 +209,6 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
             UpdateFusionDisplay();
             selectedFieldCard.Destroy();
 
-            // IEnumerator Delayed(float delay, Action action) { yield return new WaitForSeconds(delay); action?.Invoke(); }
-            // StartCoroutine(Delayed(1f, () => StartCoroutine(RunFusion())));    
             Helpers.Instance().DelayedAction(1f, () => StartCoroutine(RunFusion()));
         } else
         {
@@ -219,13 +217,14 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
     }
 
-    private IEnumerator RunFusion()
+    private IEnumerator RunFusion(List<GameplayCard.Modifier> firstModifierList = null)
     {
         fuseResultText.gameObject.SetActive(true);
 
         bool retainFirstMonster = true;
+        List<GameplayCard.Modifier> modifierList = firstModifierList;
 
-        while(fusionListData.Count > 1)
+        while (fusionListData.Count > 1)
         {
             Card material1 = fusionListData[0];
             Card material2 = fusionListData[1];
@@ -239,12 +238,21 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
             if(result.type == FusionResultType.Rejected)
             {
                 fuseResultText.text = "Rejected";
+                modifierList = null;
             } else if(result.type == FusionResultType.Fused)
             {
                 fuseResultText.text = "Fused";
+                modifierList = null;
             } else if(result.type == FusionResultType.Equipped)
             {
                 fuseResultText.text = "Equipped";
+                if(!result.modifier.HasValue)
+                {
+                    print("WARN: a modifier should be added but the data is null");
+                } else
+                {
+                    modifierList.Add(result.modifier.Value);
+                }
             }
 
             if(retainFirstMonster == true && result.retainMonster != true)
@@ -271,7 +279,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
         Card resultCard = fusionListData[0];
         isMonster = resultCard.IsMonsterCard();
-        Resolve(resultCard, false, retainModification:retainModification); // fusion result is always face up
+        Resolve(resultCard, false, retainModification:retainModification, modifierList); // fusion result is always face up
     }
 
     private void SwitchFromSingleFlowToFusionFlow(Card cardFromHand, FieldCard selectedFieldCard)
@@ -297,8 +305,6 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         UpdateFusionDisplay();
         selectedFieldCard.Destroy(); // NOTE: cardFromHand's HandCard has been destroyed on Single Flow logic
 
-        // IEnumerator Delayed(float delay, Action action) { yield return new WaitForSeconds(delay); action?.Invoke(); }
-        // StartCoroutine(Delayed(1f, () => StartCoroutine(RunFusion())));   
         Helpers.Instance().DelayedAction(1f, () => StartCoroutine(RunFusion()));
     }
 
@@ -307,7 +313,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
 #region Resolve flow
 
-    private void Resolve(Card cardData, bool isFaceDown, bool retainModification = false)
+    private void Resolve(Card cardData, bool isFaceDown, bool retainModification = false, List<GameplayCard.Modifier> modifierList = null)
     {
         // NOTE: retainModification is only from fusion flow
 
@@ -325,6 +331,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
         // setup
         resolvedHandCard.Setup(cardData);
+        resolvedHandCard.SetModifierList(modifierList);
         isFaceDownResolve = isFaceDown;
         if(isFaceDown) faceDownCardImageResolve.SetActive(true);
         else faceDownCardImageResolve.SetActive(false);
@@ -340,7 +347,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
                 // if(cachedGameplayCardModifier == null)
                 if(cachedGuardianStar == null)
                 {
-                    print($"WARN: attempt to retainModification but cachedGameplayCardModifier is null, fallbacked");
+                    print($"WARN: attempt to retainModification but cachedGuardianStar is null, fallbacked");
 
                     // fallback
                     var data = (MonsterCard)cardData;
@@ -384,8 +391,6 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
             selector.gameObject.SetActive(false);
             proceedButton.SetActive(false);
 
-            // IEnumerator Delayed(float delay, Action action) { yield return new WaitForSeconds(delay); action?.Invoke(); }
-            // StartCoroutine(Delayed(2f, () => Proceed()));
             Helpers.Instance().DelayedAction(2f, () => Proceed());
         }
     }
@@ -395,6 +400,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         if(!isOnResolve) return;
 
         var card = resolvedHandCard.GetCardData();
+        var modifierList = resolvedHandCard.GetModifierList();
         var isFaceDown = isFaceDownResolve;
 
         GuardianStar guardianStar;
@@ -407,7 +413,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         }
 
 
-        GameplayManager.Instance().ToFieldPhase(card, isFaceDown, guardianStar);
+        GameplayManager.Instance().ToFieldPhase(card, isFaceDown, guardianStar, modifierList);
 
         // cleanup
         fusionListData.Clear();

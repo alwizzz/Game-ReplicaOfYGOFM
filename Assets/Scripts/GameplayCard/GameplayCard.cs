@@ -17,6 +17,13 @@ public abstract class GameplayCard : MonoBehaviour
         public int attackPointModifier;
         public int defensePointModifier;     
         public Card source;
+
+        public Modifier(int _attackPointModifier = 0, int _defensePointModifier = 0, Card _source = null)
+        {
+            attackPointModifier = _attackPointModifier;
+            defensePointModifier = _defensePointModifier;
+            source = _source;
+        }
     }
 
 
@@ -85,6 +92,7 @@ public abstract class GameplayCard : MonoBehaviour
     public GuardianStar GetSelectedGuardianStar() => selectedGuardianStar;
 
     public Card GetCardData() => cardData;
-    public List<Modifier> GetModifier() => modifierList;
+    public void SetModifierList(List<Modifier> value) => modifierList = value;
+    public List<Modifier> GetModifierList() => modifierList;
 
 }

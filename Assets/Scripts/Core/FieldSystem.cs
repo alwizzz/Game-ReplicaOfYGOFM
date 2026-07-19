@@ -172,7 +172,7 @@ public class FieldSystem : MonoBehaviour
 
     #endregion
 
-    public void SpawnFieldCard(Card cardData, bool isFacedown, GuardianStar selectedGuardianStar)
+    public void SpawnFieldCard(Card cardData, bool isFacedown, GuardianStar selectedGuardianStar, List<GameplayCard.Modifier> modifierList)
     {
         // currently commented cuz now there's scenario that the selection is closed but the selectedFieldCardContainer still used
         // so now, more determining variable is the selectedFieldCardContainer.IsEmpty()
@@ -197,6 +197,7 @@ public class FieldSystem : MonoBehaviour
             spawnedFieldCard.SetToFaceUp();
         }
         spawnedFieldCard.SetSelectedGuardianStar(selectedGuardianStar);
+        spawnedFieldCard.SetModifierList(modifierList);
         spawnedFieldCard.SetHasBeenUsed(false);
         selectedFieldCardContainer.SetCard(spawnedFieldCard);
         UpdateInformationDisplay();

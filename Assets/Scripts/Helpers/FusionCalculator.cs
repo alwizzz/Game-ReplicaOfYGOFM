@@ -14,6 +14,7 @@ public static class FusionCalculator
 
         public FusionResultType type;
         public bool retainMonster; // specifically used for Fusion Flow's retainModification logic
+        public GameplayCard.Modifier? modifier;
     }
 
     public static FusionResult GetFusionResult(Card m1, Card m2) // m as in
@@ -25,6 +26,7 @@ public static class FusionCalculator
         Card outputCard;
         FusionResultType type = FusionResultType.Rejected;
         bool retainMonster = false; // TODO: still pretty much dummy value
+        GameplayCard.Modifier? modifier = null;
 
         if(m1.IsMonsterCard() && m2.IsMonsterCard()) // m1 monster, m2 monster
         {
@@ -49,7 +51,8 @@ public static class FusionCalculator
         {
             card = outputCard,
             type = type,
-            retainMonster = retainMonster
+            retainMonster = retainMonster,
+            modifier = modifier,
         };
     }
 
