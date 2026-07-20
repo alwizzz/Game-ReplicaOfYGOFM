@@ -15,8 +15,9 @@ public class TrapCard : NonMonsterCard
     public int attackPointTreshold;
 
     public override sealed bool IsSpellCard() => false;
-    public override void Activate()
+    public override bool Activate()
     {
         Debug.Log("Activate TRAP!");
+        return true;
     }
 }

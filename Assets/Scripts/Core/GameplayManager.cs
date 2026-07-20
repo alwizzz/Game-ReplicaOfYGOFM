@@ -13,6 +13,7 @@ public class GameplayManager : StaticReference<GameplayManager>
     [Header("States")]
     [SerializeField] private Side turn;
     [SerializeField] private Phase phase;
+    [SerializeField] private bool inputLock;
 
     [Header("Player's Caches")]
     [SerializeField] private HandSystem playerHandSystem;
@@ -360,6 +361,13 @@ public class GameplayManager : StaticReference<GameplayManager>
         var currentField = FieldSystem();
         currentField.RefreshStatus();
     }
+
+    #region Input Lock
+
+    public void SetInputLock(bool value) { inputLock = value; }
+    public bool IsInputLock() => inputLock;
+
+    #endregion
 
 
     #region Subcriptions

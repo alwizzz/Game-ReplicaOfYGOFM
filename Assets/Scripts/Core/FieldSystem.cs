@@ -291,17 +291,20 @@ public class FieldSystem : MonoBehaviour
 
     public void UseFieldCard()
     {
+        if(GameplayManager.Instance().IsInputLock()) { print("[input locked]"); return; }
+
         if (selectedFieldCardContainer.IsEmpty()) return;
         if (selectedFieldCardContainer.IsBackRank())
         {
-            var cardData = selectedFieldCardContainer.GetCard().GetCardData();
-            if (cardData.IsMonsterCard()) return; // backrank card should have be a NonMonsterCard
+            var fieldCard = selectedFieldCardContainer.GetCard();
+            var cardData = fieldCard.GetCardData();
+            if (cardData.IsMonsterCard()) return; // backrank card should be a NonMonsterCard
 
             var nonMonsterCard = (NonMonsterCard)cardData;
             if (!nonMonsterCard.IsSpellCard()) return; // do nothing if a trap card
 
             var spellCard = (SpellCard)nonMonsterCard;
-            spellCard.Activate();
+            StartCoroutine(AnimateSpellTrapActivation(fieldCard, spellCard));
         } else
         {
             // battle mode
@@ -310,6 +313,25 @@ public class FieldSystem : MonoBehaviour
 
             OpenBattleMode();
         }
+    }
+
+    private IEnumerator AnimateSpellTrapActivation(FieldCard fieldCard, SpellCard spellCard)
+    {
+        GameplayManager.Instance().SetInputLock(true);
+
+        fieldCard.SetToFaceUp();
+        bool succeed = spellCard.Activate();
+        if (succeed)
+        {
+            // Play Activate Spell animation
+        } else
+        {
+            print("WARN: failed to activate a spellcard:" + spellCard);
+        }
+        yield return new WaitForSeconds(1);
+        fieldCard.Destroy();
+
+        GameplayManager.Instance().SetInputLock(false);
     }
 
     private void OpenBattleMode()

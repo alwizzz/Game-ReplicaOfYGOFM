@@ -16,8 +16,12 @@ public class EquipSpellCard : SpellCard
     public int defensePointIncrease;
 
     public override SpellCardType GetSpellCardType() => SpellCardType.Equip;
-    public override void Activate()
+    public override bool Activate()
     {
-        Debug.Log("Activate EQUIP SPELL!");
+        // NOTE: As Activate() strictly means activating effect as an independent card,
+        // where EquipSpellCard only has effect if it went to fusion with another card.
+        // So, EquipSpellCard Activate() technically does nothing
+        Debug.Log("Activated EQUIP SPELL which does nothing...");
+        return true;
     }
 }

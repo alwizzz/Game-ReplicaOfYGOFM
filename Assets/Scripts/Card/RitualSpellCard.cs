@@ -12,8 +12,9 @@ using Enums;
 public class RitualSpellCard : SpellCard
 {
     public override SpellCardType GetSpellCardType() => SpellCardType.Ritual;
-    public override void Activate()
+    public override bool Activate()
     {
-        Debug.Log("Activate RITUAL SPELL!");
+        Debug.Log("Activated RITUAL SPELL!");
+        return true;
     }
 }

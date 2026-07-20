@@ -12,8 +12,9 @@ using Enums;
 public class FieldSpellCard : SpellCard
 {
     public override SpellCardType GetSpellCardType() => SpellCardType.Field;
-    public override void Activate()
+    public override bool Activate()
     {
-        Debug.Log("Activate FIELD SPELL!");
+        Debug.Log("Activated FIELD SPELL!");
+        return true;
     }
 }
