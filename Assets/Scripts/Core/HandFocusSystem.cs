@@ -262,6 +262,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
                 } else
                 {
                     // carried over and also appended
+                    if(modifierList == null) modifierList = new List<GameplayCard.Modifier>();
                     modifierList.Add(result.modifier.Value);
                 }
             }
