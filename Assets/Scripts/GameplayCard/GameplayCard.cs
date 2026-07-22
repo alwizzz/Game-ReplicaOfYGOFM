@@ -112,7 +112,6 @@ public abstract class GameplayCard : MonoBehaviour
         modifierList?.ForEach(modifier =>
         {
             result += modifier.attackPointModifier;
-            print("XXX");
         });
 
         return result;

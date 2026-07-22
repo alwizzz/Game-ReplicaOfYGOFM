@@ -109,7 +109,9 @@ public class EnemyBot : MonoBehaviour
     private FieldCardContainer GetEmptyContainer()
     {
         var containers = new List<FieldCardContainer>();
-        if (handFocusSystem.IsMonster())
+        // TODO: IsMonster() only properly works on single flow, which also the current limitation for this enemy bot.
+        // The moment the bot can try to do fusion flow, which hasnt been tested if it works properly, remember this concern
+        if (handFocusSystem.IsMonster()) 
         {
             containers = fieldSystem.GetFrontRankContainers();
         }

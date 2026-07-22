@@ -26,11 +26,11 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
     [Header("Segment Fusion Flow")]
     [SerializeField] private List<Card> fusionListData;
     [SerializeField] private List<HandCard> fusionListHandReference;
-    [SerializeField] private List<HandCard> fusionListDisplay;
-    [SerializeField] private GameObject panelFusionFlow;
-    [SerializeField] private GameObject returnButton;
-    [SerializeField] private GameObject fuseButton;
-    [SerializeField] private TextMeshProUGUI fuseResultText;
+    // [SerializeField] private List<HandCard> fusionListDisplay;
+    // [SerializeField] private GameObject panelFusionFlow;
+    // [SerializeField] private GameObject returnButton;
+    // [SerializeField] private GameObject fuseButton;
+    // [SerializeField] private TextMeshProUGUI fuseResultText;
     // [SerializeField] private GameplayCard.Modifier? cachedGameplayCardModifier;
     [SerializeField] private GuardianStar? cachedGuardianStar;
 
@@ -53,7 +53,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
 
 
-#region Single Flow
+    #region Single Flow
     public void SetupSingleFlow(HandCard handCard)
     {
         var cardData = handCard.GetCardData();
@@ -74,7 +74,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         }
 
         panelSingleFlow.SetActive(true);
-        panelFusionFlow.SetActive(false);
+        // panelFusionFlow.SetActive(false);
 
         isOnResolve = false;
         panelResolve.SetActive(false);
@@ -152,159 +152,195 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         // fuse flow always assume the end result is monster card
         GameplayManager.Instance().FieldSystem().OpenFrontRankSelection();
 
+        fusionListHandReference = list;
+
         panelSingleFlow.SetActive(false);
-        panelFusionFlow.SetActive(true);
+        // panelFusionFlow.SetActive(true);
 
         isOnResolve = false;
         panelResolve.SetActive(false);
 
-        if(possession == Side.Player) // just to mark it
-        {
-            panelFusionFlow.GetComponent<Image>().color = Color.blue;
-        }
+        Action returnButtonCallback = () => ReturnToHand();
+        Action fuseButtonCallback = () => // basically Fuse() but only the HandFocusSytem's part
+        { 
+            // destroy reference on hand
+            fusionListHandReference.ForEach(e => e.GetContainer().RemoveCard(alsoDestroy: true));
 
-        fuseResultText.gameObject.SetActive(false);
-        returnButton.SetActive(true);
-        fuseButton.SetActive(true);
-
-        fusionListHandReference = list;
-        fusionListHandReference.ForEach(e => fusionListData.Add(e.GetCardData()));
-        UpdateFusionDisplay();
-
-        Show();
-    }
-
-    private void UpdateFusionDisplay(List<GameplayCard.Modifier> modifierListOnFirstIndex = null)
-    {
-        for(int i=0; i<fusionListDisplay.Count; i++)
-        {
-            if(i >= fusionListData.Count)
+            FieldCardContainer selectedFieldContainer = GameplayManager.Instance().FieldSystem().GetSelectedFieldContainer();
+            FieldCard selectedFieldCard = selectedFieldContainer.GetCard();
+            if(selectedFieldCard != null)
             {
-                fusionListDisplay[i].gameObject.SetActive(false);
+                cachedGuardianStar = selectedFieldCard.GetSelectedGuardianStar();
+                Card cardData = selectedFieldCard.GetCardData();
+                var modifierList = selectedFieldCard.GetModifierList();
+
+                // TODO: swap the order of below two lines, arguably for better readability
+                FusionSystem.Instance().AppendFirstIndexFusionMaterial(cardData, modifierList);
+                selectedFieldCard.Destroy();
+
+
+                // fusionListData.Insert(0, cardData);
+                // UpdateFusionDisplay(modifierList);
+                ///// selectedFieldCard.Destroy();
+
+                // Helpers.Instance().DelayedAction(1f, () => StartCoroutine(RunFusion(modifierList)));
             } else
             {
-                if(i==0 && modifierListOnFirstIndex != null)
-                {
-                    fusionListDisplay[i].Setup(fusionListData[i], modifierListOnFirstIndex);
-                } else
-                {
-                    fusionListDisplay[i].Setup(fusionListData[i]);
-                }
-                fusionListDisplay[i].gameObject.SetActive(true);
+                // StartCoroutine(RunFusion());
+                FusionSystem.Instance().ExternalRunFusion();
             }
-        }
+        };
+        FusionSystem.Instance().SetupForFusionFlow(list, returnButtonCallback, fuseButtonCallback);
+        Show();
+
+        // if(possession == Side.Player) // just to mark it
+        // {
+        //     // panelFusionFlow.GetComponent<Image>().color = Color.blue;
+        // }
+
+        // fuseResultText.gameObject.SetActive(false);
+        // returnButton.SetActive(true);
+        // fuseButton.SetActive(true);
+
+        // fusionListHandReference = list;
+        // fusionListHandReference.ForEach(e => fusionListData.Add(e.GetCardData()));
+        // UpdateFusionDisplay();
+
+        // Show();
     }
 
-    public void Fuse() // called by button
-    {
-        // destroy reference on hand
-        fusionListHandReference.ForEach(e => e.GetContainer().RemoveCard(alsoDestroy: true));
+    // private void UpdateFusionDisplay(List<GameplayCard.Modifier> modifierListOnFirstIndex = null)
+    // {
+    //     for(int i=0; i<fusionListDisplay.Count; i++)
+    //     {
+    //         if(i >= fusionListData.Count)
+    //         {
+    //             fusionListDisplay[i].gameObject.SetActive(false);
+    //         } else
+    //         {
+    //             if(i==0 && modifierListOnFirstIndex != null)
+    //             {
+    //                 fusionListDisplay[i].Setup(fusionListData[i], modifierListOnFirstIndex);
+    //             } else
+    //             {
+    //                 fusionListDisplay[i].Setup(fusionListData[i]);
+    //             }
+    //             fusionListDisplay[i].gameObject.SetActive(true);
+    //         }
+    //     }
+    // }
 
-        returnButton.SetActive(false);
-        fuseButton.SetActive(false);
+    // public void Fuse() // called by button
+    // {
+    //     // destroy reference on hand
+    //     fusionListHandReference.ForEach(e => e.GetContainer().RemoveCard(alsoDestroy: true));
 
-        FieldCardContainer selectedFieldContainer = GameplayManager.Instance().FieldSystem().GetSelectedFieldContainer();
-        FieldCard selectedFieldCard = selectedFieldContainer.GetCard();
-        if(selectedFieldCard != null)
-        {
-            // cachedGameplayCardModifier = selectedFieldCard.GetModifier();
-            cachedGuardianStar = selectedFieldCard.GetSelectedGuardianStar();
-            Card cardData = selectedFieldCard.GetCardData();
-            var modifierList = selectedFieldCard.GetModifierList();
+    //     returnButton.SetActive(false);
+    //     fuseButton.SetActive(false);
 
-            fusionListData.Insert(0, cardData);
-            // UpdateFusionDisplay();
-            UpdateFusionDisplay(modifierList);
-            selectedFieldCard.Destroy();
+    //     FieldCardContainer selectedFieldContainer = GameplayManager.Instance().FieldSystem().GetSelectedFieldContainer();
+    //     FieldCard selectedFieldCard = selectedFieldContainer.GetCard();
+    //     if(selectedFieldCard != null)
+    //     {
+    //         // cachedGameplayCardModifier = selectedFieldCard.GetModifier();
+    //         cachedGuardianStar = selectedFieldCard.GetSelectedGuardianStar();
+    //         Card cardData = selectedFieldCard.GetCardData();
+    //         var modifierList = selectedFieldCard.GetModifierList();
 
-            Helpers.Instance().DelayedAction(1f, () => StartCoroutine(RunFusion(modifierList)));
-        } else
-        {
-            StartCoroutine(RunFusion());
-        }
+    //         fusionListData.Insert(0, cardData);
+    //         // UpdateFusionDisplay();
+    //         UpdateFusionDisplay(modifierList);
+    //         selectedFieldCard.Destroy();
 
-    }
+    //         Helpers.Instance().DelayedAction(1f, () => StartCoroutine(RunFusion(modifierList)));
+    //     } else
+    //     {
+    //         StartCoroutine(RunFusion());
+    //     }
 
-    private IEnumerator RunFusion(List<GameplayCard.Modifier> firstModifierList = null)
-    {
-        fuseResultText.gameObject.SetActive(true);
+    // }
 
-        bool retainFirstMonster = true;
-        List<GameplayCard.Modifier> modifierList = firstModifierList;
+    // private IEnumerator RunFusion(List<GameplayCard.Modifier> firstModifierList = null)
+    // {
+    //     fuseResultText.gameObject.SetActive(true);
 
-        while (fusionListData.Count > 1)
-        {
-            Card material1 = fusionListData[0];
-            Card material2 = fusionListData[1];
+    //     bool retainFirstMonster = true;
+    //     List<GameplayCard.Modifier> modifierList = firstModifierList;
 
-            FusionCalculator.FusionResult result = FusionCalculator.GetFusionResult(material1, material2);
+    //     while (fusionListData.Count > 1)
+    //     {
+    //         Card material1 = fusionListData[0];
+    //         Card material2 = fusionListData[1];
 
-            if(result.type == FusionResultType.Rejected)
-            {
-                fuseResultText.text = "Rejected";
-                if (result.retainMonster)
-                {
-                    // carried over   
-                } else
-                {
-                    modifierList = null;
-                }
-            } else if(result.type == FusionResultType.Fused)
-            {
-                fuseResultText.text = "Fused";
-                modifierList = null;
-            } else if(result.type == FusionResultType.Equipped)
-            {
-                fuseResultText.text = "Equipped";
-                if(!result.modifier.HasValue)
-                {
-                    print("WARN: a modifier should be added but the data is null");
-                } else
-                {
-                    // carried over and also appended
-                    if(modifierList == null) modifierList = new List<GameplayCard.Modifier>();
-                    modifierList.Add(result.modifier.Value);
-                }
-            }
+    //         FusionCalculator.FusionResult result = FusionCalculator.GetFusionResult(material1, material2);
 
-            if(retainFirstMonster == true && result.retainMonster != true)
-            {
-                retainFirstMonster = false;
-            }
+    //         if(result.type == FusionResultType.Rejected)
+    //         {
+    //             fuseResultText.text = "Rejected";
+    //             if (result.retainMonster)
+    //             {
+    //                 // carried over   
+    //             } else
+    //             {
+    //                 modifierList = null;
+    //             }
+    //         } else if(result.type == FusionResultType.Fused)
+    //         {
+    //             fuseResultText.text = "Fused";
+    //             modifierList = null;
+    //         } else if(result.type == FusionResultType.Equipped)
+    //         {
+    //             fuseResultText.text = "Equipped";
+    //             if(!result.modifier.HasValue)
+    //             {
+    //                 print("WARN: a modifier should be added but the data is null");
+    //             } else
+    //             {
+    //                 // carried over and also appended
+    //                 if(modifierList == null) modifierList = new List<GameplayCard.Modifier>();
+    //                 modifierList.Add(result.modifier.Value);
+    //             }
+    //         }
 
-            fusionListData[0] = result.card; // change first index as fusion result
-            fusionListData.RemoveAt(1); // exhaust index-1 as it was the material2
-            UpdateFusionDisplay(modifierList); // update display
+    //         if(retainFirstMonster == true && result.retainMonster != true)
+    //         {
+    //             retainFirstMonster = false;
+    //         }
 
-            yield return new WaitForSeconds(1f);
-        }
+    //         fusionListData[0] = result.card; // change first index as fusion result
+    //         fusionListData.RemoveAt(1); // exhaust index-1 as it was the material2
+    //         UpdateFusionDisplay(modifierList); // update display
 
-        bool retainModification = false;
-        // if(cachedGameplayCardModifier != null && retainFirstMonster == true)
-        if(cachedGuardianStar != null && retainFirstMonster == true)
-        {
-            retainModification = true;
-        }
+    //         yield return new WaitForSeconds(1f);
+    //     }
 
-        fuseResultText.gameObject.SetActive(false);
-        yield return new WaitForSeconds(1f);
+    //     bool retainModification = false;
+    //     // if(cachedGameplayCardModifier != null && retainFirstMonster == true)
+    //     if(cachedGuardianStar != null && retainFirstMonster == true)
+    //     {
+    //         retainModification = true;
+    //     }
 
-        Card resultCard = fusionListData[0];
-        isMonster = resultCard.IsMonsterCard();
-        Resolve(resultCard, false, retainModification:retainModification, modifierList); // fusion result is always face up
-    }
+    //     fuseResultText.gameObject.SetActive(false);
+    //     yield return new WaitForSeconds(1f);
+
+    //     Card resultCard = fusionListData[0];
+    //     isMonster = resultCard.IsMonsterCard();
+    //     Resolve(resultCard, false, retainModification:retainModification, modifierList); // fusion result is always face up
+    // }
 
     private void SwitchFromSingleFlowToFusionFlow(Card cardFromHand, FieldCard selectedFieldCard)
     {   
         // UI handling
         panelSingleFlow.SetActive(false);
-        panelFusionFlow.SetActive(true);
-        if(possession == Side.Player) // just to mark it
-        {
-            panelFusionFlow.GetComponent<Image>().color = Color.blue;
-        }
-        returnButton.SetActive(false);
-        fuseButton.SetActive(false);
+        Show();
+        // panelFusionFlow.SetActive(true);
+        // if(possession == Side.Player) // just to mark it
+        // {
+        //     // panelFusionFlow.GetComponent<Image>().color = Color.blue;
+        // }
+        // returnButton.SetActive(false);
+        // fuseButton.SetActive(false);
 
         // data handling
 
@@ -313,12 +349,15 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         Card cardFromField = selectedFieldCard.GetCardData();
         var modifierList = selectedFieldCard.GetModifierList();
 
-        fusionListData.Insert(0, cardFromField);
-        fusionListData.Insert(1, cardFromHand);
-        UpdateFusionDisplay(modifierList);
+        // fusionListData.Insert(0, cardFromField);
+        // fusionListData.Insert(1, cardFromHand);
+        List<Card> list = new List<Card>{ cardFromField, cardFromHand };
+        FusionSystem.Instance().SetupForSwitchFlow(list, modifierList);
+
+        // UpdateFusionDisplay(modifierList);
         selectedFieldCard.Destroy(); // NOTE: cardFromHand's HandCard has been destroyed on Single Flow logic
 
-        Helpers.Instance().DelayedAction(1f, () => StartCoroutine(RunFusion(modifierList)));
+        // Helpers.Instance().DelayedAction(1f, () => StartCoroutine(RunFusion(modifierList)));
     }
 
 #endregion
@@ -329,6 +368,11 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
     private void Resolve(Card cardData, bool isFaceDown, bool retainModification = false, List<GameplayCard.Modifier> modifierList = null)
     {
         // NOTE: retainModification is only from fusion flow
+        if(retainModification == true && cachedGuardianStar == null)
+        {
+            // this bool is initially for internal fusion flow. After the flow is separated, the "checking" is kinda reversed
+            retainModification = false;
+        }
 
         if(isOnResolve) return;
         isOnResolve = true;
@@ -340,7 +384,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         }
 
         panelSingleFlow.SetActive(false);
-        panelFusionFlow.SetActive(false);
+        // panelFusionFlow.SetActive(false);
 
         // setup
         resolvedHandCard.Setup(cardData, modifierList);
@@ -351,7 +395,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         // a way to show that in this flow it is no more time for choosing the field card container
         GameplayManager.Instance().FieldSystem().CloseSelection(retainSelection:true);
 
-        // TODO: check if cardData alr got GS selected, then dont need to choose again
+        isMonster = cardData.IsMonsterCard(); // new, quick refresh
         if (isMonster)
         {
             if (retainModification)
@@ -407,6 +451,11 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         }
     }
 
+    public void ExternalResolve(Card cardData, bool isFaceDown, bool retainModification = false, List<GameplayCard.Modifier> modifierList = null)
+    {
+        Resolve(cardData, isFaceDown, retainModification, modifierList);
+    }
+
     public void Proceed() // either called by button or autocalled
     {
         if(!isOnResolve) return;
@@ -428,8 +477,8 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         GameplayManager.Instance().ToFieldPhase(card, isFaceDown, guardianStar, modifierList);
 
         // cleanup
-        fusionListData.Clear();
-        // cachedGameplayCardModifier = null;
+        // fusionListData.Clear();
+        // FusionSystem.Instance().Clear(); // done independently
         cachedGuardianStar = null;
         Hide();
     }
