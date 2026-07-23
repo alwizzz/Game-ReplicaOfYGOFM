@@ -9,6 +9,8 @@ public class FieldButtonManager : UIModal<FieldButtonManager>
 {
     [SerializeField] private Button changePositionButton;
     [SerializeField] private Button useCardButton;
+    [SerializeField] private Button useSpellButton;
+    [SerializeField] private Button cancelSpellButton;
     [SerializeField] private Button battleButton;
     [SerializeField] private Button cancelBattleButton;
     [SerializeField] private Button endTurnButton;
@@ -22,6 +24,8 @@ public class FieldButtonManager : UIModal<FieldButtonManager>
 
     public void UpdateButtons(FieldCardContainer container)
     {
+        if(GameplayManager.Instance().PlayerFieldSystem().IsOnSpellMode()) return;
+
         if(container.IsEmpty())
         {
             useCardButton.interactable = false;
@@ -81,6 +85,27 @@ public class FieldButtonManager : UIModal<FieldButtonManager>
         }
     }
 
+    public void UpdateSpellButtons(bool inMode)
+    {
+        if(inMode)
+        {
+            useSpellButton.interactable = true;
+            cancelSpellButton.interactable = true;
+
+            useCardButton.interactable = false;
+            endTurnButton.interactable = false;
+            changePositionButton.interactable = false;
+        } else
+        {
+            useSpellButton.interactable = false;
+            cancelSpellButton.interactable = false;
+
+            useCardButton.interactable = true;
+            endTurnButton.interactable = true;
+            changePositionButton.interactable = true;
+        }
+    }
+
     public void ForceUpdateButtons()
     {
         // force to reselect current selected field card container to
@@ -89,11 +114,11 @@ public class FieldButtonManager : UIModal<FieldButtonManager>
         GameplayManager.Instance().PlayerFieldSystem().GetSelectedFieldContainer().Select();
     }
 
-    public Button GetChangePositionButton() => changePositionButton;
-    public Button GetUseCardButton() => useCardButton;
-    public Button GetBattleButton() => battleButton;
-    public Button GetCancelBattleButton() => cancelBattleButton;
-    public Button GetEndTurnButton() => endTurnButton;
+    // public Button GetChangePositionButton() => changePositionButton;
+    // public Button GetUseCardButton() => useCardButton;
+    // public Button GetBattleButton() => battleButton;
+    // public Button GetCancelBattleButton() => cancelBattleButton;
+    // public Button GetEndTurnButton() => endTurnButton;
 
 
 

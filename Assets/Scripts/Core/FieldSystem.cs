@@ -12,6 +12,9 @@ public class FieldSystem : MonoBehaviour
     [Header("States")]
     [SerializeField] private bool isOnSelection;
     [SerializeField] private bool isOnBattleMode;
+    [SerializeField] private bool isOnSpellMode;
+    [SerializeField] private FieldCard selectedSpellFieldCard;
+    
     [SerializeField] private int frontRankCardCount;
     [SerializeField] private int backRankCardCount;
     [SerializeField] private FieldCardContainer selectedFieldCardContainer;
@@ -268,6 +271,7 @@ public class FieldSystem : MonoBehaviour
         //fieldPhaseButtons.SetActive(true);
         FieldButtonManager.Instance().Show();
         FieldButtonManager.Instance().UpdateBattleButtons(false);
+        FieldButtonManager.Instance().UpdateSpellButtons(false);
     }
 
     public void EndTurn()
@@ -296,15 +300,17 @@ public class FieldSystem : MonoBehaviour
         if (selectedFieldCardContainer.IsEmpty()) return;
         if (selectedFieldCardContainer.IsBackRank())
         {
-            var fieldCard = selectedFieldCardContainer.GetCard();
-            var cardData = fieldCard.GetCardData();
-            if (cardData.IsMonsterCard()) return; // backrank card should be a NonMonsterCard
+            OpenSpellMode();
 
-            var nonMonsterCard = (NonMonsterCard)cardData;
-            if (!nonMonsterCard.IsSpellCard()) return; // do nothing if a trap card
+            // var fieldCard = selectedFieldCardContainer.GetCard();
+            // var cardData = fieldCard.GetCardData();
+            // if (cardData.IsMonsterCard()) return; // backrank card should be a NonMonsterCard
 
-            var spellCard = (SpellCard)nonMonsterCard;
-            StartCoroutine(AnimateSpellTrapActivation(fieldCard, spellCard));
+            // var nonMonsterCard = (NonMonsterCard)cardData;
+            // if (!nonMonsterCard.IsSpellCard()) return; // do nothing if a trap card
+
+            // var spellCard = (SpellCard)nonMonsterCard;
+            // StartCoroutine(AnimateSpellActivation(fieldCard, spellCard));
         } else
         {
             // battle mode
@@ -315,7 +321,20 @@ public class FieldSystem : MonoBehaviour
         }
     }
 
-    private IEnumerator AnimateSpellTrapActivation(FieldCard fieldCard, SpellCard spellCard)
+    public void UseSpellCard()
+    {
+        var fieldCard = selectedSpellFieldCard;
+        var cardData = fieldCard.GetCardData();
+        if (cardData.IsMonsterCard()) return; // backrank card should be a NonMonsterCard
+
+        var nonMonsterCard = (NonMonsterCard)cardData;
+        if (!nonMonsterCard.IsSpellCard()) return; // do nothing if a trap card
+
+        var spellCard = (SpellCard)nonMonsterCard;
+        StartCoroutine(AnimateSpellActivation(fieldCard, spellCard));
+    }
+
+    private IEnumerator AnimateSpellActivation(FieldCard fieldCard, SpellCard spellCard)
     {
         GameplayManager.Instance().SetInputLock(true);
 
@@ -331,6 +350,7 @@ public class FieldSystem : MonoBehaviour
         yield return new WaitForSeconds(1);
         fieldCard.Destroy();
 
+        CancelSpellMode();
         GameplayManager.Instance().SetInputLock(false);
     }
 
@@ -356,12 +376,35 @@ public class FieldSystem : MonoBehaviour
         isOnBattleMode = false;
     }
 
+    private void OpenSpellMode()
+    {
+        print("Spell MODE");
+        isOnSpellMode = true;
+        selectedSpellFieldCard = selectedFieldCardContainer.GetCard();
+        // selectedFieldCardContainer.SetAsAttackerInBattle();
+        // CloseSelection(retainSelection:true);
+
+        GameplayManager.Instance().PlayerFieldSystem().OpenFrontRankSelection();
+        FieldButtonManager.Instance().UpdateSpellButtons(true);
+    }
+
+    public void CancelSpellMode()
+    {
+        print("CANCEL Spell MODE");
+
+        OpenFullSelection(true);
+        FieldButtonManager.Instance().UpdateSpellButtons(false);
+
+        selectedSpellFieldCard = null;
+        isOnSpellMode = false;
+    }
+
     #endregion
 
     public List<FieldCardContainer> GetFrontRankContainers() => frontRankFieldCardContainers;
     public List<FieldCardContainer> GetBackRankContainers() => backRankFieldCardContainers;
     public FieldCardContainer GetSelectedFieldContainer() => selectedFieldCardContainer;
-    public bool IsOnBattleMode() => isOnBattleMode;
+    public bool IsOnSpellMode() => isOnSpellMode;
 
     public bool HasNoMonster()
     {
