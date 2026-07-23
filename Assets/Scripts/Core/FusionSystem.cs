@@ -9,6 +9,7 @@ using System;
 
 public class FusionSystem : UIModal<FusionSystem>
 {
+    [SerializeField] private bool isActive;
     [SerializeField] private List<Card> fusionListData;
     // [SerializeField] private List<HandCard> fusionListHandReference;
     [SerializeField] private List<HandCard> fusionListDisplay;
@@ -27,6 +28,9 @@ public class FusionSystem : UIModal<FusionSystem>
     // TODO: currently the setup is niched to every use case. The ideal design would be more abstract
     public void SetupForFusionFlow(List<HandCard> list, Action returnButtonCallback, Action fuseButtonCallback)
     {
+        if(isActive){ print("already active, setup denied"); return; }
+        isActive = true;
+
         panel.SetActive(true);
         panel.GetComponent<Image>().color = Color.magenta;
 
@@ -54,6 +58,9 @@ public class FusionSystem : UIModal<FusionSystem>
 
     public void SetupForSwitchFlow(List<Card> list, List<GameplayCard.Modifier> modifierList)
     {
+        if(isActive){ print("already active, setup denied"); return; }
+        isActive = true;
+
         panel.SetActive(true);
         panel.GetComponent<Image>().color = Color.magenta;
 
@@ -74,6 +81,8 @@ public class FusionSystem : UIModal<FusionSystem>
 
     public void AppendFirstIndexFusionMaterial(Card cardData, List<GameplayCard.Modifier> modifierList)
     {
+        if(!isActive){ print("is inactive, aborted"); return; }
+
         fusionListData.Insert(0, cardData);
         UpdateFusionDisplay(modifierList);
 
@@ -85,21 +94,23 @@ public class FusionSystem : UIModal<FusionSystem>
     // public void Clear()
     private void Clear()
     {
-        // TODO: should have validation whether it can be cleared at that moment
+        if(!isActive){ print("is inactive, Clear() denied"); return; }
+        isActive = false;
+
         fusionListData.Clear();
         Hide();
     }
 
-// quick handling
+    // quick handling
     private static void OnFinished(Card cardData, bool retainModification, List<GameplayCard.Modifier> modifierList)
-        {
-            GameplayManager.Instance().HandFocusSystem().ExternalResolve(
-                cardData, 
-                false, // always face up
-                retainModification, 
-                modifierList
-            );
-        }
+    {
+        GameplayManager.Instance().HandFocusSystem().ExternalResolve(
+            cardData, 
+            false, // always face up
+            retainModification, 
+            modifierList
+        );
+    }
 
 
     private void UpdateFusionDisplay(List<GameplayCard.Modifier> modifierListOnFirstIndex = null)
@@ -156,7 +167,7 @@ public class FusionSystem : UIModal<FusionSystem>
     // private IEnumerator RunFusion(List<GameplayCard.Modifier> firstModifierList = null)
     private IEnumerator RunFusion(
         List<GameplayCard.Modifier> firstModifierList = null, 
-        Action<Card, bool, List<GameplayCard.Modifier>> OnFinished = null
+        Action<Card, bool, List<GameplayCard.Modifier>> OnFinishedCallback = null
     ){
         fuseResultText.gameObject.SetActive(true);
 
@@ -227,7 +238,7 @@ public class FusionSystem : UIModal<FusionSystem>
         // quick handling to directly call HandFocusSytem's Resolve()
         // this.OnFinished(resultCard, retainModification, modifierList);
 
-        OnFinished?.Invoke(resultCard, retainModification, modifierList);
+        OnFinishedCallback?.Invoke(resultCard, retainModification, modifierList);
         // Resolve(resultCard, false, retainModification:retainModification, modifierList); // fusion result is always face up
     
         Clear();
