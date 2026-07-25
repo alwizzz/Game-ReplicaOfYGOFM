@@ -130,6 +130,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
                 // force to face up, as nonmonster cant be facedown in front rank
                 isFaceDown = false;
             }
+            GameplayManager.Instance().FieldSystem().CloseSelection(retainSelection:true);
             Resolve(card, isFaceDown);
         }
 
@@ -165,6 +166,8 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         { 
             // destroy reference on hand
             fusionListHandReference.ForEach(e => e.GetContainer().RemoveCard(alsoDestroy: true));
+
+            GameplayManager.Instance().FieldSystem().CloseSelection(retainSelection:true);
 
             FieldCardContainer selectedFieldContainer = GameplayManager.Instance().FieldSystem().GetSelectedFieldContainer();
             FieldCard selectedFieldCard = selectedFieldContainer.GetCard();
@@ -349,15 +352,11 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         Card cardFromField = selectedFieldCard.GetCardData();
         var modifierList = selectedFieldCard.GetModifierList();
 
-        // fusionListData.Insert(0, cardFromField);
-        // fusionListData.Insert(1, cardFromHand);
+        selectedFieldCard.Destroy(); // NOTE: cardFromHand's HandCard has been destroyed on Single Flow logic
+        GameplayManager.Instance().FieldSystem().CloseSelection(retainSelection:true);
+
         List<Card> list = new List<Card>{ cardFromField, cardFromHand };
         FusionSystem.Instance().SetupForSwitchFlow(list, modifierList, carriedGuardianStar);
-
-        // UpdateFusionDisplay(modifierList);
-        selectedFieldCard.Destroy(); // NOTE: cardFromHand's HandCard has been destroyed on Single Flow logic
-
-        // Helpers.Instance().DelayedAction(1f, () => StartCoroutine(RunFusion(modifierList)));
     }
 
 #endregion
@@ -397,8 +396,8 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         if(isFaceDown) faceDownCardImageResolve.SetActive(true);
         else faceDownCardImageResolve.SetActive(false);
 
-        // a way to show that in this flow it is no more time for choosing the field card container
-        GameplayManager.Instance().FieldSystem().CloseSelection(retainSelection:true);
+        // // a way to show that in this flow it is no more time for choosing the field card container
+        // GameplayManager.Instance().FieldSystem().CloseSelection(retainSelection:true);
 
         isMonster = cardData.IsMonsterCard(); // new, quick refresh
         if (isMonster)

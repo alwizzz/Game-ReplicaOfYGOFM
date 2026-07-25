@@ -388,7 +388,7 @@ public class FieldSystem : MonoBehaviour
             (Card)spellCard
         };
         
-
+        GameplayManager.Instance().FieldSystem().CloseSelection(retainSelection:true);
         FusionSystem.Instance().SetupForEquipOnFieldFlow(list, modifierList, carriedGuardianStar
             // () => {
             //     //////////////// continue here
@@ -401,6 +401,7 @@ public class FieldSystem : MonoBehaviour
     public void ResolveEquipActivation(Card cardData, List<GameplayCard.Modifier> modifierList, GuardianStar carriedGuardianStar)
     {
         // TODO: state checks
+        // TODO: make a fake resolve panel like in HandFocusSytem's flow, for visual purpose only
 
         SpawnFieldCard(cardData, false, carriedGuardianStar, modifierList); // TODO: check if the fieldcardcontainer is correct
         // SpawnFieldCard(cardData, false, GuardianStar.NONE, modifierList); // debug GS with NONE
