@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Enums;
+using UnityEngine.Assertions;
+using System;
 
 public class FieldSystem : MonoBehaviour
 {
@@ -330,8 +332,19 @@ public class FieldSystem : MonoBehaviour
         var nonMonsterCard = (NonMonsterCard)cardData;
         if (!nonMonsterCard.IsSpellCard()) return; // do nothing if a trap card
 
+
+
         var spellCard = (SpellCard)nonMonsterCard;
-        StartCoroutine(AnimateSpellActivation(fieldCard, spellCard));
+        if(spellCard.GetSpellCardType() == SpellCardType.Equip)
+        {
+            FieldCard frontRankFieldCard = selectedFieldCardContainer.GetCard();
+            StartCoroutine(AnimateEquipActivation(fieldCard, spellCard, frontRankFieldCard));
+        } else
+        {
+            StartCoroutine(AnimateSpellActivation(fieldCard, spellCard));
+        }
+
+
     }
 
     private IEnumerator AnimateSpellActivation(FieldCard fieldCard, SpellCard spellCard)
@@ -340,15 +353,57 @@ public class FieldSystem : MonoBehaviour
 
         fieldCard.SetToFaceUp();
         bool succeed = spellCard.Activate();
-        if (succeed)
-        {
-            // Play Activate Spell animation
-        } else
-        {
-            print("WARN: failed to activate a spellcard:" + spellCard);
-        }
+
         yield return new WaitForSeconds(1);
         fieldCard.Destroy();
+
+        // yield return new WaitForSeconds(1);
+        // fieldCard.Destroy();
+
+        CancelSpellMode();
+        GameplayManager.Instance().SetInputLock(false);
+    }
+
+    private IEnumerator AnimateEquipActivation(FieldCard fieldCard, SpellCard spellCard, FieldCard frontRankFieldCard)
+    {
+        if(frontRankFieldCard == null) throw new ArgumentNullException(nameof(frontRankFieldCard));
+
+        GameplayManager.Instance().SetInputLock(true);
+
+        fieldCard.SetToFaceUp();
+        bool succeed = spellCard.Activate();
+
+        yield return new WaitForSeconds(1);
+        var modifierList = frontRankFieldCard.GetModifierList();
+        var carriedGuardianStar = frontRankFieldCard.GetSelectedGuardianStar();
+        // var container = frontRankFieldCard.GetContainer();
+
+        fieldCard.Destroy();
+        frontRankFieldCard.Destroy();
+        print(modifierList);
+
+        var list = new List<Card>
+        {
+            frontRankFieldCard.GetCardData(),
+            (Card)spellCard
+        };
+        
+
+        FusionSystem.Instance().SetupForEquipOnFieldFlow(list, modifierList, carriedGuardianStar
+            // () => {
+            //     //////////////// continue here
+            //     CancelSpellMode();
+            //     GameplayManager.Instance().SetInputLock(false);
+            // }   
+        );
+    }
+
+    public void ResolveEquipActivation(Card cardData, List<GameplayCard.Modifier> modifierList, GuardianStar carriedGuardianStar)
+    {
+        // TODO: state checks
+
+        SpawnFieldCard(cardData, false, carriedGuardianStar, modifierList); // TODO: check if the fieldcardcontainer is correct
+        // SpawnFieldCard(cardData, false, GuardianStar.NONE, modifierList); // debug GS with NONE
 
         CancelSpellMode();
         GameplayManager.Instance().SetInputLock(false);

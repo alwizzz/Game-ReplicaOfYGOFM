@@ -32,7 +32,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
     // [SerializeField] private GameObject fuseButton;
     // [SerializeField] private TextMeshProUGUI fuseResultText;
     // [SerializeField] private GameplayCard.Modifier? cachedGameplayCardModifier;
-    [SerializeField] private GuardianStar? cachedGuardianStar;
+    // [SerializeField] private GuardianStar? cachedGuardianStar;
 
 
 
@@ -170,12 +170,12 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
             FieldCard selectedFieldCard = selectedFieldContainer.GetCard();
             if(selectedFieldCard != null)
             {
-                cachedGuardianStar = selectedFieldCard.GetSelectedGuardianStar();
+                var carriedGuardianStar = selectedFieldCard.GetSelectedGuardianStar();
                 Card cardData = selectedFieldCard.GetCardData();
                 var modifierList = selectedFieldCard.GetModifierList();
 
                 // TODO: swap the order of below two lines, arguably for better readability
-                FusionSystem.Instance().AppendFirstIndexFusionMaterial(cardData, modifierList);
+                FusionSystem.Instance().AppendFirstIndexFusionMaterial(cardData, modifierList, carriedGuardianStar);
                 selectedFieldCard.Destroy();
 
 
@@ -345,14 +345,14 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         // data handling
 
         // cachedGameplayCardModifier = selectedFieldCard.GetModifier();
-        cachedGuardianStar = selectedFieldCard.GetSelectedGuardianStar();
+        var carriedGuardianStar = selectedFieldCard.GetSelectedGuardianStar();
         Card cardFromField = selectedFieldCard.GetCardData();
         var modifierList = selectedFieldCard.GetModifierList();
 
         // fusionListData.Insert(0, cardFromField);
         // fusionListData.Insert(1, cardFromHand);
         List<Card> list = new List<Card>{ cardFromField, cardFromHand };
-        FusionSystem.Instance().SetupForSwitchFlow(list, modifierList);
+        FusionSystem.Instance().SetupForSwitchFlow(list, modifierList, carriedGuardianStar);
 
         // UpdateFusionDisplay(modifierList);
         selectedFieldCard.Destroy(); // NOTE: cardFromHand's HandCard has been destroyed on Single Flow logic
@@ -365,10 +365,15 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
 #region Resolve flow
 
-    private void Resolve(Card cardData, bool isFaceDown, bool retainModification = false, List<GameplayCard.Modifier> modifierList = null)
+    private void Resolve(
+        Card cardData, 
+        bool isFaceDown, 
+        bool retainModification = false, 
+        List<GameplayCard.Modifier> modifierList = null,
+        GuardianStar? carriedGuardianStar = null)
     {
         // NOTE: retainModification is only from fusion flow
-        if(retainModification == true && cachedGuardianStar == null)
+        if(retainModification == true && carriedGuardianStar == null)
         {
             // this bool is initially for internal fusion flow. After the flow is separated, the "checking" is kinda reversed
             retainModification = false;
@@ -401,9 +406,9 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
             if (retainModification)
             {
                 // if(cachedGameplayCardModifier == null)
-                if(cachedGuardianStar == null)
+                if(carriedGuardianStar == null)
                 {
-                    print($"WARN: attempt to retainModification but cachedGuardianStar is null, fallbacked");
+                    print($"WARN: attempt to retainModification but carriedGuardianStar is null, fallbacked");
 
                     // fallback
                     var data = (MonsterCard)cardData;
@@ -414,15 +419,15 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
                     var data = (MonsterCard)cardData;
                     selector.Setup(data.guardianStarOption1, data.guardianStarOption2);
 
-                    // var cachedGuardianStar = cachedGameplayCardModifier?.selectedGuardianStar;
-                    if(cachedGuardianStar == data.guardianStarOption1)
+                    // var carriedGuardianStar = cachedGameplayCardModifier?.selectedGuardianStar;
+                    if(carriedGuardianStar == data.guardianStarOption1)
                     {
                         selector.gameObject.SetActive(false);
                         proceedButton.SetActive(false);
 
                         selector.SelectOption1(); // ghost setup
                         Helpers.Instance().DelayedAction(1f, () => Proceed());
-                    } else if(cachedGuardianStar == data.guardianStarOption2)
+                    } else if(carriedGuardianStar == data.guardianStarOption2)
                     {
                         selector.gameObject.SetActive(false);
                         proceedButton.SetActive(false);
@@ -431,7 +436,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
                         Helpers.Instance().DelayedAction(1f, () => Proceed());
                     } else
                     {
-                        print($"WARN: attempt to retain GS but cache's GS ({cachedGuardianStar}) doesnt match with data, fallbacked");
+                        print($"WARN: attempt to retain GS but cache's GS ({carriedGuardianStar}) doesnt match with data, fallbacked");
                         // fallback
                         proceedButton.SetActive(true);
                     }
@@ -451,9 +456,14 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         }
     }
 
-    public void ExternalResolve(Card cardData, bool isFaceDown, bool retainModification = false, List<GameplayCard.Modifier> modifierList = null)
-    {
-        Resolve(cardData, isFaceDown, retainModification, modifierList);
+    public void ExternalResolve(
+        Card cardData, 
+        bool isFaceDown, 
+        bool retainModification = false, 
+        List<GameplayCard.Modifier> modifierList = null,
+        GuardianStar? carriedGuardianStar = null
+    ){
+        Resolve(cardData, isFaceDown, retainModification, modifierList, carriedGuardianStar);
     }
 
     public void Proceed() // either called by button or autocalled
@@ -479,7 +489,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         // cleanup
         // fusionListData.Clear();
         // FusionSystem.Instance().Clear(); // done independently
-        cachedGuardianStar = null;
+        // cachedGuardianStar = null;
         Hide();
     }
 

@@ -21,6 +21,7 @@ public class FieldCard : GameplayCard
     {
         this.container = container;
     }
+    public FieldCardContainer GetContainer() => container;
 
     public void ResetContainer() { container = null; }
 

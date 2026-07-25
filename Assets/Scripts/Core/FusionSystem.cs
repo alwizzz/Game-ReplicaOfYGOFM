@@ -56,7 +56,7 @@ public class FusionSystem : UIModal<FusionSystem>
         Show();
     }
 
-    public void SetupForSwitchFlow(List<Card> list, List<GameplayCard.Modifier> modifierList)
+    public void SetupForSwitchFlow(List<Card> list, List<GameplayCard.Modifier> modifierList, GuardianStar carriedGuardianStar)
     {
         if(isActive){ print("already active, setup denied"); return; }
         isActive = true;
@@ -75,11 +75,34 @@ public class FusionSystem : UIModal<FusionSystem>
         Show();
 
         Helpers.Instance().DelayedAction(1f, () => 
-            StartCoroutine(RunFusion(modifierList, OnFinished)
+            StartCoroutine(RunFusion(modifierList, carriedGuardianStar, OnFinished_HandFocusSytem)
         ));
     }
 
-    public void AppendFirstIndexFusionMaterial(Card cardData, List<GameplayCard.Modifier> modifierList)
+    public void SetupForEquipOnFieldFlow(List<Card> list, List<GameplayCard.Modifier> modifierList, GuardianStar carriedGuardianStar)
+    {
+        if(isActive){ print("already active, setup denied"); return; }
+        isActive = true;
+
+        panel.SetActive(true);
+        panel.GetComponent<Image>().color = Color.gray;
+
+        fuseResultText.gameObject.SetActive(false);
+        returnButton.SetActive(false);
+        fuseButton.SetActive(false);
+
+        // list.ForEach(e => fusionListData.Add(e.GetCardData()));
+        list.ForEach(e => fusionListData.Add(e));
+        UpdateFusionDisplay(modifierList);
+
+        Show();
+
+        Helpers.Instance().DelayedAction(1f, () => 
+            StartCoroutine(RunFusion(modifierList, carriedGuardianStar, OnFinished_FieldSystem)
+        ));
+    }
+
+    public void AppendFirstIndexFusionMaterial(Card cardData, List<GameplayCard.Modifier> modifierList, GuardianStar carriedGuardianStar)
     {
         if(!isActive){ print("is inactive, aborted"); return; }
 
@@ -87,7 +110,7 @@ public class FusionSystem : UIModal<FusionSystem>
         UpdateFusionDisplay(modifierList);
 
         Helpers.Instance().DelayedAction(1f, () => 
-            StartCoroutine(RunFusion(modifierList, OnFinished)
+            StartCoroutine(RunFusion(modifierList, carriedGuardianStar, OnFinished_HandFocusSytem)
         ));
     }
 
@@ -102,13 +125,35 @@ public class FusionSystem : UIModal<FusionSystem>
     }
 
     // quick handling
-    private static void OnFinished(Card cardData, bool retainModification, List<GameplayCard.Modifier> modifierList)
-    {
+    private static void OnFinished_HandFocusSytem(
+        Card cardData, 
+        bool retainModification, 
+        List<GameplayCard.Modifier> modifierList,
+        GuardianStar? carriedGuardianStar
+    ){
         GameplayManager.Instance().HandFocusSystem().ExternalResolve(
             cardData, 
             false, // always face up
             retainModification, 
-            modifierList
+            modifierList,
+            carriedGuardianStar
+        );
+    }
+
+    private static void OnFinished_FieldSystem(
+        Card cardData, 
+        bool retainModification, 
+        List<GameplayCard.Modifier> modifierList, 
+        GuardianStar? carriedGuardianStar
+    ){
+        // for this flow, modifierList and carriedGuardianStar shouldnt be null
+        Debug.Assert(modifierList != null && carriedGuardianStar != null);
+
+        GameplayManager.Instance().PlayerFieldSystem().ResolveEquipActivation(
+            cardData, 
+            // retainModification, 
+            modifierList, 
+            carriedGuardianStar.Value
         );
     }
 
@@ -167,7 +212,8 @@ public class FusionSystem : UIModal<FusionSystem>
     // private IEnumerator RunFusion(List<GameplayCard.Modifier> firstModifierList = null)
     private IEnumerator RunFusion(
         List<GameplayCard.Modifier> firstModifierList = null, 
-        Action<Card, bool, List<GameplayCard.Modifier>> OnFinishedCallback = null
+        GuardianStar? carriedGuardianStar = null,
+        Action<Card, bool, List<GameplayCard.Modifier>, GuardianStar?> OnFinishedCallback = null
     ){
         fuseResultText.gameObject.SetActive(true);
 
@@ -222,6 +268,7 @@ public class FusionSystem : UIModal<FusionSystem>
         }
 
         bool retainModification = retainFirstMonster;
+        if(!retainModification && carriedGuardianStar.HasValue) carriedGuardianStar = null; // safeguard
 
         // bool retainModification = false;
         // if(cachedGuardianStar != null && retainFirstMonster == true)
@@ -236,17 +283,17 @@ public class FusionSystem : UIModal<FusionSystem>
         var isMonster = resultCard.IsMonsterCard();
 
         // quick handling to directly call HandFocusSytem's Resolve()
-        // this.OnFinished(resultCard, retainModification, modifierList);
+        // this.OnFinished_HandFocusSytem(resultCard, retainModification, modifierList);
 
-        OnFinishedCallback?.Invoke(resultCard, retainModification, modifierList);
+        OnFinishedCallback?.Invoke(resultCard, retainModification, modifierList, carriedGuardianStar);
         // Resolve(resultCard, false, retainModification:retainModification, modifierList); // fusion result is always face up
     
         Clear();
     }
 
-    public void ExternalRunFusion(List<GameplayCard.Modifier> modifierList = null)
+    public void ExternalRunFusion(List<GameplayCard.Modifier> modifierList = null, GuardianStar? carriedGuardianStar = null)
     {
-        StartCoroutine(RunFusion(modifierList, OnFinished));
+        StartCoroutine(RunFusion(modifierList, carriedGuardianStar, OnFinished_HandFocusSytem));
     }
 
 
