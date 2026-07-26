@@ -268,8 +268,13 @@ public class GameplayManager : StaticReference<GameplayManager>
     //     EventManager.FocusPhase();
     // }
 
-    public void ToFieldPhase(Card card, bool isFaceDown, GuardianStar guardianStar, List<GameplayCard.Modifier> modifierList)
-    {
+    public void ToFieldPhase(
+        Card card, 
+        bool isFaceDown, 
+        GuardianStar guardianStar, 
+        List<GameplayCard.Modifier> modifierList,
+        bool retainedMonster = false
+    ){
         // if (phase != Phase.FocusPhase)
         if (phase != Phase.HandPhase)
         {
@@ -282,7 +287,7 @@ public class GameplayManager : StaticReference<GameplayManager>
             // TODO: activate the non monster card
         } else
         {
-            FieldSystem().SpawnFieldCard(card, isFaceDown, guardianStar, modifierList);
+            FieldSystem().SpawnFieldCard(card, isFaceDown, guardianStar, modifierList, retainedMonster);
         }
         FieldSystem().StartFieldPhase();
 

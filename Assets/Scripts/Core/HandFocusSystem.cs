@@ -425,14 +425,14 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
                         proceedButton.SetActive(false);
 
                         selector.SelectOption1(); // ghost setup
-                        Helpers.Instance().DelayedAction(1f, () => Proceed());
+                        Helpers.Instance().DelayedAction(1f, () => Proceed(true));
                     } else if(carriedGuardianStar == data.guardianStarOption2)
                     {
                         selector.gameObject.SetActive(false);
                         proceedButton.SetActive(false);
 
                         selector.SelectOption2(); // ghost setup
-                        Helpers.Instance().DelayedAction(1f, () => Proceed());
+                        Helpers.Instance().DelayedAction(1f, () => Proceed(true));
                     } else
                     {
                         print($"WARN: attempt to retain GS but cache's GS ({carriedGuardianStar}) doesnt match with data, fallbacked");
@@ -465,7 +465,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         Resolve(cardData, isFaceDown, retainModification, modifierList, carriedGuardianStar);
     }
 
-    public void Proceed() // either called by button or autocalled
+    public void Proceed(bool retainedMonster = false) // either called by button or autocalled
     {
         if(!isOnResolve) return;
 
@@ -483,7 +483,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
         }
 
 
-        GameplayManager.Instance().ToFieldPhase(card, isFaceDown, guardianStar, modifierList);
+        GameplayManager.Instance().ToFieldPhase(card, isFaceDown, guardianStar, modifierList, retainedMonster);
 
         // cleanup
         // fusionListData.Clear();

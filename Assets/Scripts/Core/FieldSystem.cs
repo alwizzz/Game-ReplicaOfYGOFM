@@ -177,8 +177,13 @@ public class FieldSystem : MonoBehaviour
 
     #endregion
 
-    public void SpawnFieldCard(Card cardData, bool isFacedown, GuardianStar selectedGuardianStar, List<GameplayCard.Modifier> modifierList)
-    {
+    public void SpawnFieldCard(
+        Card cardData, 
+        bool isFacedown, 
+        GuardianStar selectedGuardianStar, 
+        List<GameplayCard.Modifier> modifierList,
+        bool retainedMonster = false
+    ){
         // currently commented cuz now there's scenario that the selection is closed but the selectedFieldCardContainer still used
         // so now, more determining variable is the selectedFieldCardContainer.IsEmpty()
         // if (!isOnSelection) return;
@@ -208,6 +213,11 @@ public class FieldSystem : MonoBehaviour
         UpdateInformationDisplay();
 
         IncrementCardCount(selectedFieldCardContainer.IsBackRank());
+
+        if(cardData.IsMonsterCard() && !retainedMonster)
+        {
+            EventManager.MonsterSummoned(owner);
+        }
     }
 
     private void IncrementCardCount(bool isBackRank)
@@ -403,7 +413,8 @@ public class FieldSystem : MonoBehaviour
         // TODO: state checks
         // TODO: make a fake resolve panel like in HandFocusSytem's flow, for visual purpose only
 
-        SpawnFieldCard(cardData, false, carriedGuardianStar, modifierList); // TODO: check if the fieldcardcontainer is correct
+        bool retainedMonster = true; // always true for this case
+        SpawnFieldCard(cardData, false, carriedGuardianStar, modifierList, retainedMonster); // TODO: check if the fieldcardcontainer is correct
         // SpawnFieldCard(cardData, false, GuardianStar.NONE, modifierList); // debug GS with NONE
 
         CancelSpellMode();

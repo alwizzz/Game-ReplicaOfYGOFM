@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Enums;
 using UnityEngine;
 
 public class EventManager : MonoBehaviour
@@ -49,6 +50,22 @@ public class EventManager : MonoBehaviour
     {
         print("EndPhase flag raised!");
         OnEndPhase?.Invoke();
+    }
+
+
+    #endregion
+
+
+    #region Gameplay Events
+
+    public delegate void MonsterSummonedAction(Side side);
+    public static event MonsterSummonedAction OnMonsterSummoned;
+
+    public static void MonsterSummoned(Side side) 
+    { 
+
+        print($"MonsterSummoned flag raised (side:{side})!"); 
+        OnMonsterSummoned?.Invoke(side); 
     }
 
 

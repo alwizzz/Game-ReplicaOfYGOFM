@@ -76,15 +76,17 @@ namespace Enums
         DestroyMonsterOnSummon
     }
 
-    public enum PhaseTrigger
+    public enum EventTrigger
     {
-        Null,
+        // use case: sword of revealing light
         OnStartOfPlayerPhase,
         OnStartOfOpponentPhase,
 
+        // use case: trap cards
         OnPlayerAttack,
         OnOpponentAttack,
 
+        // use case: field spell
         OnPlayerSummon,
         OnOpponentSummon,
     }
