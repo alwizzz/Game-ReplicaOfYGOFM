@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 using Enums;
 
@@ -14,6 +15,7 @@ public class GameplayManager : StaticReference<GameplayManager>
     [SerializeField] private Side turn;
     [SerializeField] private Phase phase;
     [SerializeField] private bool inputLock;
+    [SerializeField] private FieldType fieldType = FieldType.Normal; // default
 
     [Header("Player's Caches")]
     [SerializeField] private HandSystem playerHandSystem;
@@ -33,6 +35,7 @@ public class GameplayManager : StaticReference<GameplayManager>
     [Header("Other Caches")]
     [SerializeField] private Transform offscreenParking;
     [SerializeField] private EnemyBot enemyBot;
+    [SerializeField] private Image fieldBaseImage;
 
 
 
@@ -59,6 +62,8 @@ public class GameplayManager : StaticReference<GameplayManager>
         // Setup lifepoint
         playerLifePointSystem.Setup(initialLifePoint);
         enemyLifePointSystem.Setup(initialLifePoint);
+
+        SetFieldType(fieldType, true);
 
         phase = Phase.EndPhase;
         turn = Side.Enemy;
@@ -366,6 +371,37 @@ public class GameplayManager : StaticReference<GameplayManager>
 
     public void SetInputLock(bool value) { inputLock = value; }
     public bool IsInputLock() => inputLock;
+
+    #endregion
+
+    #region Field Spell
+
+    public void SetFieldType(FieldType value, bool init = false)
+    {
+        if(!init && fieldType == value)
+        {
+            print($"attempt to set field type of same value ({value}), nothing happened");
+            return;
+        }
+
+        var fieldColor = ResourceManager.Instance().GetFieldColor(value);
+        var fieldContainerColor = ResourceManager.Instance().GetFieldContainerColor(value);
+
+        fieldBaseImage.color = fieldColor;
+        PlayerFieldSystem().GetAllContainers().ForEach(e =>
+        {
+           e.gameObject.GetComponent<Image>().color = fieldContainerColor; 
+        });
+        EnemyFieldSystem().GetAllContainers().ForEach(e =>
+        {
+           e.gameObject.GetComponent<Image>().color = fieldContainerColor; 
+        });
+
+        // TODO: handle modifiers
+        fieldType = value;
+        print($"succeed setting field type to {value}");
+    }
+
 
     #endregion
 

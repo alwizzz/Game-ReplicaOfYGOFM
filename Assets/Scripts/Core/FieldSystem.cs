@@ -459,6 +459,12 @@ public class FieldSystem : MonoBehaviour
 
     public List<FieldCardContainer> GetFrontRankContainers() => frontRankFieldCardContainers;
     public List<FieldCardContainer> GetBackRankContainers() => backRankFieldCardContainers;
+    public List<FieldCardContainer> GetAllContainers()
+    {
+        var result = new List<FieldCardContainer>(frontRankFieldCardContainers);
+        result.AddRange(backRankFieldCardContainers);
+        return result;
+    }
     public FieldCardContainer GetSelectedFieldContainer() => selectedFieldCardContainer;
     public bool IsOnSpellMode() => isOnSpellMode;
 

@@ -96,7 +96,16 @@ namespace Enums
         Equipped // technically can be said as subtype of fused
     }
 
-
+    public enum FieldType
+    {
+        Normal, 
+        Forest,
+        Mountain,
+        Sogen,
+        Umi,
+        Wasteland,
+        Yami,
+    }
 }
 
 

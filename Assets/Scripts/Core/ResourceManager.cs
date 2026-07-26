@@ -32,9 +32,78 @@ public class ResourceManager : StaticReference<ResourceManager>
     [SerializeField] private Color normalNumberColor;
     [SerializeField] private Color bonusedNumberColor;
 
+
+    [Header("Field Colors")]
+    [SerializeField] private Dictionary<FieldType, Color> fieldColorDict = new();
+    [SerializeField] private Dictionary<FieldType, Color> fieldContainerColorDict = new();
+
     private void Awake()
     {
         BaseAwake(this);
+
+        // runtime fill
+        fieldColorDict.Add(
+            FieldType.Normal, 
+            new Color32(119, 100, 10, 255)
+        );
+        fieldContainerColorDict.Add(
+            FieldType.Normal, 
+            new Color32(119, 100, 10, 255)
+        );
+
+        fieldColorDict.Add(
+            FieldType.Forest, 
+            new Color32(46, 107, 47, 255)
+        );
+        fieldContainerColorDict.Add(
+            FieldType.Forest, 
+            new Color32(77, 139, 78, 255)
+        );
+
+        fieldColorDict.Add(
+            FieldType.Mountain, 
+            new Color32(106, 95, 85, 255)
+        );
+        fieldContainerColorDict.Add(
+            FieldType.Mountain, 
+            new Color32(136, 124, 113, 255)
+        );
+
+        fieldColorDict.Add(
+            FieldType.Sogen, 
+            new Color32(142, 158, 58, 255)
+        );
+        fieldContainerColorDict.Add(
+            FieldType.Sogen, 
+            new Color32(168, 184, 87, 255)
+        );
+
+        fieldColorDict.Add(
+            FieldType.Umi, 
+            new Color32(29, 95, 154, 255)
+        );
+        fieldContainerColorDict.Add(
+            FieldType.Umi, 
+            new Color32(63, 130, 194, 255)
+        );
+
+        fieldColorDict.Add(
+            FieldType.Wasteland, 
+            new Color32(166, 124, 69, 255)
+        );
+        fieldContainerColorDict.Add(
+            FieldType.Wasteland, 
+            new Color32(195, 151, 94, 255)
+        );
+
+        fieldColorDict.Add(
+            FieldType.Yami, 
+            new Color32(56, 34, 74, 255)
+        );
+        fieldContainerColorDict.Add(
+            FieldType.Yami, 
+            new Color32(88, 64, 107, 255)
+        );
     }
 
     public Sprite GetTypeIcon(MonsterType type)
@@ -95,6 +164,19 @@ public class ResourceManager : StaticReference<ResourceManager>
     public Color GetNumberColor(bool isNormal)
     {
         return isNormal ? normalNumberColor : bonusedNumberColor;
+    }
+
+    public Color GetFieldColor(FieldType fieldType)
+    {
+        Debug.Assert(fieldColorDict.ContainsKey(fieldType));
+
+        return fieldColorDict.GetValueOrDefault(fieldType);
+    }
+    public Color GetFieldContainerColor(FieldType fieldType)
+    {
+        Debug.Assert(fieldContainerColorDict.ContainsKey(fieldType));
+
+        return fieldColorDict.GetValueOrDefault(fieldType);
     }
 
     private void OnDestroy()

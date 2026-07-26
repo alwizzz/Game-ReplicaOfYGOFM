@@ -156,6 +156,7 @@ MonoBehaviour:
   turn: 0
   phase: 0
   inputLock: 0
+  fieldType: 0
   playerHandSystem: {fileID: 885102175}
   playerHandFocusSystem: {fileID: 1543891171}
   playerFieldSystem: {fileID: 7223169372605328131}
@@ -168,6 +169,7 @@ MonoBehaviour:
   enemyDeck: {fileID: 1951215743}
   offscreenParking: {fileID: 727406679}
   enemyBot: {fileID: 491376980}
+  fieldBaseImage: {fileID: 1729551177}
 --- !u!4 &35664128
 Transform:
   m_ObjectHideFlags: 0
@@ -4269,7 +4271,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7132075, g: 0.5869047, b: 0.014802404, a: 1}
+  m_Color: {r: 0.46666667, g: 0.39215687, b: 0.039215688, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6941,6 +6943,10 @@ PrefabInstance:
     - target: {fileID: 802817976797206282, guid: 6925583ba6c093b49a59ac614973d181, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8661416339905106012, guid: 6925583ba6c093b49a59ac614973d181, type: 3}
+      propertyPath: m_Color.r
+      value: 0.49803922
       objectReference: {fileID: 0}
     - target: {fileID: 8713441857979948270, guid: 6925583ba6c093b49a59ac614973d181, type: 3}
       propertyPath: m_Name
