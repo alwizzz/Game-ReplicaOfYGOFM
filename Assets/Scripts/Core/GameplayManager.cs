@@ -407,6 +407,12 @@ public class GameplayManager : StaticReference<GameplayManager>
         print($"succeed setting field type to {value}");
     }
 
+    private void ResetFieldModifier(GameplayCard gCard, FieldType fieldType)
+    {
+        // first, remove field modifier if any
+        
+    }
+
 
     #endregion
 

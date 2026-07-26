@@ -33,9 +33,10 @@ public class ResourceManager : StaticReference<ResourceManager>
     [SerializeField] private Color bonusedNumberColor;
 
 
-    [Header("Field Colors")]
+    [Header("Field Spell")]
     [SerializeField] private Dictionary<FieldType, Color> fieldColorDict = new();
     [SerializeField] private Dictionary<FieldType, Color> fieldContainerColorDict = new();
+    [SerializeField] private Dictionary<FieldType, Card> fieldCardDict = new();
 
     private void Awake()
     {
@@ -50,6 +51,10 @@ public class ResourceManager : StaticReference<ResourceManager>
             FieldType.Normal, 
             new Color32(119, 100, 10, 255)
         );
+        fieldCardDict.Add(
+            FieldType.Normal, 
+            null
+        );
 
         fieldColorDict.Add(
             FieldType.Forest, 
@@ -58,6 +63,10 @@ public class ResourceManager : StaticReference<ResourceManager>
         fieldContainerColorDict.Add(
             FieldType.Forest, 
             new Color32(77, 139, 78, 255)
+        );
+        fieldCardDict.Add(
+            FieldType.Forest, 
+            null // dummy
         );
 
         fieldColorDict.Add(
@@ -68,6 +77,10 @@ public class ResourceManager : StaticReference<ResourceManager>
             FieldType.Mountain, 
             new Color32(136, 124, 113, 255)
         );
+        fieldCardDict.Add(
+            FieldType.Mountain, 
+            null // dummy
+        );
 
         fieldColorDict.Add(
             FieldType.Sogen, 
@@ -76,6 +89,10 @@ public class ResourceManager : StaticReference<ResourceManager>
         fieldContainerColorDict.Add(
             FieldType.Sogen, 
             new Color32(168, 184, 87, 255)
+        );
+        fieldCardDict.Add(
+            FieldType.Sogen, 
+            null // dummy
         );
 
         fieldColorDict.Add(
@@ -86,6 +103,10 @@ public class ResourceManager : StaticReference<ResourceManager>
             FieldType.Umi, 
             new Color32(63, 130, 194, 255)
         );
+        fieldCardDict.Add(
+            FieldType.Umi, 
+            null // dummy
+        );
 
         fieldColorDict.Add(
             FieldType.Wasteland, 
@@ -95,6 +116,10 @@ public class ResourceManager : StaticReference<ResourceManager>
             FieldType.Wasteland, 
             new Color32(195, 151, 94, 255)
         );
+        fieldCardDict.Add(
+            FieldType.Wasteland, 
+            null // dummy
+        );
 
         fieldColorDict.Add(
             FieldType.Yami, 
@@ -103,6 +128,10 @@ public class ResourceManager : StaticReference<ResourceManager>
         fieldContainerColorDict.Add(
             FieldType.Yami, 
             new Color32(88, 64, 107, 255)
+        );
+        fieldCardDict.Add(
+            FieldType.Yami, 
+            null // dummy
         );
     }
 

@@ -10612,18 +10612,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 727214031}
     m_Modifications:
-    - target: {fileID: 120461241594021388, guid: 36423630f5955274aa64737bee2050d0, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 164258087396160047, guid: 36423630f5955274aa64737bee2050d0, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1278741850457371358, guid: 36423630f5955274aa64737bee2050d0, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4487763624038590597, guid: 36423630f5955274aa64737bee2050d0, type: 3}
       propertyPath: m_Name
       value: Player HandFocusSystem

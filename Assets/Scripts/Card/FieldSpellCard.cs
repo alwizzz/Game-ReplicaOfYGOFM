@@ -11,6 +11,7 @@ using Enums;
 )]
 public class FieldSpellCard : SpellCard
 {
+    [SerializeField] private FieldType fieldType;
     public override SpellCardType GetSpellCardType() => SpellCardType.Field;
     public override bool Activate()
     {
