@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using Enums;
+using Unity.VisualScripting;
 
 public class GameplayManager : StaticReference<GameplayManager>
 {
@@ -398,7 +399,7 @@ public class GameplayManager : StaticReference<GameplayManager>
             if(e.IsEmpty()) return;
             if(!e.GetCard().GetCardData().IsMonsterCard()) return;
 
-            ResetFieldModifier(e.GetCard(), value);
+            SetFieldModifier(e.GetCard(), value);
         }
         PlayerFieldSystem().GetAllContainers().ForEach(e =>
         {
@@ -414,15 +415,15 @@ public class GameplayManager : StaticReference<GameplayManager>
         print($"succeed setting field type to {value}");
     }
 
-    private void ResetFieldModifier(GameplayCard gCard, FieldType fieldType)
+    public void SetFieldModifier(GameplayCard gCard, FieldType fieldType)
     {
-        ////// NEXT: handle this modifier list null problem
-        var modifierList = gCard.GetModifierList();
-        if(modifierList == null){ return; }
+        var modifierListRef = gCard.GetModifierList();
+        if(modifierListRef == null){ return; }
+        var modifierList = new List<GameplayCard.Modifier>(modifierListRef); // creating a copy
 
         var fieldCardData = ResourceManager.Instance().GetFieldCard(fieldType);
         
-        // first, remove field modifier if any
+        // first, remove existing field modifier if any
         var toBeRemoved = new List<GameplayCard.Modifier>();
         for(int i=0; i<modifierList.Count; i++)
         {
@@ -439,7 +440,7 @@ public class GameplayManager : StaticReference<GameplayManager>
             1, 1, fieldCardData
         ));
 
-        // reassignment (actually the flow is kinda awkward, but it still works)
+        // reassignment
         gCard.SetModifierList(modifierList);
     }
 

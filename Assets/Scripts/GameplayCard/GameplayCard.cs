@@ -108,7 +108,6 @@ public abstract class GameplayCard : MonoBehaviour
 
         modifierList = value;
         RefreshAttackDefenseText();
-        RefreshAttackDefenseText();
     }
     public List<Modifier> GetModifierList() => modifierList;
 
