@@ -58,14 +58,13 @@ public class EventManager : MonoBehaviour
 
     #region Gameplay Events
 
-    public delegate void MonsterSummonedAction(Side side);
+    public delegate void MonsterSummonedAction(FieldCard fieldCard, Side side);
     public static event MonsterSummonedAction OnMonsterSummoned;
 
-    public static void MonsterSummoned(Side side) 
+    public static void MonsterSummoned(FieldCard fieldCard, Side side) 
     { 
-
         print($"MonsterSummoned flag raised (side:{side})!"); 
-        OnMonsterSummoned?.Invoke(side); 
+        OnMonsterSummoned?.Invoke(fieldCard, side); 
     }
 
 

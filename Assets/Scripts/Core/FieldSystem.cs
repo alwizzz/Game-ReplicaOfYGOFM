@@ -216,7 +216,7 @@ public class FieldSystem : MonoBehaviour
 
         if(cardData.IsMonsterCard() && !retainedMonster)
         {
-            EventManager.MonsterSummoned(owner);
+            EventManager.MonsterSummoned(spawnedFieldCard, owner);
         }
     }
 

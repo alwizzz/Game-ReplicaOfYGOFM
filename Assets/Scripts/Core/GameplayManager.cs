@@ -415,7 +415,7 @@ public class GameplayManager : StaticReference<GameplayManager>
         print($"succeed setting field type to {value}");
     }
 
-    public void SetFieldModifier(GameplayCard gCard, FieldType fieldType)
+    private void SetFieldModifier(GameplayCard gCard, FieldType fieldType)
     {
         var modifierListRef = gCard.GetModifierList();
         if(modifierListRef == null){ return; }
@@ -450,6 +450,14 @@ public class GameplayManager : StaticReference<GameplayManager>
 
     #region Subcriptions
 
+    private void SetFieldModifierOnMonsterSummoned(FieldCard fieldCard, Side _)
+    {
+        print("XXX");
+        SetFieldModifier(fieldCard, fieldType);
+    }
+
+
+
     private void OnEnable()
     {
         EventManager.OnDrawPhase += OpenHand;
@@ -457,6 +465,7 @@ public class GameplayManager : StaticReference<GameplayManager>
 
         EventManager.OnEndPhase += ResetFieldInformationDisplays;
 
+        EventManager.OnMonsterSummoned += SetFieldModifierOnMonsterSummoned;
     }
 
     private void OnDisable()
@@ -465,6 +474,8 @@ public class GameplayManager : StaticReference<GameplayManager>
         EventManager.OnDrawPhase -= RefreshFieldStatus;
 
         EventManager.OnEndPhase -= ResetFieldInformationDisplays;
+
+        EventManager.OnMonsterSummoned -= SetFieldModifierOnMonsterSummoned;
     }
 
     #endregion
