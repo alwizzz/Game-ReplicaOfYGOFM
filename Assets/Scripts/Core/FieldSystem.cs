@@ -362,8 +362,8 @@ public class FieldSystem : MonoBehaviour
         GameplayManager.Instance().SetInputLock(true);
 
         fieldCard.SetToFaceUp();
+        yield return new WaitForSeconds(1);
         bool succeed = spellCard.Activate();
-
         yield return new WaitForSeconds(1);
         fieldCard.Destroy();
 

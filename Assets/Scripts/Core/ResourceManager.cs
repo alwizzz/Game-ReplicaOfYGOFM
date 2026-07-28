@@ -207,13 +207,13 @@ public class ResourceManager : StaticReference<ResourceManager>
 
         return fieldColorDict.GetValueOrDefault(fieldType);
     }
-
     public Card GetFieldCard(FieldType fieldType)
     {
         Debug.Assert(fieldContainerColorDict.ContainsKey(fieldType));
 
         return fieldCardDict.GetValueOrDefault(fieldType);
     }
+
 
     private void OnDestroy()
     {

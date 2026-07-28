@@ -16,6 +16,9 @@ public class FieldSpellCard : SpellCard
     public override bool Activate()
     {
         Debug.Log("Activated FIELD SPELL!");
+
+        GameplayManager.Instance().SetFieldType(fieldType);
+
         return true;
     }
 }

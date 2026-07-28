@@ -77,9 +77,6 @@ public class GameplayManager : StaticReference<GameplayManager>
         var cardData = Resources.Load<Card>("CardLibrary/022-NormalMonster-SummonedSkull");
         var fieldCardContainer = enemyFieldSystem.GetFrontRankContainers()[0];
         var fieldCard = enemyFieldSystem.DebugSpawnFieldCard(cardData, false, fieldCardContainer);
-        // fieldCard.SetToDefensePosition();
-        //enemyFieldSystem.IncrementCardCount(false);
-        // print("DEBUG: spawned monster card on enemy field");
 
         // spawn monster card on player field
         cardData = Resources.Load<Card>("CardLibrary/022-NormalMonster-SummonedSkull");
@@ -92,17 +89,17 @@ public class GameplayManager : StaticReference<GameplayManager>
                 new GameplayCard.Modifier(1000, 1000, Resources.Load<Card>("CardLibrary/657-EquipSpell-Megamorph"))
             }
         );
-        //fieldCard.SetToDefensePosition();
-        //playerFieldSystem.IncrementCardCount(false);
-        // print("DEBUG: spawned monster card on player field");
 
         // spawn magic card on player field
         cardData = Resources.Load<Card>("CardLibrary/657-EquipSpell-Megamorph");
         fieldCardContainer = playerFieldSystem.GetBackRankContainers()[0];
         fieldCard = playerFieldSystem.DebugSpawnFieldCard(cardData, true, fieldCardContainer);
-        //fieldCard.SetToDefensePosition();
-        //playerFieldSystem.IncrementCardCount(false);
-        // print("DEBUG: spawned non moster card on player field");
+
+        // spawn magic card on player field
+        cardData = Resources.Load<Card>("CardLibrary/335-FieldSpell-Yami");
+        fieldCardContainer = playerFieldSystem.GetBackRankContainers()[1];
+        fieldCard = playerFieldSystem.DebugSpawnFieldCard(cardData, true, fieldCardContainer);
+
     }
 
     public bool IsPlayerTurn() => (turn == Side.Player ? true : false);
@@ -286,6 +283,7 @@ public class GameplayManager : StaticReference<GameplayManager>
         if(!card.IsMonsterCard() && !isFaceDown)
         {
             // TODO: activate the non monster card
+            ((NonMonsterCard)card).Activate();
         } else
         {
             FieldSystem().SpawnFieldCard(card, isFaceDown, guardianStar, modifierList, retainedMonster);
@@ -429,15 +427,21 @@ public class GameplayManager : StaticReference<GameplayManager>
         {
             var modifier = modifierList[i];
             var card = modifier.source;
-            if(card.id == fieldCardData.id) toBeRemoved.Add(modifier);
+            if(card.IsMonsterCard()) continue;
+            
+            var spellCard = (SpellCard)card;
+            if(spellCard.GetSpellCardType() != SpellCardType.Field) continue;
+
+            toBeRemoved.Add(modifier);
         }
         // NOTE: validate flow by looking on toBeRemoved.Count
         print($"DEBUG toBeRemoved.Count: {toBeRemoved.Count} {gCard}");
         toBeRemoved.ForEach(e => modifierList.Remove(e));
 
         // second, update field modifier
-        modifierList.Add(new GameplayCard.Modifier( // dummy
-            1, 1, fieldCardData
+        int value = int.Parse(fieldCardData.id); // dummy
+        modifierList.Add(new GameplayCard.Modifier( 
+            value, value, fieldCardData
         ));
 
         // reassignment
