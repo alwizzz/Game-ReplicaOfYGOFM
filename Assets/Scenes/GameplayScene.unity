@@ -156,7 +156,7 @@ MonoBehaviour:
   turn: 0
   phase: 0
   inputLock: 0
-  fieldType: 0
+  fieldType: 1
   playerHandSystem: {fileID: 885102175}
   playerHandFocusSystem: {fileID: 1543891171}
   playerFieldSystem: {fileID: 7223169372605328131}

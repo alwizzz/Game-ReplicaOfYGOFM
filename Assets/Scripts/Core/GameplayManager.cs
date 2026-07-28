@@ -52,6 +52,8 @@ public class GameplayManager : StaticReference<GameplayManager>
         Setup();
         Debug();
         GameplayFieldManager.Instance().RefreshFieldCardOrientation();
+
+        SetFieldType(fieldType, true);
     }
 
     private void Setup()
@@ -62,8 +64,6 @@ public class GameplayManager : StaticReference<GameplayManager>
         // Setup lifepoint
         playerLifePointSystem.Setup(initialLifePoint);
         enemyLifePointSystem.Setup(initialLifePoint);
-
-        SetFieldType(fieldType, true);
 
         phase = Phase.EndPhase;
         turn = Side.Enemy;
@@ -78,7 +78,7 @@ public class GameplayManager : StaticReference<GameplayManager>
         var fieldCard = enemyFieldSystem.DebugSpawnFieldCard(cardData, false, fieldCardContainer);
         // fieldCard.SetToDefensePosition();
         //enemyFieldSystem.IncrementCardCount(false);
-        print("DEBUG: spawned monster card on enemy field");
+        // print("DEBUG: spawned monster card on enemy field");
 
         // spawn monster card on player field
         cardData = Resources.Load<Card>("CardLibrary/022-NormalMonster-SummonedSkull");
@@ -93,7 +93,7 @@ public class GameplayManager : StaticReference<GameplayManager>
         );
         //fieldCard.SetToDefensePosition();
         //playerFieldSystem.IncrementCardCount(false);
-        print("DEBUG: spawned monster card on player field");
+        // print("DEBUG: spawned monster card on player field");
 
         // spawn magic card on player field
         cardData = Resources.Load<Card>("CardLibrary/657-EquipSpell-Megamorph");
@@ -101,7 +101,7 @@ public class GameplayManager : StaticReference<GameplayManager>
         fieldCard = playerFieldSystem.DebugSpawnFieldCard(cardData, true, fieldCardContainer);
         //fieldCard.SetToDefensePosition();
         //playerFieldSystem.IncrementCardCount(false);
-        print("DEBUG: spawned non moster card on player field");
+        // print("DEBUG: spawned non moster card on player field");
     }
 
     public bool IsPlayerTurn() => (turn == Side.Player ? true : false);
@@ -392,25 +392,55 @@ public class GameplayManager : StaticReference<GameplayManager>
         var fieldColor = ResourceManager.Instance().GetFieldColor(value);
         var fieldContainerColor = ResourceManager.Instance().GetFieldContainerColor(value);
 
-        fieldBaseImage.color = fieldColor;
+        void _HandleModifier(FieldCardContainer e)
+        {
+            e.gameObject.GetComponent<Image>().color = fieldContainerColor;
+            if(e.IsEmpty()) return;
+            if(!e.GetCard().GetCardData().IsMonsterCard()) return;
+
+            ResetFieldModifier(e.GetCard(), value);
+        }
         PlayerFieldSystem().GetAllContainers().ForEach(e =>
         {
-           e.gameObject.GetComponent<Image>().color = fieldContainerColor; 
+            _HandleModifier(e);
         });
         EnemyFieldSystem().GetAllContainers().ForEach(e =>
         {
-           e.gameObject.GetComponent<Image>().color = fieldContainerColor; 
+            _HandleModifier(e);
         });
 
-        // TODO: handle modifiers
+        fieldBaseImage.color = fieldColor;
         fieldType = value;
         print($"succeed setting field type to {value}");
     }
 
     private void ResetFieldModifier(GameplayCard gCard, FieldType fieldType)
     {
-        // first, remove field modifier if any
+        ////// NEXT: handle this modifier list null problem
+        var modifierList = gCard.GetModifierList();
+        if(modifierList == null){ return; }
+
+        var fieldCardData = ResourceManager.Instance().GetFieldCard(fieldType);
         
+        // first, remove field modifier if any
+        var toBeRemoved = new List<GameplayCard.Modifier>();
+        for(int i=0; i<modifierList.Count; i++)
+        {
+            var modifier = modifierList[i];
+            var card = modifier.source;
+            if(card.id == fieldCardData.id) toBeRemoved.Add(modifier);
+        }
+        // NOTE: validate flow by looking on toBeRemoved.Count
+        print($"DEBUG toBeRemoved.Count: {toBeRemoved.Count} {gCard}");
+        toBeRemoved.ForEach(e => modifierList.Remove(e));
+
+        // second, update field modifier
+        modifierList.Add(new GameplayCard.Modifier( // dummy
+            1, 1, fieldCardData
+        ));
+
+        // reassignment (actually the flow is kinda awkward, but it still works)
+        gCard.SetModifierList(modifierList);
     }
 
 

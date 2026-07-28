@@ -49,9 +49,13 @@ public abstract class GameplayCard : MonoBehaviour
 
 
 
-    public void Setup(Card cardData, List<GameplayCard.Modifier> modifierList = null)
+    public void Setup(Card cardData, List<Modifier> modifierList = null)
     {
         this.cardData = cardData;
+
+        // quick handling, now modifierList default is an empty list instead of null
+        if(modifierList == null) modifierList = new();
+
         SetModifierList(modifierList);
 
         baseImage.color = ResourceManager.Instance().GetGameplayCardBaseColor(cardData);
@@ -100,6 +104,8 @@ public abstract class GameplayCard : MonoBehaviour
     public Card GetCardData() => cardData;
 
     public void SetModifierList(List<Modifier> value){
+        if(!cardData.IsMonsterCard()) return; // safeguard
+
         modifierList = value;
         RefreshAttackDefenseText();
         RefreshAttackDefenseText();

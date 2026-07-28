@@ -66,46 +66,7 @@ public class ResourceManager : StaticReference<ResourceManager>
         );
         fieldCardDict.Add(
             FieldType.Forest, 
-            null // dummy
-        );
-
-        fieldColorDict.Add(
-            FieldType.Mountain, 
-            new Color32(106, 95, 85, 255)
-        );
-        fieldContainerColorDict.Add(
-            FieldType.Mountain, 
-            new Color32(136, 124, 113, 255)
-        );
-        fieldCardDict.Add(
-            FieldType.Mountain, 
-            null // dummy
-        );
-
-        fieldColorDict.Add(
-            FieldType.Sogen, 
-            new Color32(142, 158, 58, 255)
-        );
-        fieldContainerColorDict.Add(
-            FieldType.Sogen, 
-            new Color32(168, 184, 87, 255)
-        );
-        fieldCardDict.Add(
-            FieldType.Sogen, 
-            null // dummy
-        );
-
-        fieldColorDict.Add(
-            FieldType.Umi, 
-            new Color32(29, 95, 154, 255)
-        );
-        fieldContainerColorDict.Add(
-            FieldType.Umi, 
-            new Color32(63, 130, 194, 255)
-        );
-        fieldCardDict.Add(
-            FieldType.Umi, 
-            null // dummy
+            Resources.Load<Card>("CardLibrary/330-FieldSpell-Forest")
         );
 
         fieldColorDict.Add(
@@ -118,7 +79,46 @@ public class ResourceManager : StaticReference<ResourceManager>
         );
         fieldCardDict.Add(
             FieldType.Wasteland, 
-            null // dummy
+            Resources.Load<Card>("CardLibrary/331-FieldSpell-Wasteland")
+        );
+
+        fieldColorDict.Add(
+            FieldType.Mountain, 
+            new Color32(106, 95, 85, 255)
+        );
+        fieldContainerColorDict.Add(
+            FieldType.Mountain, 
+            new Color32(136, 124, 113, 255)
+        );
+        fieldCardDict.Add(
+            FieldType.Mountain, 
+            Resources.Load<Card>("CardLibrary/332-FieldSpell-Mountain")
+        );
+
+        fieldColorDict.Add(
+            FieldType.Sogen, 
+            new Color32(142, 158, 58, 255)
+        );
+        fieldContainerColorDict.Add(
+            FieldType.Sogen, 
+            new Color32(168, 184, 87, 255)
+        );
+        fieldCardDict.Add(
+            FieldType.Sogen, 
+            Resources.Load<Card>("CardLibrary/333-FieldSpell-Sogen")
+        );
+
+        fieldColorDict.Add(
+            FieldType.Umi, 
+            new Color32(29, 95, 154, 255)
+        );
+        fieldContainerColorDict.Add(
+            FieldType.Umi, 
+            new Color32(63, 130, 194, 255)
+        );
+        fieldCardDict.Add(
+            FieldType.Umi, 
+            Resources.Load<Card>("CardLibrary/334-FieldSpell-Umi")
         );
 
         fieldColorDict.Add(
@@ -131,7 +131,7 @@ public class ResourceManager : StaticReference<ResourceManager>
         );
         fieldCardDict.Add(
             FieldType.Yami, 
-            null // dummy
+            Resources.Load<Card>("CardLibrary/335-FieldSpell-Yami")
         );
     }
 
@@ -206,6 +206,13 @@ public class ResourceManager : StaticReference<ResourceManager>
         Debug.Assert(fieldContainerColorDict.ContainsKey(fieldType));
 
         return fieldColorDict.GetValueOrDefault(fieldType);
+    }
+
+    public Card GetFieldCard(FieldType fieldType)
+    {
+        Debug.Assert(fieldContainerColorDict.ContainsKey(fieldType));
+
+        return fieldCardDict.GetValueOrDefault(fieldType);
     }
 
     private void OnDestroy()
