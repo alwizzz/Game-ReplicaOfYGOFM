@@ -210,7 +210,7 @@ public class FieldSystem : MonoBehaviour
         spawnedFieldCard.SetModifierList(modifierList);
         spawnedFieldCard.SetHasBeenUsed(false);
         selectedFieldCardContainer.SetCard(spawnedFieldCard);
-        UpdateInformationDisplay();
+        // UpdateInformationDisplay();
 
         IncrementCardCount(selectedFieldCardContainer.IsBackRank());
 
@@ -218,6 +218,8 @@ public class FieldSystem : MonoBehaviour
         {
             EventManager.MonsterSummoned(spawnedFieldCard, owner);
         }
+
+        UpdateInformationDisplay();
     }
 
     private void IncrementCardCount(bool isBackRank)
