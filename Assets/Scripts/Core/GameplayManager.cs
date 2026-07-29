@@ -78,6 +78,12 @@ public class GameplayManager : StaticReference<GameplayManager>
         var fieldCardContainer = enemyFieldSystem.GetFrontRankContainers()[0];
         var fieldCard = enemyFieldSystem.DebugSpawnFieldCard(cardData, false, fieldCardContainer);
 
+        // spawn trap card on enemy field
+        cardData = Resources.Load<Card>("CardLibrary/682-Trap-Eatgaboon");
+        fieldCardContainer = enemyFieldSystem.GetBackRankContainers()[0];
+        fieldCard = enemyFieldSystem.DebugSpawnFieldCard(cardData, true, fieldCardContainer);
+
+
         // spawn monster card on player field
         cardData = Resources.Load<Card>("CardLibrary/022-NormalMonster-SummonedSkull");
         fieldCardContainer = playerFieldSystem.GetFrontRankContainers()[0];

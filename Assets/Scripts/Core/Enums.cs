@@ -69,11 +69,15 @@ namespace Enums
 
     }
 
-    public enum TrapEffect
+    public enum TrapTrigger
     {
-        None,
-        DestroyMonsterOnAttack,
-        DestroyMonsterOnSummon
+        OnAttack,
+
+        OnMonsterSummoned,
+
+        OnSpellActivated,
+
+        OnLifePointChanged,
     }
 
     public enum EventTrigger
