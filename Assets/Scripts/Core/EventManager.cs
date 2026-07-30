@@ -58,7 +58,8 @@ public class EventManager : MonoBehaviour
 
     #region Gameplay Events
 
-    public delegate void MonsterSummonedAction(FieldCard fieldCard, Side side);
+    // side can later be removed as fieldcard -> fieldcardcontainer -> contains side data
+    public delegate void MonsterSummonedAction(FieldCard fieldCard, Side side); 
     public static event MonsterSummonedAction OnMonsterSummoned;
 
     public static void MonsterSummoned(FieldCard fieldCard, Side side) 

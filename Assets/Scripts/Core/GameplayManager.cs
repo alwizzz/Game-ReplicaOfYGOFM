@@ -458,12 +458,95 @@ public class GameplayManager : StaticReference<GameplayManager>
     #endregion
 
 
+    #region Trap Activation
+
+    private void CheckTrapOnMonsterSummoned(FieldCard monsterFieldCard, Side side)
+    {
+        // get opposite side's containers
+        List<FieldCardContainer> containers;
+        if(side == Side.Player) 
+        {
+            containers = EnemyFieldSystem().GetAllContainers();
+        } else
+        {
+            containers = PlayerFieldSystem().GetAllContainers();
+        }
+
+        // list all traps that canTrigger
+        List<FieldCard> canTriggerTrapList = new();
+        containers.ForEach(e =>
+        {
+            if(e.IsEmpty()) return;
+
+            var fieldCard = e.GetCard();
+            var card = fieldCard.GetCardData();
+
+            if(card is not NonMonsterCard nonMonsterCard) return;
+            if(nonMonsterCard is not TrapCard trapCard) return;
+            if(trapCard.trigger != TrapTrigger.OnMonsterSummoned) return;
+
+            var canTrigger = trapCard.Check(new TrapCard.Context(monsterFieldCard));
+            if(!canTrigger) return;
+
+            canTriggerTrapList.Add(fieldCard);
+        });
+
+        if(canTriggerTrapList.Count == 0)
+        {
+            print("DEBUG: no OnMonsterSummoned trap can be triggered");
+            return;   
+        }
+
+        // handle if there are multiple trap cards that can be triggered
+        FieldCard toBeTriggeredTrapFieldCard;
+        if(canTriggerTrapList.Count == 1)
+        {
+            toBeTriggeredTrapFieldCard = canTriggerTrapList[0];
+        } else
+        {
+            // TODO: actually handle the choosing of which trap to be triggered
+            toBeTriggeredTrapFieldCard = canTriggerTrapList[0];
+        }
+
+        StartCoroutine(ActivateTrapOnMonsterSummoned(toBeTriggeredTrapFieldCard, monsterFieldCard));
+    }
+
+    private IEnumerator ActivateTrapOnMonsterSummoned(FieldCard trapFieldCard, FieldCard monsterFieldCard)
+    {
+        SetInputLock(true);
+
+        yield return new WaitForSeconds(1f);
+
+        // set the trap face up
+        trapFieldCard.SetToFaceUp();
+
+        yield return new WaitForSeconds(1f);
+
+        // activate trap
+        TrapCard trapCard = (TrapCard)trapFieldCard.GetCardData();
+        bool succeed = trapCard.Activate(new TrapCard.Context(monsterFieldCard));
+
+        yield return new WaitForSeconds(1f);
+
+        // destroy trap
+        trapFieldCard.Destroy();
+
+        yield return new WaitForSeconds(1f);
+
+        print($"XXX {trapFieldCard.GetCardData().cardName} [Trap] is activated with target {monsterFieldCard.GetCardData().cardName} [Monster] (succeed:{succeed})");
+        SetInputLock(false);
+    }
+
+    #endregion
+
+
     #region Subcriptions
 
-    private void SetFieldModifierOnMonsterSummoned(FieldCard fieldCard, Side _)
+    // functions put here are more of a wrapper
+    private void SetFieldModifierOnMonsterSummoned(FieldCard monsterFieldCard, Side _)
     {
         print("XXX");
-        SetFieldModifier(fieldCard, fieldType);
+        SetFieldModifier(monsterFieldCard, fieldType);
     }
 
 
@@ -476,6 +559,7 @@ public class GameplayManager : StaticReference<GameplayManager>
         EventManager.OnEndPhase += ResetFieldInformationDisplays;
 
         EventManager.OnMonsterSummoned += SetFieldModifierOnMonsterSummoned;
+        EventManager.OnMonsterSummoned += CheckTrapOnMonsterSummoned;
     }
 
     private void OnDisable()
@@ -486,6 +570,7 @@ public class GameplayManager : StaticReference<GameplayManager>
         EventManager.OnEndPhase -= ResetFieldInformationDisplays;
 
         EventManager.OnMonsterSummoned -= SetFieldModifierOnMonsterSummoned;
+        EventManager.OnMonsterSummoned -= CheckTrapOnMonsterSummoned;
     }
 
     #endregion

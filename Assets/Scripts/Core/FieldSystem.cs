@@ -299,7 +299,9 @@ public class FieldSystem : MonoBehaviour
     }
 
     public void ChangeCardPosition()
-    {
+    {   
+        //// next: make sure InputLock apply all
+
         if (selectedFieldCardContainer.IsBackRank()) return; // only front rank able to change position
         if (selectedFieldCardContainer.IsEmpty()) return;
 
@@ -403,7 +405,6 @@ public class FieldSystem : MonoBehaviour
         GameplayManager.Instance().FieldSystem().CloseSelection(retainSelection:true);
         FusionSystem.Instance().SetupForEquipOnFieldFlow(list, modifierList, carriedGuardianStar
             // () => {
-            //     //////////////// continue here
             //     CancelSpellMode();
             //     GameplayManager.Instance().SetInputLock(false);
             // }   
