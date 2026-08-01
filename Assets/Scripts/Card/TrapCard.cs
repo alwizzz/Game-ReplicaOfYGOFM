@@ -23,8 +23,9 @@ public class TrapCard : NonMonsterCard
     }
 
     public TrapTrigger trigger;
-
     public override sealed bool IsSpellCard() => false;
+
+
 
     public override bool Activate() // an "empty" function, mainly used for trap activation out of its trigger condition
     {
@@ -41,12 +42,12 @@ public class TrapCard : NonMonsterCard
         // implicitly also do a Check()
         bool canTrigger = Check(context);
 
-        if (canTrigger)
+        if (canTrigger) // actual activation
         {
-            switch(cardName){
+            switch(cardName){ // TODO: classify effect
                 case "Eatgaboon":
-                    context.summonedMonsterCard.Destroy();
-                    succeed = true; // NOTE: make sure the Destroy() succeed would be nice
+                    context.summonedMonsterCard.Destroy(); // NOTE: making sure the Destroy() succeed would be nice
+                    succeed = true; 
                     break;
                 default:
                     Debug.Log($"Unhandled case {cardName}");

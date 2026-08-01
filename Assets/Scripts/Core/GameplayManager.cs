@@ -218,6 +218,29 @@ public class GameplayManager : StaticReference<GameplayManager>
         }
     }
 
+    public void IncreaseLifePointFromSpell(int value, bool forEnemy = false)
+    {   
+        // normally the effect is for self
+        if (forEnemy)
+        {
+            enemyLifePointSystem.IncreaseLifePoint(value);
+        } else
+        {
+            playerLifePointSystem.IncreaseLifePoint(value);
+        }
+    }
+    public void DecreaseLifePointFromSpell(int value, bool forSelf = false)
+    {   
+        // normally the effect is for enemy
+        if (forSelf)
+        {
+            playerLifePointSystem.DecreaseLifePoint(value);
+        } else
+        {
+            enemyLifePointSystem.DecreaseLifePoint(value);
+        }
+    }
+
     #endregion
 
     #region Phase Management
