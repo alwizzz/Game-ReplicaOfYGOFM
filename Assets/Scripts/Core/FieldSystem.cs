@@ -311,7 +311,7 @@ public class FieldSystem : MonoBehaviour
 
     public void UseFieldCard()
     {
-        if(GameplayManager.Instance().IsInputLock()) { print("[input locked]"); return; }
+        // if(GameplayManager.Instance().IsInputLock()) { print("[input locked]"); return; } // now handle by SafeButton
 
         if (selectedFieldCardContainer.IsEmpty()) return;
         if (selectedFieldCardContainer.IsBackRank())
