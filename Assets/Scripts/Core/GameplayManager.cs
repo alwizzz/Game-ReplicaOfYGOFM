@@ -73,20 +73,60 @@ public class GameplayManager : StaticReference<GameplayManager>
 
     private void Debug()
     {
+        // --------- ENEMY
+
         // spawn monster card on enemy field
         var cardData = Resources.Load<Card>("CardLibrary/022-NormalMonster-SummonedSkull");
         var fieldCardContainer = enemyFieldSystem.GetFrontRankContainers()[0];
         var fieldCard = enemyFieldSystem.DebugSpawnFieldCard(cardData, false, fieldCardContainer);
 
-        // spawn trap card on enemy field
-        cardData = Resources.Load<Card>("CardLibrary/682-Trap-Eatgaboon");
-        fieldCardContainer = enemyFieldSystem.GetBackRankContainers()[0];
-        fieldCard = enemyFieldSystem.DebugSpawnFieldCard(cardData, true, fieldCardContainer);
+        // // spawn trap card on enemy field
+        // cardData = Resources.Load<Card>("CardLibrary/682-Trap-Eatgaboon");
+        // fieldCardContainer = enemyFieldSystem.GetBackRankContainers()[0];
+        // fieldCard = enemyFieldSystem.DebugSpawnFieldCard(cardData, true, fieldCardContainer);
 
+        // --------- PLAYER
 
         // spawn monster card on player field
         cardData = Resources.Load<Card>("CardLibrary/022-NormalMonster-SummonedSkull");
         fieldCardContainer = playerFieldSystem.GetFrontRankContainers()[0];
+        fieldCard = playerFieldSystem.DebugSpawnFieldCard(
+            cardData, 
+            false, 
+            fieldCardContainer,
+            new List<GameplayCard.Modifier>{
+                new GameplayCard.Modifier(1000, 1000, Resources.Load<Card>("CardLibrary/657-EquipSpell-Megamorph"))
+            }
+        );
+
+        //// next: handle ritual card color
+        //// handle predefined spawn field card's container (for ritual and potentially other flow)
+        //// handle ritual monster's guardian star
+        // spawn monster card on player field [[ TO TEST OUT RITUAL ]]
+        cardData = Resources.Load<Card>("CardLibrary/001-NormalMonster-BlueEyesWhiteDragon");
+        fieldCardContainer = playerFieldSystem.GetFrontRankContainers()[1];
+        fieldCard = playerFieldSystem.DebugSpawnFieldCard(
+            cardData, 
+            false, 
+            fieldCardContainer,
+            new List<GameplayCard.Modifier>{
+                new GameplayCard.Modifier(1000, 1000, Resources.Load<Card>("CardLibrary/657-EquipSpell-Megamorph"))
+            }
+        );
+        // spawn monster card on player field
+        cardData = Resources.Load<Card>("CardLibrary/001-NormalMonster-BlueEyesWhiteDragon");
+        fieldCardContainer = playerFieldSystem.GetFrontRankContainers()[2];
+        fieldCard = playerFieldSystem.DebugSpawnFieldCard(
+            cardData, 
+            false, 
+            fieldCardContainer,
+            new List<GameplayCard.Modifier>{
+                new GameplayCard.Modifier(1000, 1000, Resources.Load<Card>("CardLibrary/657-EquipSpell-Megamorph"))
+            }
+        );
+        // spawn monster card on player field
+        cardData = Resources.Load<Card>("CardLibrary/001-NormalMonster-BlueEyesWhiteDragon");
+        fieldCardContainer = playerFieldSystem.GetFrontRankContainers()[3];
         fieldCard = playerFieldSystem.DebugSpawnFieldCard(
             cardData, 
             false, 

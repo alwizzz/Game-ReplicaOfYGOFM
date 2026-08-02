@@ -9,10 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21da1760a576ffe468070127097d0ece, type: 3}
-  m_Name: 339-NormalSpell-RedMedicine
+  m_Script: {fileID: 11500000, guid: 6cdef3980cf73984fa4c6cd2c5487109, type: 3}
+  m_Name: 380-RitualMonster-BlueEyesUltimateDragon
   m_EditorClassIdentifier: 
-  id: 339
-  cardName: Red Medicine
+  id: 380
+  cardName: Blue-Eyes Ultimate Dragon
   spriteBig: {fileID: 21300000, guid: c1d15c1052945aa48bcfea9e5d19ed00, type: 3}
   spriteSmall: {fileID: 0}
+  type: 0
+  guardianStarOption1: 0
+  guardianStarOption2: 0
+  level: 12
+  attackPoint: 4500
+  defensePoint: 3800
+  listOfSuitableEquip: []

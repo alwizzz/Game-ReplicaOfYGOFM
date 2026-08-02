@@ -105,6 +105,7 @@ public abstract class GameplayCard : MonoBehaviour
 
     public void SetModifierList(List<Modifier> value){
         if(!cardData.IsMonsterCard()) return; // safeguard
+        if(value == null) value = new(); // make sure no null
 
         modifierList = value;
         RefreshAttackDefenseText();

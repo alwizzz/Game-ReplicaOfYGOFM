@@ -9,5 +9,5 @@ using UnityEngine;
 )]
 public class RitualMonsterCard : MonsterCard
 {
-     // public RitualSpellCard RitualSpellCardReference { get; }
+    public RitualSpellCard RitualReference; // currently only for logging purpose
 }
