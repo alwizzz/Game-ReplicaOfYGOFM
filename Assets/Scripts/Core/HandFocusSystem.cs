@@ -184,7 +184,7 @@ public class HandFocusSystem : UIModal<HandFocusSystem>
 
                 // fusionListData.Insert(0, cardData);
                 // UpdateFusionDisplay(modifierList);
-                ///// selectedFieldCard.Destroy();
+                // selectedFieldCard.Destroy();
 
                 // Helpers.Instance().DelayedAction(1f, () => StartCoroutine(RunFusion(modifierList)));
             } else

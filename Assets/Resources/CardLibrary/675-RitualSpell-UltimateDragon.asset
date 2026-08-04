@@ -20,4 +20,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 340c5f27b7bd8d84e895d15c05470fb1, type: 2}
   - {fileID: 11400000, guid: 340c5f27b7bd8d84e895d15c05470fb1, type: 2}
   - {fileID: 11400000, guid: 340c5f27b7bd8d84e895d15c05470fb1, type: 2}
-  cardResult: {fileID: 0}
+  cardResult: {fileID: 11400000, guid: b33fe337e3cd1465686b7068373d96c6, type: 2}

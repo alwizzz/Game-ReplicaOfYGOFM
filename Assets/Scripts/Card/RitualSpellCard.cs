@@ -69,8 +69,11 @@ public class RitualSpellCard : SpellCard
                 cardResult, 
                 false, // always face up
                 GuardianStar.NONE, // dummy, TODO: properly handle guardian star via fusion system's resolve panel
-                null
+                null, // null modifier list, the default value will be hanled in the function logic
+                targetFieldCardContainer: targetFieldCardContainer
             );
+
+            //// next: handle ritual monster's guardian star
         }
 
         Debug.Log($"Activated RITUAL SPELL! ritualSucceed:{ritualSucceed}");

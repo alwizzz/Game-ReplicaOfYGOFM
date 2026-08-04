@@ -16,10 +16,11 @@ MonoBehaviour:
   cardName: Blue-Eyes Ultimate Dragon
   spriteBig: {fileID: 21300000, guid: c1d15c1052945aa48bcfea9e5d19ed00, type: 3}
   spriteSmall: {fileID: 0}
-  type: 0
+  type: 4
   guardianStarOption1: 0
-  guardianStarOption2: 0
+  guardianStarOption2: 2
   level: 12
   attackPoint: 4500
   defensePoint: 3800
   listOfSuitableEquip: []
+  RitualReference: {fileID: 11400000, guid: 5ab8dd2d83b224cdc80845f958f626da, type: 2}

@@ -182,18 +182,24 @@ public class FieldSystem : MonoBehaviour
         bool isFacedown, 
         GuardianStar selectedGuardianStar, 
         List<GameplayCard.Modifier> modifierList,
-        bool retainedMonster = false
+        bool retainedMonster = false,
+        FieldCardContainer targetFieldCardContainer = null
     ){
         // currently commented cuz now there's scenario that the selection is closed but the selectedFieldCardContainer still used
         // so now, more determining variable is the selectedFieldCardContainer.IsEmpty()
         // if (!isOnSelection) return;
 
-        if(selectedFieldCardContainer.IsEmpty() == false)
+
+        FieldCardContainer fieldCardContainer;
+        if(targetFieldCardContainer != null)
         {
-            print("spawning field card on occupied field card container");
-            // currently unable to spawn on occupied container
-            // TODO: implement fusion/equip in this manner
-            return;
+            Debug.Assert(targetFieldCardContainer.IsEmpty());
+            fieldCardContainer = targetFieldCardContainer;
+        } else 
+        {
+            // related argument is null, using selectedFieldCardContainer instead
+            Debug.Assert(selectedFieldCardContainer.IsEmpty());
+            fieldCardContainer = selectedFieldCardContainer;
         }
 
         var spawnedFieldCard = Instantiate(fieldCardPrefab);
@@ -209,10 +215,10 @@ public class FieldSystem : MonoBehaviour
         spawnedFieldCard.SetSelectedGuardianStar(selectedGuardianStar);
         spawnedFieldCard.SetModifierList(modifierList);
         spawnedFieldCard.SetHasBeenUsed(false);
-        selectedFieldCardContainer.SetCard(spawnedFieldCard);
+        fieldCardContainer.SetCard(spawnedFieldCard);
         // UpdateInformationDisplay();
 
-        IncrementCardCount(selectedFieldCardContainer.IsBackRank());
+        IncrementCardCount(fieldCardContainer.IsBackRank());
 
         if(cardData.IsMonsterCard() && !retainedMonster)
         {
@@ -300,8 +306,6 @@ public class FieldSystem : MonoBehaviour
 
     public void ChangeCardPosition()
     {   
-        //// next: make sure InputLock apply all
-
         if (selectedFieldCardContainer.IsBackRank()) return; // only front rank able to change position
         if (selectedFieldCardContainer.IsEmpty()) return;
 

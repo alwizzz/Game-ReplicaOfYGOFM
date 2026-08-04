@@ -99,9 +99,6 @@ public class GameplayManager : StaticReference<GameplayManager>
             }
         );
 
-        //// next: handle ritual card color
-        //// handle predefined spawn field card's container (for ritual and potentially other flow)
-        //// handle ritual monster's guardian star
         // spawn monster card on player field [[ TO TEST OUT RITUAL ]]
         cardData = Resources.Load<Card>("CardLibrary/001-NormalMonster-BlueEyesWhiteDragon");
         fieldCardContainer = playerFieldSystem.GetFrontRankContainers()[1];
